@@ -1,0 +1,6 @@
+{
+    "database-url-var": "POSTGRES_URL",
+    "migration-file-language": "js",
+    "verbose": false,
+    "template-file-name": "migrationTemplate.js"
+}
