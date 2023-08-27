@@ -33,3 +33,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+## Vercel Postgres
+
+A note on edge environments
+
+In edge environments, IO connections cannot be reused between requests. To allow your Pools to continue to function, we set maxUses to 1 when running on the edge (otherwise the Pool might hold on to a Client used in one request and try to use it again in another). Unfortunately, this means the Pool also can't reuse the connection within the request. For this reason, if you're firing more than one database query to serve a single request in your app, we recommend obtaining a Client from Pool.connect, using that Client to query the database, and then releasing it.
