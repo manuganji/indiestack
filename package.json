@@ -12,7 +12,10 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest"
+		"test:unit": "vitest",
+		"migrate": "node-pg-migrate --config-file pgMigrateConfig.json",
+		"migrate:up": "pnpm run migrate up",
+		"migrate:down": "pnpm run migrate down"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -21,9 +24,11 @@
 		"@sveltejs/kit": "^1.20.4",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"dotenv": "^16.3.1",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
+		"pg": "file:shims/pg",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^4.0.5",
@@ -33,5 +38,12 @@
 		"vite": "^4.4.2",
 		"vitest": "^0.32.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@neondatabase/serverless": "^0.6.0",
+		"@upstash/qstash": "^0.3.6",
+		"@vercel/postgres": "^0.4.1",
+		"node-pg-migrate": "^6.2.2",
+		"zapatos": "^6.1.4"
+	}
 }

@@ -11,7 +11,8 @@ This is a reference repo for Svelte Kit projects. It's inspired from vercel/plat
 - [x] SvelteKit Adapter for Vercel
 - [ ] `node-pg-migrate` for database migrations
 - [x] `pnpm` for package management
-- [ ] `dotenv` for environment variables
+- [x] `dotenv` for environment variables
+- [ ] `@upstash/qstash` for queue
 
 ## Get Started
 
