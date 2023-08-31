@@ -17,6 +17,7 @@ This is a reference repo for Svelte Kit projects. It's inspired from vercel/plat
 
     - Clone this project to your local machine
     - Run `pnpm i` to install dependencies
+    - Copy over `.env.example` to `.env` and fill in the values
     
 ## Developing
 
