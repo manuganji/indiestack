@@ -44,6 +44,5 @@ export default async function middleware(req: NextRequest) {
    */
   // rewrite everything else to `/[domain]/[path] dynamic route
   const newURL = new URL(`${res?.id || "root"}${path}`, req.url);
-  console.log("newURL", newURL.toString());
   return NextResponse.rewrite(newURL);
 }
