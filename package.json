@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build",
+		"build": "next build && pnpm run migrate:up",
 		"start": "next start",
 		"lint": "next lint",
 		"update-zapatos-types": "node ./generate_zapatos_types.mjs",
