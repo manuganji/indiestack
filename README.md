@@ -8,9 +8,8 @@ This is a reference repo based on Next.js.
 - [x] TailwindCSS
 - [x] Zapatos
 - [x] Neon
-- [x] `node-pg-migrate` for database migrations
+- [ ] `node-pg-migrate` for database migrations. `dotenv` is needed for environment variables to work.
 - [x] `pnpm` for package management
-- [x] `dotenv` for environment variables
 - [ ] `@upstash/qstash` for queue
 
 ## Get Started
