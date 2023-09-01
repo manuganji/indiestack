@@ -1,5 +1,5 @@
 {
-	"name": "explorer",
+	"name": "@manuganji/indiestack",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
