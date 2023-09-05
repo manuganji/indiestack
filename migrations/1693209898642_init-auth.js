@@ -6,35 +6,24 @@ exports.shorthands = undefined;
  * @param {import('node-pg-migrate').MigrationBuilder} pgm
  */
 exports.up = (pgm) => {
-  pgm.createTable(
-    "properties",
-    {
-      id: {
-        type: "uuid",
-        unique: true,
-        primaryKey: true,
-        default: pgm.func("gen_random_uuid()"),
-      },
-      name: {
-        type: "text",
-        notNull: true,
-      },
-      domain: {
-        type: "text",
-      },
-    },
-    {
-      constraints: {
-        unique: ["id", "domain"],
-      },
-      ifNotExists: true,
-    }
-  );
-  pgm.createTable("users", {
-    property_id: {
-      type: "uuid",
-      references: "properties(id)",
+  pgm.createTable("properties", {
+    name: {
+      type: "text",
       notNull: true,
+    },
+    domain: {
+      type: "text",
+      primaryKey: true,
+    },
+  });
+  pgm.createTable("users", {
+    domain: {
+      type: "text",
+      references: "properties(domain)",
+      notNull: true,
+    },
+    is_admin: {
+      type: "boolean",
     },
     id: {
       type: "uuid",
@@ -58,7 +47,7 @@ exports.up = (pgm) => {
     },
   });
   pgm.createTable("sessions", {
-    property_id: {
+    domain: {
       type: "uuid",
       notNull: true,
       references: "properties(id)",
@@ -84,10 +73,10 @@ exports.up = (pgm) => {
     },
   });
   pgm.createTable("accounts", {
-    property_id: {
-      type: "uuid",
+    domain: {
+      type: "text",
+      references: "properties(domain)",
       notNull: true,
-      references: "properties(id)",
     },
     user_id: {
       type: "uuid",
@@ -132,9 +121,9 @@ exports.up = (pgm) => {
   });
   pgm.createTable("verification_tokens", {
     property_id: {
-      type: "uuid",
+      type: "text",
+      references: "properties(domain)",
       notNull: true,
-      references: "properties(id)",
     },
     identifier: {
       type: "text",

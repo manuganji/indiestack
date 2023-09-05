@@ -1,4 +1,4 @@
-# Serverless Tech Stack for Indie Hackers
+# Open Source Serverless Tech Stack for Indie Hackers
 
 This is a reference repo based on Next.js.
 
@@ -7,8 +7,8 @@ This is a reference repo based on Next.js.
 - [x] Next.js
 - [x] TailwindCSS
 - [x] Zapatos
-- [x] Neon
-- [ ] `node-pg-migrate` for database migrations. `dotenv` is needed for environment variables to work.
+- [x] Postgres
+- [x] `node-pg-migrate` for database migrations. `dotenv` is needed for environment variables to work.
 - [x] `pnpm` for package management
 - [ ] `@upstash/qstash` for queue
 
@@ -44,3 +44,8 @@ You can preview the production build with `pnpm run preview`.
 ## Inspiration
 
 - vercel/platforms
+
+
+## Settings
+
+Read through `.env.example` for basic settings.

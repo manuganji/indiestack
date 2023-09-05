@@ -27,3 +27,9 @@ export const ZAPATOS_CONFIG: Config = {
 };
 
 export const DB_CONFIG = ZAPATOS_CONFIG.db;
+
+export const WIDGET_IDS = {
+  COVER: 1,
+  BENEFITS: 2,
+  TESTIMONIALS: 3
+}
