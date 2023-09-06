@@ -22,10 +22,15 @@
 		"@upstash/qstash": "^0.3.6",
 		"@vercel/postgres": "^0.4.1",
 		"autoprefixer": "10.4.15",
+		"axios": "^1.5.0",
+		"camelcase-keys": "^9.0.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.0.0",
+		"date-fns": "^2.30.0",
+		"decamelize-keys": "^2.0.1",
 		"eslint": "8.48.0",
 		"eslint-config-next": "13.4.19",
+		"lodash": "^4.17.21",
 		"next": "13.4.19",
 		"next-auth": "^4.23.1",
 		"node-pg-migrate": "^6.2.2",
@@ -42,6 +47,8 @@
 		"zapatos": "^6.1.4"
 	},
 	"devDependencies": {
+		"@types/lodash": "^4.14.198",
+		"@types/nodemailer": "^6.4.9",
 		"dotenv": "^16.3.1"
 	}
 }

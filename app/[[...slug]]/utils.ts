@@ -4,7 +4,7 @@ import "server-only";
 
 export const getPage = async function (path?: string) {
   const hostname = headers().get("host");
-  console.log("From func", hostname, path);
+  // console.log("From func", hostname, path);
   const INT_HOST = "app.localhost:3000";
   const INT_PATH = "some/thing3";
 

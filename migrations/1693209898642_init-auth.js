@@ -33,10 +33,10 @@ exports.up = (pgm) => {
     },
     name: {
       type: "text",
-      notNull: true,
     },
     email: {
       type: "text",
+      notNull: true,
     },
     email_verified: {
       type: "timestamptz",
@@ -48,9 +48,9 @@ exports.up = (pgm) => {
   });
   pgm.createTable("sessions", {
     domain: {
-      type: "uuid",
+      type: "text",
       notNull: true,
-      references: "properties(id)",
+      references: "properties(domain)",
     },
     user_id: {
       type: "uuid",
@@ -65,6 +65,7 @@ exports.up = (pgm) => {
     },
     expires: {
       type: "timestamptz",
+      notNull: true,
     },
     session_token: {
       type: "uuid",
@@ -93,6 +94,9 @@ exports.up = (pgm) => {
       type: "text",
       notNull: true,
     },
+    type: {
+      type: "text",
+    },
     provider_account_id: {
       type: "text",
       notNull: true,
@@ -104,7 +108,7 @@ exports.up = (pgm) => {
       type: "text",
     },
     expires_at: {
-      type: "timestamptz",
+      type: "integer",
     },
     token_type: {
       type: "text",
@@ -120,7 +124,7 @@ exports.up = (pgm) => {
     },
   });
   pgm.createTable("verification_tokens", {
-    property_id: {
+    domain: {
       type: "text",
       references: "properties(domain)",
       notNull: true,
@@ -136,6 +140,7 @@ exports.up = (pgm) => {
     },
     expires: {
       type: "timestamptz",
+      notNull: true,
     },
   });
 };

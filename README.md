@@ -43,7 +43,7 @@ You can preview the production build with `pnpm run preview`.
     
 ## Inspiration
 
-- vercel/platforms
+- [vercel/platforms](https://github.com/vercel/platforms)
 
 
 ## Settings

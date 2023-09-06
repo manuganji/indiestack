@@ -4,6 +4,11 @@
 import Image from "next/image";
 import { getPage } from "./utils";
 import Link from "next/link";
+import { initDB } from "@/db";
+import { dev } from "@/constants";
+if (dev) {
+  initDB();
+}
 
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
 export const dynamic = "auto";
@@ -20,7 +25,7 @@ export default async function Home({
   };
 }) {
   const page = await getPage(params.slug?.join("/"));
-  console.log(params);
+  // console.log(params);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
