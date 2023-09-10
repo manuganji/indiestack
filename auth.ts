@@ -274,32 +274,16 @@ const authAdapter: Adapter = {
     return mapUsers(user.user);
   },
   linkAccount: async ({
-    provider,
     providerAccountId: provider_account_id,
     userId: user_id,
-    type,
-    access_token,
-    refresh_token,
-    expires_at,
-    id_token,
-    scope,
-    session_state,
-    token_type,
+    ...rest
   }: AdapterAccount) => {
     await runQuery(
       insert("accounts", {
         domain: getHostName(),
-        provider,
-        type,
         provider_account_id,
         user_id,
-        token_type,
-        access_token,
-        expires_at,
-        id_token,
-        refresh_token,
-        scope,
-        session_state,
+        ...rest,
       })
     );
   },
@@ -336,13 +320,13 @@ const authAdapter: Adapter = {
 export const authOptions: NextAuthOptions = {
   providers: [Email({})],
   adapter: authAdapter,
-  pages: {
-    signIn: "/auth/sign-in/",
-    newUser: "/",
-    signOut: "/auth/sign-out/",
-    error: "/auth/error/",
-    verifyRequest: "/auth/verify/",
-  },
+  // pages: {
+  //   signIn: "/auth/sign-in/",
+  //   newUser: "/",
+  //   signOut: "/auth/sign-out/",
+  //   error: "/auth/error/",
+  //   verifyRequest: "/auth/verify/",
+  // },
   session: {
     strategy: "database",
   },
