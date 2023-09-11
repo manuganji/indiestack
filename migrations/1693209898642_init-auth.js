@@ -54,23 +54,21 @@ exports.up = (pgm) => {
     },
     user_id: {
       type: "uuid",
-      notNull: true,
       references: "users(id)",
-    },
-    id: {
-      type: "uuid",
-      unique: true,
-      primaryKey: true,
-      default: pgm.func("gen_random_uuid()"),
+      notNull: true,
     },
     expires: {
       type: "timestamptz",
       notNull: true,
     },
     session_token: {
+      primaryKey: true,
       type: "uuid",
       notNull: true,
       default: pgm.func("gen_random_uuid()"),
+    },
+    data: {
+      type: "jsonb",
     },
   });
   pgm.createTable("accounts", {

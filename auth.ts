@@ -13,7 +13,7 @@ import {
 } from "zapatos/db";
 import type { accounts, users } from "zapatos/schema";
 import {
-  DEFAULT_SESSION_DURATION,
+  DEFAULT_AUTH_DURATION,
   LONG_SESSION_COOKIE,
   LONG_SESSION_DURATION,
   SECS_IN_DAY,
@@ -22,7 +22,7 @@ import {
 } from "./constants";
 import { runQuery } from "./db";
 // import { sendWelcomeMail } from "./serverSideUtils";
-import { getHostName } from "@/lib/utils";
+import { getHostName } from "@/lib/serverUtils";
 import { NextAuthOptions } from "next-auth";
 import { Adapter, AdapterAccount, AdapterUser } from "next-auth/adapters";
 import Email from "next-auth/providers/email";

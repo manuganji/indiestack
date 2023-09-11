@@ -1,20 +1,18 @@
 // check if any page for the request
 // show 404
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { getPage } from "./utils";
 import Link from "next/link";
-import { initDB } from "@/db";
-import { dev } from "@/constants";
-if (dev) {
-  initDB();
-}
-
+import { getPage } from "./utils";
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
 export const dynamic = "auto";
 export async function generateStaticParams() {
   return ["home", "about"];
 }
+// if (dev) {
+//   initDB();
+// }
 
 export default async function Home({
   params,
@@ -34,22 +32,16 @@ export default async function Home({
           <code className="font-mono font-bold">app/page.tsx</code>
         </p>
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
+          <Link
             className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
+            href="/"
             rel="noopener noreferrer"
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            By IndieStack
+          </Link>
+          <form>
+            <Button type="submit">Submit</Button>
+          </form>
         </div>
       </div>
 

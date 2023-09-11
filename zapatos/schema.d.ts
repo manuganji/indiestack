@@ -651,12 +651,6 @@ declare module 'zapatos/schema' {
       */
       user_id: string;
       /**
-      * **sessions.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
       * **sessions.expires**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -668,6 +662,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token: string;
+      /**
+      * **sessions.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data: db.JSONValue | null;
     }
     export interface JSONSelectable {
       /**
@@ -683,12 +683,6 @@ declare module 'zapatos/schema' {
       */
       user_id: string;
       /**
-      * **sessions.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id: string;
-      /**
       * **sessions.expires**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -700,6 +694,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token: string;
+      /**
+      * **sessions.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data: db.JSONValue | null;
     }
     export interface Whereable {
       /**
@@ -715,12 +715,6 @@ declare module 'zapatos/schema' {
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **sessions.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
       * **sessions.expires**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -732,6 +726,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sessions.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -747,12 +747,6 @@ declare module 'zapatos/schema' {
       */
       user_id: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **sessions.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
       * **sessions.expires**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -764,6 +758,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **sessions.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -779,12 +779,6 @@ declare module 'zapatos/schema' {
       */
       user_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **sessions.id**
-      * - `uuid` in database
-      * - `NOT NULL`, default: `gen_random_uuid()`
-      */
-      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
       * **sessions.expires**
       * - `timestamptz` in database
       * - `NOT NULL`, no default
@@ -796,6 +790,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **sessions.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'sessions_pkey';
     export type Column = keyof Selectable;

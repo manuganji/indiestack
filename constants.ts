@@ -29,23 +29,24 @@ export const ZAPATOS_CONFIG: Config = {
 export const DB_CONFIG = ZAPATOS_CONFIG.db;
 
 // Auth Settings
-export const DEFAULT_SESSION_DURATION = {
+export const DEFAULT_AUTH_DURATION = {
   days: 7,
 };
 
-export const LONG_SESSION_DURATION = {
+export const LONG_AUTH_DURATION = {
   days: 180,
 };
 
 export const EMAIL_COOKIE = "auth-email";
 export const SESSION_COOKIE = "session_token";
+export const LOCAL_USER = "local-user";
 export const LONG_SESSION_COOKIE = "long-session";
 export const SECS_IN_DAY = 86400;
 
 export const SIGN_UP_PATH = '/sign-up';
 export const SIGN_IN_PATH = '/sign-in';
 export const SIGN_OUT_PATH = '/sign-out';
-
+export const SESSION_PATH = '/session';
 
 
 export const WIDGET_IDS = {

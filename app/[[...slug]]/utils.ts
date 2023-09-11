@@ -1,9 +1,8 @@
-import { headers } from "next/headers";
+import { getHostName } from "@/lib/serverUtils";
 import { notFound } from "next/navigation";
-import "server-only";
 
 export const getPage = async function (path?: string) {
-  const hostname = headers().get("host");
+  const hostname = getHostName();
   // console.log("From func", hostname, path);
   const INT_HOST = "app.localhost:3000";
   const INT_PATH = "some/thing3";
