@@ -22,34 +22,31 @@ import {
   selectOne,
   upsert,
 } from "zapatos/db";
-import SignIn from "@/emails/SignIn";
-import SignUp from "@/emails/SignUp";
+import SignIn from "@/emails/SignInMail";
+import SignUp from "@/emails/SignUpMail";
 import WelcomeMail from "@/emails/WelcomeMail";
 import { env } from "process";
 import { render } from "@react-email/render";
+import { properties } from "zapatos/schema";
 
 export const getHostName = () => headers().get("host")!;
 
 export const upsertDomain = async (domain: string, name?: string) => {
-  try {
-    const res = await runQuery(
-      upsert(
-        "properties",
-        {
-          id: shortId(10),
-          email_from: `no-reply@${domain}`,
-          domain,
-          name: name ?? domain,
-        },
-        {
-          value: "properties_pkey",
-        }
-      )
-    );
-    return res;
-  } catch (e) {
-    console.log(e);
-  }
+  const res = await runQuery(
+    upsert(
+      "properties",
+      {
+        id: shortId(10),
+        email_from: `no-reply@${domain}`,
+        domain,
+        name: name ?? domain,
+      },
+      {
+        value: "properties_pkey",
+      }
+    )
+  );
+  return res;
 };
 
 let EMAIL_TEST_ACCOUNT: nodemailer.TestAccount;
@@ -94,21 +91,25 @@ export function getTransporter() {
   return transporter;
 }
 
-export const getCurrentProperty = cache(async () => {
-  try {
-    const property = await runQuery(
-      selectExactlyOne("properties", {
-        domain: getHostName(),
-      })
-    );
-    return property;
-  } catch (e) {
-    if (e instanceof NotExactlyOneError) {
+export const getCurrentProperty = cache(
+  async (): Promise<properties.JSONSelectable> => {
+    try {
+      const property = await runQuery(
+        selectExactlyOne("properties", {
+          domain: getHostName(),
+        })
+      );
+      return property;
+    } catch (e) {
+      if (e instanceof NotExactlyOneError) {
+        console.error(e);
+        throw new Error("Multiple properties found for domain");
+      }
       const property = upsertDomain(getHostName());
       return property;
     }
   }
-});
+);
 
 export async function sendMailOnSignUp({
   email,
