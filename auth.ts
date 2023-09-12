@@ -1,7 +1,4 @@
-import { HttpStatusCode } from "axios";
-import { add } from "date-fns";
 import {
-  all,
   conditions as dc,
   deletes,
   insert,
@@ -11,66 +8,30 @@ import {
   sql,
   update,
 } from "zapatos/db";
-import type { accounts, users } from "zapatos/schema";
-import {
-  DEFAULT_AUTH_DURATION,
-  LONG_SESSION_COOKIE,
-  LONG_SESSION_DURATION,
-  SECS_IN_DAY,
-  SESSION_COOKIE,
-  SIGN_IN_PATH,
-} from "./constants";
+import type {
+  accounts,
+  sessions,
+  users,
+  verification_tokens,
+} from "zapatos/schema";
 import { runQuery } from "./db";
 // import { sendWelcomeMail } from "./serverSideUtils";
-import { getHostName } from "@/lib/serverUtils";
-import { NextAuthOptions } from "next-auth";
-import { Adapter, AdapterAccount, AdapterUser } from "next-auth/adapters";
-import Email from "next-auth/providers/email";
+import { getCurrentProperty, getHostName } from "@/lib/serverUtils";
+
 // const SC_ORG_ID = env.SC_ORG_ID;
-import camelcaseKeys from "camelcase-keys";
-import decamelizeKeys from "decamelize-keys";
 
-export const getUserByAccount = ({
-  provider_account_id,
-  provider,
-}: {
-  provider_account_id: string;
-  provider: string;
-}) =>
-  runQuery(
-    selectOne("users", all, {
-      lateral: {
-        account: selectOne("accounts", {
-          user_id: parent("id"),
-          provider_account_id,
-          provider,
-        }),
-      },
-    })
-  );
-
-const mapUsers = function (user: users.JSONSelectable) {
-  return {
-    ...user,
-    emailVerified: user.email_verified ? new Date(user.email_verified) : null,
-  } satisfies AdapterUser;
-};
-
-const findVerificatonToken = async function (
+export const findVerificatonToken = async function (
   identifier: string,
   token: string
 ) {
   const res = await runQuery(
     selectOne("verification_tokens", {
+      identifier,
       token,
       expires: dc.gte(sql`LOCALTIMESTAMP(0)`),
     })
   );
-  return res
-    ? {
-        ...res,
-      }
-    : null;
+  return res ?? null;
 };
 
 // export async function logUserIn(email: string, cookies: Cookies) {
@@ -110,224 +71,190 @@ const findVerificatonToken = async function (
 //   return session;
 // }
 
-const authAdapter: Adapter = {
-  createUser: async function createUser(user: Omit<AdapterUser, "id">) {
-    const domain = getHostName();
-    const res = await runQuery(
-      insert("users", {
-        ...user,
-        domain,
-      })
-    );
-    return mapUsers(res);
-  },
-  createSession: async function (session) {
-    const res = await runQuery(
-      // async (txNClient) => {
-      // await update(
-      //   "users",
-      //   {
-      //     email_verified: true,
-      //     last_login: sql`LOCALTIMESTAMP(0)`,
-      //   },
-      //   { id: session.userId }
-      // ).run(txNClient);
-      // return await
-      insert(
-        "sessions",
-        {
-          ...decamelizeKeys(session),
-          domain: getHostName(),
-        },
-        {
-          returning: ["session_token", "user_id", "expires"],
-        }
-      )
-      // .run(txNClient);
-    );
-    return {
-      ...camelcaseKeys(res),
-      expires: new Date(res.expires),
-    };
-  },
-  deleteSession: async function (sessionToken) {
-    await runQuery(
-      deletes("sessions", {
-        domain: getHostName(),
-        session_token: sessionToken,
-      })
-    );
-  },
-  createVerificationToken: async function (params) {
-    const res = await runQuery(
-      insert("verification_tokens", {
-        domain: getHostName(),
-        ...params,
-      })
-    );
-    return {
-      ...res,
-      expires: new Date(res.expires),
-    };
-  },
-  updateUser: async (user) => {
-    const res = await runQuery(
-      update("users", decamelizeKeys(user), {
-        domain: getHostName(),
-        id: user.id,
-      })
-    );
-    return camelcaseKeys(mapUsers(res[0])) as AdapterUser;
-  },
-  deleteUser: async (userId: string) => {
-    runQuery(deletes("users", { id: userId, domain: getHostName() }));
-  },
-  useVerificationToken: async function ({ identifier, token }) {
-    const [item, ...res] = await runQuery(
-      update(
-        "verification_tokens",
-        { expires: sql`LOCALTIMESTAMP(0)` },
-        {
-          identifier,
-          token,
-          expires: dc.gte(sql`LOCALTIMESTAMP(0)`),
-          domain: getHostName(),
-        },
-        {
-          returning: ["identifier", "token", "expires"],
-        }
-      )
-    );
-    if (!item) {
-      throw new Error("Verification token invalid or expired");
-    }
-    return {
-      ...item,
-      expires: new Date(item.expires),
-    };
-  },
-  getUser: async function getUser(id: string) {
-    const user = await runQuery(
-      selectOne("users", { id, domain: getHostName() })
-    );
-    return user ? mapUsers(user) : null;
-  },
-  getUserByEmail: async (email: string) => {
-    const user = await runQuery(
-      selectOne("users", { email, domain: getHostName() })
-    );
-    return user ? mapUsers(user) : null;
-  },
-  getSessionAndUser: async function getSessionAndUser(session_token: string) {
-    const res = await runQuery(
-      selectOne(
-        "sessions",
-        {
-          session_token,
-          expires: dc.gt(sql`LOCALTIMESTAMP(0)`),
-          domain: getHostName(),
-        },
-        {
-          lateral: {
-            user: selectOne("users", {
-              id: parent("user_id"),
-              domain: getHostName(),
-            }),
-          },
-        }
-      )
-    );
-    if (!res) return null;
-
-    const { user, ...session } = res;
-
-    if (!user) return null;
-
-    return {
-      session: {
-        ...session,
-        sessionToken: session.session_token,
-        userId: session.user_id,
-        expires: new Date(session.expires),
-      },
-      user: mapUsers(user),
-    };
-  },
-  getUserByAccount: async function ({ provider, providerAccountId }) {
-    const user = await runQuery(
-      selectExactlyOne(
-        "accounts",
-        {
-          provider_account_id: providerAccountId,
-          provider,
-          domain: getHostName(),
-        },
-        {
-          lateral: {
-            user: selectExactlyOne("users", {
-              id: parent("user_id"),
-            }),
-          },
-        }
-      )
-    );
-    return mapUsers(user.user);
-  },
-  linkAccount: async ({
-    providerAccountId: provider_account_id,
-    userId: user_id,
-    ...rest
-  }: AdapterAccount) => {
-    await runQuery(
-      insert("accounts", {
-        domain: getHostName(),
-        provider_account_id,
-        user_id,
-        ...rest,
-      })
-    );
-  },
-  unlinkAccount: async ({
-    providerAccountId: provider_account_id,
-    provider,
-  }) => {
-    await runQuery(
-      deletes("accounts", {
-        provider_account_id,
-        provider,
-        domain: getHostName(),
-      })
-    );
-  },
-  updateSession: async function ({ sessionToken: session_token, expires }) {
-    const [session] = await runQuery(
-      update(
-        "sessions",
-        { expires },
-        { session_token, domain: getHostName() },
-        {
-          returning: ["session_token", "user_id", "expires"],
-        }
-      )
-    );
-    return {
-      ...camelcaseKeys(session),
-      expires: new Date(session.expires),
-    };
-  },
+export const createUser = async function createUser(user: users.Insertable) {
+  const property = await getCurrentProperty();
+  return runQuery(
+    insert("users", {
+      ...user,
+      property: property.id,
+    })
+  );
 };
 
-export const authOptions: NextAuthOptions = {
-  providers: [Email({})],
-  adapter: authAdapter,
-  // pages: {
-  //   signIn: "/auth/sign-in/",
-  //   newUser: "/",
-  //   signOut: "/auth/sign-out/",
-  //   error: "/auth/error/",
-  //   verifyRequest: "/auth/verify/",
-  // },
-  session: {
-    strategy: "database",
-  },
+export const createSession = async function (session: sessions.Insertable) {
+  return runQuery(
+    insert("sessions", session, {
+      returning: ["session_token", "user_id", "expires"],
+    })
+    // .run(txNClient);
+  );
+};
+
+export const deleteSession = async function (
+  sessionToken: sessions.JSONSelectable["session_token"]
+) {
+  return runQuery(
+    deletes("sessions", {
+      session_token: sessionToken,
+    })
+  );
+};
+
+export const createVerificationToken = async function (
+  item: verification_tokens.Insertable
+) {
+  return runQuery(insert("verification_tokens", item));
+};
+
+export const updateUser = async (user: users.JSONSelectable) => {
+  return runQuery(
+    update("users", user, {
+      property: user.property,
+      id: user.id,
+    })
+  );
+};
+
+export const deleteUser = async (userId: string) => {
+  const property = await getCurrentProperty();
+  runQuery(deletes("users", { id: userId, property: property.id }));
+};
+
+export const useVerificationToken = async function ({
+  identifier,
+  token,
+}: {
+  identifier: string;
+  token: string;
+}) {
+  const property = await getCurrentProperty();
+  const [item, ...res] = await runQuery(
+    update(
+      "verification_tokens",
+      { expires: sql`LOCALTIMESTAMP(0)` },
+      {
+        identifier,
+        token,
+        expires: dc.gte(sql`LOCALTIMESTAMP(0)`),
+        property: property.id,
+      },
+      {
+        returning: ["identifier", "token", "expires"],
+      }
+    )
+  );
+  if (!item) {
+    throw new Error("Verification token invalid or expired");
+  }
+  return {
+    ...item,
+    expires: new Date(item.expires),
+  };
+};
+
+export const getUser = async function getUser(id: string) {
+  return runQuery(selectOne("users", { id }));
+};
+
+export const getUserByEmail = async (email: string) => {
+  const property = await getCurrentProperty();
+  return runQuery(selectOne("users", { email, property: property.id }));
+};
+
+export const getSessionAndUser = async function getSessionAndUser(
+  session_token: string
+) {
+  const res = await runQuery(
+    selectOne(
+      "sessions",
+      {
+        session_token,
+        expires: dc.gt(sql`LOCALTIMESTAMP(0)`),
+      },
+      {
+        lateral: {
+          user: selectOne("users", {
+            id: parent("user_id"),
+          }),
+        },
+      }
+    )
+  );
+  if (!res) return null;
+
+  const { user, ...session } = res;
+
+  if (!user) return null;
+
+  return {
+    session: {
+      ...session,
+      sessionToken: session.session_token,
+      userId: session.user_id,
+      expires: new Date(session.expires),
+    },
+    user,
+  };
+};
+
+export const getUserByAccount = async function ({
+  provider,
+  providerAccountId,
+}: {
+  provider: string;
+  providerAccountId: string;
+}) {
+  const property = await getCurrentProperty();
+  const account = await runQuery(
+    selectExactlyOne(
+      "accounts",
+      {
+        provider_account_id: providerAccountId,
+        provider,
+        property: property.id,
+      },
+      {
+        lateral: {
+          user: selectExactlyOne("users", {
+            id: parent("user_id"),
+          }),
+        },
+      }
+    )
+  );
+  return account.user;
+};
+
+export const linkAccount = async (account: accounts.Insertable) => {
+  return runQuery(insert("accounts", account));
+};
+
+export const unlinkAccount = async ({
+  provider_account_id,
+  provider,
+}: accounts.Selectable) => {
+  const property = await getCurrentProperty();
+  return runQuery(
+    deletes("accounts", {
+      provider_account_id,
+      provider,
+      property: property.id,
+    })
+  );
+};
+export const updateSession = async function ({
+  session_token,
+  expires,
+}: sessions.Selectable) {
+  const [session, ..._] = await runQuery(
+    update(
+      "sessions",
+      { expires },
+      { session_token },
+      {
+        returning: ["session_token", "user_id", "expires"],
+      }
+    )
+  );
+  return session;
 };

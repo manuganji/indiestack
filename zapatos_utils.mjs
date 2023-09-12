@@ -45,11 +45,9 @@ export const ZAPATOS_CONFIG = {
   customTypesTransform: "PgMyType",
 };
 
-export const initDB = async () => {
-  if (process.env.NODE_ENV === "development") {
-    console.log("generating zapatos");
-    generate(ZAPATOS_CONFIG).then(() => {
-      console.log("generated zapatos");
-    });
-  }
+export const initDB = () => {
+  console.log("generating zapatos");
+  generate(ZAPATOS_CONFIG).then(() => {
+    console.log("generated zapatos");
+  });
 };

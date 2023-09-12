@@ -74,7 +74,11 @@ exports.up = (pgm) => {
       primaryKey: true,
       default: pgm.func("gen_random_uuid()"),
     },
-    name: {
+    first_name: {
+      type: "text",
+      notNull: true,
+    },
+    last_name: {
       type: "text",
     },
     email: {

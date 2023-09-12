@@ -5,6 +5,7 @@ import {
   RECAPTCHA_FORM_FIELD_NAME,
   RECAPTCHA_VERIFICATION_URL,
   dev,
+  prod,
 } from "@/constants";
 import { runQuery } from "@/db";
 import { S3 } from "@aws-sdk/client-s3";
@@ -28,6 +29,7 @@ import WelcomeMail from "@/emails/WelcomeMail";
 import { env } from "process";
 import { render } from "@react-email/render";
 import { properties } from "zapatos/schema";
+import { add } from "date-fns";
 
 export const getHostName = () => headers().get("host")!;
 
@@ -101,10 +103,6 @@ export const getCurrentProperty = cache(
       );
       return property;
     } catch (e) {
-      if (e instanceof NotExactlyOneError) {
-        console.error(e);
-        throw new Error("Multiple properties found for domain");
-      }
       const property = upsertDomain(getHostName());
       return property;
     }
@@ -324,3 +322,14 @@ const ALPHABET =
 const ID_LENGTH = 12;
 
 export const shortId = customAlphabet(ALPHABET, ID_LENGTH);
+
+export const deltaFromNow = function (duration: Duration) {
+  const now = new Date();
+  return add(now, duration);
+};
+
+export const makeAbsoluteUrl = function (path: string) {
+  return prod
+    ? `https://${getHostName()}${path}`
+    : `http://${getHostName()}${path}`;
+};

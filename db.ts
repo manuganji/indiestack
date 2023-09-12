@@ -1,6 +1,6 @@
 import { createPool } from "@vercel/postgres";
 import pg from "pg";
-import { DB_CONFIG, dev } from "./constants";
+import { DB_CONFIG, dev } from "./serverConstants";
 
 import {
   readCommitted,

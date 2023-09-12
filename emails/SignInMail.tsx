@@ -32,23 +32,13 @@ export default function SignIn({
       >
         Click the link below to sign in to {domain}.
       </p>
-      <a
-        href={url}
-        style={`font-size="22px" font-weight="bold" border-radius="2px"`}
-      >
-        Login
-      </a>
-      <p style={`font-size="15px"; padding-left="25px"; padding-right="25px"`}>
+      <a href={url}>Login</a>
+      <p>
         If the link doesn't work, paste this url into your browser and hit
         enter:
       </p>
       <p>{url}</p>
-      <p
-        style={`
-		font-size="15px";
-		padding-left="25px";
-		padding-right="25px";`}
-      >
+      <p>
         Thanks, <br />
         {brandName} Team
       </p>

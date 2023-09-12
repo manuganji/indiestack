@@ -23,27 +23,13 @@ export default function SignUp({
       blockUrl={blockUrl}
       reason={`This mail is sent to you because you have signed up to ${brandName}. If you didn't sign up, please ignore.`}
     >
-      <a
-        href={url}
-        style={`
-		font-size:22px; 
-		font-weight:bold;
-		border-radius:2px;
-	`}
-      >
-        Sign In
-      </a>
-      <p style={`font-size="15px"; padding-left="25px"; padding-right="25px"`}>
+      <a href={url}>Sign In</a>
+      <p>
         We are excited to see what you'll build. Click the button below to
         verify your email and sign in to {brandName}.
       </p>
       <p>{url}</p>
-      <p
-        style={`
-		font-size="15px";
-		padding-left="25px";
-		padding-right="25px";`}
-      >
+      <p>
         Thanks, <br />
         {brandName} Team
       </p>

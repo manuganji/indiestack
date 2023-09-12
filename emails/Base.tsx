@@ -26,19 +26,19 @@ export default function Base({
   const footer = [
     {
       title: "Contact Support",
-      href: `mailto:support@${DOMAIN}`,
+      href: `mailto:support@${domain}`,
     },
     // {
     // 	title: 'Read our Blog',
-    // 	href: `https://${DOMAIN}/blog`
+    // 	href: `https://${domain}/blog`
     // },
     {
       title: "Privacy Policy",
-      href: `https://${DOMAIN}/privacy`,
+      href: `https://${domain}/privacy`,
     },
     {
       title: "Terms and Conditions",
-      href: `https://${DOMAIN}/terms-conditions`,
+      href: `https://${domain}/terms-conditions`,
     },
   ];
   return (
@@ -46,15 +46,15 @@ export default function Base({
       <Font
         webFont={{
           url: "https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@100;200;300;400;700&display=swap",
+          format: "woff2",
         }}
+        fontFamily="Montserrat, Inter, sans-serif"
+        fallbackFontFamily={"Helvetica"}
       />
       <Container>
         <Section>
           <Row>{brandName}</Row>
           {headline && <Row>{headline}</Row>}
-        </Section>
-        <Section>
-          <Row></Row>
         </Section>
         {children}
       </Container>

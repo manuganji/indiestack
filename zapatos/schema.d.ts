@@ -1033,11 +1033,17 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **users.name**
+      * **users.first_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      first_name: string;
+      /**
+      * **users.last_name**
       * - `text` in database
       * - Nullable, no default
       */
-      name: string | null;
+      last_name: string | null;
       /**
       * **users.email**
       * - `text` in database
@@ -1077,11 +1083,17 @@ declare module 'zapatos/schema' {
       */
       id: string;
       /**
-      * **users.name**
+      * **users.first_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      first_name: string;
+      /**
+      * **users.last_name**
       * - `text` in database
       * - Nullable, no default
       */
-      name: string | null;
+      last_name: string | null;
       /**
       * **users.email**
       * - `text` in database
@@ -1121,11 +1133,17 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **users.name**
+      * **users.first_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.last_name**
       * - `text` in database
       * - Nullable, no default
       */
-      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.email**
       * - `text` in database
@@ -1165,11 +1183,17 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
-      * **users.name**
+      * **users.first_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      first_name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **users.last_name**
       * - `text` in database
       * - Nullable, no default
       */
-      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.email**
       * - `text` in database
@@ -1209,11 +1233,17 @@ declare module 'zapatos/schema' {
       */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
-      * **users.name**
+      * **users.first_name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **users.last_name**
       * - `text` in database
       * - Nullable, no default
       */
-      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      last_name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **users.email**
       * - `text` in database

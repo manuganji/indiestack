@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,21 +8,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SIGN_IN_PATH } from "@/constants";
 import Link from "next/link";
-import { Form, useForm } from "react-hook-form";
+import { signUpAction } from "../actions";
 import * as z from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-export default function SignUp({}: {}) {
+const signUpSchema = z.object({
+  email: z.string().email().nonempty(),
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+});
+
+export default function SignUp({ searchParams }: {
+  searchParams: {
+    email: string;
+    firstName: string;
+    lastName: string;
+  }
+}) {
+  console.log(searchParams);
+  const form = useForm({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: searchParams,
+    mode: "onTouched",
+    progressive: true,
+  });
+
   return (
     <Card className="mx-auto mt-20">
       <CardHeader>
@@ -39,42 +62,65 @@ export default function SignUp({}: {}) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* <Form>
-          <FormField
-            name="email"
-            render={() => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" />
-                </FormControl>
-                <FormDescription>
-                  Email to receive the magic link
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Get a Magic Link</Button>
-        </Form> */}
-        <form action={""} className="gap-2 flex flex-col">
-          <div className="flex flex-col gap-2">
-            <label>First Name</label>
-            <Input type="text" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label>Last Name</label>
-            <Input type="text" />
-          </div>
-          <p>Get a magic link to your email</p>
-          <div className="flex flex-col gap-2">
-            <label>Email</label>
-            <Input type="email" />
+        <Form {...form}>
+          <form
+            method="POST"
+            className="gap-2 flex flex-col"
+            onSubmit={form.handleSubmit((data) => {
+              signUpAction(data);
+            })}
+          >
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="lastName"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="someone@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" variant="default">
-              Get a Magic Link
+              Sign Up
             </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
       </CardContent>
 
       <CardFooter className="flex gap-2 text-xs">

@@ -1,8 +1,3 @@
-import { ZAPATOS_CONFIG } from "./zapatos_utils.mjs";
-
-// re-export the config from zapatos
-export { ZAPATOS_CONFIG };
-
 export const dev = process.env.NEXT_PUBLIC_VERCEL_ENV === "development";
 
 export const preview = process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
@@ -10,8 +5,6 @@ export const preview = process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
 export const prod = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 
 export const AWS_REGION = "eu-central-1";
-
-export const DB_CONFIG = ZAPATOS_CONFIG.db;
 
 // Auth Settings
 export const DEFAULT_AUTH_DURATION = {
