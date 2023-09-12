@@ -1,6 +1,6 @@
 import { createPool } from "@vercel/postgres";
 import pg from "pg";
-import { DB_CONFIG, ZAPATOS_CONFIG, dev } from "./constants";
+import { DB_CONFIG, dev } from "./constants";
 
 import {
   readCommitted,
@@ -8,19 +8,6 @@ import {
   type SQLFragment,
   type TxnClientForReadCommitted,
 } from "zapatos/db";
-import { generate } from "zapatos/generate";
-
-export async function initDB() {
-  let generated = !dev;
-  console.log("generated", generated);
-  if (!generated) {
-    // console.log('generating zapatos');
-    await generate(ZAPATOS_CONFIG).then(() => {
-      console.log("generated zapatos");
-      generated = true;
-    });
-  }
-}
 
 export function getPool() {
   const pool = dev

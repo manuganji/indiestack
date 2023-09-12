@@ -6,20 +6,63 @@ exports.shorthands = undefined;
  * @param {import('node-pg-migrate').MigrationBuilder} pgm
  */
 exports.up = (pgm) => {
+  pgm.createExtension("citext", { ifNotExists: true });
   pgm.createTable("properties", {
+    id: {
+      type: "varchar(10)",
+      primaryKey: true,
+    },
     name: {
       type: "text",
       notNull: true,
     },
     domain: {
-      type: "text",
-      primaryKey: true,
+      type: "citext",
+      unique: true,
+      notNull: true,
+    },
+    email_from: {
+      type: "citext",
+      notNull: true,
     },
   });
+  // block list to not spam emails
+  pgm.createTable(
+    "block_list",
+    {
+      property: {
+        type: "varchar(10)",
+        references: "properties(id)",
+        notNull: true,
+      },
+      email: {
+        type: "citext",
+        primaryKey: true,
+      },
+      created_at: {
+        type: "timestamptz",
+        notNull: true,
+        default: pgm.func("now()"),
+      },
+      active: {
+        type: "boolean",
+        notNull: true,
+        default: true,
+      },
+      updated_at: {
+        type: "timestamptz",
+        notNull: true,
+        default: pgm.func("now()"),
+      },
+    },
+    {
+      ifNotExists: true,
+    }
+  );
   pgm.createTable("users", {
-    domain: {
-      type: "text",
-      references: "properties(domain)",
+    property: {
+      type: "varchar(10)",
+      references: "properties(id)",
       notNull: true,
     },
     is_admin: {
@@ -47,10 +90,10 @@ exports.up = (pgm) => {
     },
   });
   pgm.createTable("sessions", {
-    domain: {
-      type: "text",
+    property: {
+      type: "varchar(10)",
+      references: "properties(id)",
       notNull: true,
-      references: "properties(domain)",
     },
     user_id: {
       type: "uuid",
@@ -67,14 +110,11 @@ exports.up = (pgm) => {
       notNull: true,
       default: pgm.func("gen_random_uuid()"),
     },
-    data: {
-      type: "jsonb",
-    },
   });
   pgm.createTable("accounts", {
-    domain: {
-      type: "text",
-      references: "properties(domain)",
+    property: {
+      type: "varchar(10)",
+      references: "properties(id)",
       notNull: true,
     },
     user_id: {
@@ -122,9 +162,9 @@ exports.up = (pgm) => {
     },
   });
   pgm.createTable("verification_tokens", {
-    domain: {
-      type: "text",
-      references: "properties(domain)",
+    property: {
+      type: "varchar(10)",
+      references: "properties(id)",
       notNull: true,
     },
     identifier: {

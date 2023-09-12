@@ -31,18 +31,30 @@ export default async function SignIn({}: {}) {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <label htmlFor="username" className="text-sm">
-                Username / Email
+              <label htmlFor="email" className="text-sm">
+                Email
               </label>
-              <Input id="username" placeholder="Username/Email" />
+              <Input id="email" placeholder="Email" type="email" />
+              <Button type="submit" variant="default">
+                Get a magic link
+              </Button>
             </div>
+            <label htmlFor="username" className="text-sm">
+              Username
+            </label>
+            <Input type="username" />
+            <Button type="submit" variant="default">
+              Apple ID
+            </Button>
+            <Button type="submit" variant="default">
+              Google ID
+            </Button>
+            <Button type="submit" variant="default">
+              Microsoft ID
+            </Button>
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
       <CardFooter className="flex gap-2 text-xs">
         <span className="text-sm">By clicking Sign In, you agree to our </span>
         <Link className=" text-xs underline" href="/privacy">

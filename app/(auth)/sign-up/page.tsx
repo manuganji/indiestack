@@ -70,21 +70,12 @@ export default function SignUp({}: {}) {
           <div className="flex flex-col gap-2">
             <label>Email</label>
             <Input type="email" />
-            <Button type="submit" variant="default">Get a Magic Link</Button>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label>Username</label>
-            <Input type="username" />
-            <Button type="submit" variant="default">Apple ID</Button>
-            <Button type="submit" variant="default">Google ID</Button>
-            <Button type="submit" variant="default">Microsoft ID</Button>
+            <Button type="submit" variant="default">
+              Get a Magic Link
+            </Button>
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
 
       <CardFooter className="flex gap-2 text-xs">
         <span className="text-sm">By clicking Sign Up, you agree to our </span>

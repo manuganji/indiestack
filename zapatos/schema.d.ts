@@ -30,11 +30,11 @@ declare module 'zapatos/schema' {
     export type Table = 'accounts';
     export interface Selectable {
       /**
-      * **accounts.domain**
-      * - `text` in database
+      * **accounts.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **accounts.user_id**
       * - `uuid` in database
@@ -110,11 +110,11 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
-      * **accounts.domain**
-      * - `text` in database
+      * **accounts.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **accounts.user_id**
       * - `uuid` in database
@@ -190,11 +190,11 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
-      * **accounts.domain**
-      * - `text` in database
+      * **accounts.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **accounts.user_id**
       * - `uuid` in database
@@ -270,11 +270,11 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
-      * **accounts.domain**
-      * - `text` in database
+      * **accounts.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string | db.Parameter<string> | db.SQLFragment;
+      property: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **accounts.user_id**
       * - `uuid` in database
@@ -350,11 +350,11 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
-      * **accounts.domain**
-      * - `text` in database
+      * **accounts.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **accounts.user_id**
       * - `uuid` in database
@@ -429,6 +429,179 @@ declare module 'zapatos/schema' {
       session_state?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'accounts_id_key';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **block_list**
+   * - Table in database
+   */
+  export namespace block_list {
+    export type Table = 'block_list';
+    export interface Selectable {
+      /**
+      * **block_list.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **block_list.email**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email: string;
+      /**
+      * **block_list.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **block_list.active**
+      * - `bool` in database
+      * - `NOT NULL`, default: `true`
+      */
+      active: boolean;
+      /**
+      * **block_list.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **block_list.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **block_list.email**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email: string;
+      /**
+      * **block_list.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **block_list.active**
+      * - `bool` in database
+      * - `NOT NULL`, default: `true`
+      */
+      active: boolean;
+      /**
+      * **block_list.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **block_list.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **block_list.email**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **block_list.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **block_list.active**
+      * - `bool` in database
+      * - `NOT NULL`, default: `true`
+      */
+      active?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **block_list.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **block_list.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **block_list.email**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **block_list.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **block_list.active**
+      * - `bool` in database
+      * - `NOT NULL`, default: `true`
+      */
+      active?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+      /**
+      * **block_list.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **block_list.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **block_list.email**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **block_list.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **block_list.active**
+      * - `bool` in database
+      * - `NOT NULL`, default: `true`
+      */
+      active?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **block_list.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'block_list_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -556,6 +729,12 @@ declare module 'zapatos/schema' {
     export type Table = 'properties';
     export interface Selectable {
       /**
+      * **properties.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
       * **properties.name**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -563,13 +742,25 @@ declare module 'zapatos/schema' {
       name: string;
       /**
       * **properties.domain**
-      * - `text` in database
+      * - `citext` in database
       * - `NOT NULL`, no default
       */
       domain: string;
+      /**
+      * **properties.email_from**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email_from: string;
     }
     export interface JSONSelectable {
       /**
+      * **properties.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
       * **properties.name**
       * - `text` in database
       * - `NOT NULL`, no default
@@ -577,12 +768,24 @@ declare module 'zapatos/schema' {
       name: string;
       /**
       * **properties.domain**
-      * - `text` in database
+      * - `citext` in database
       * - `NOT NULL`, no default
       */
       domain: string;
+      /**
+      * **properties.email_from**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email_from: string;
     }
     export interface Whereable {
+      /**
+      * **properties.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **properties.name**
       * - `text` in database
@@ -591,12 +794,24 @@ declare module 'zapatos/schema' {
       name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **properties.domain**
-      * - `text` in database
+      * - `citext` in database
       * - `NOT NULL`, no default
       */
       domain?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **properties.email_from**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email_from?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **properties.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **properties.name**
       * - `text` in database
@@ -605,12 +820,24 @@ declare module 'zapatos/schema' {
       name: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **properties.domain**
-      * - `text` in database
+      * - `citext` in database
       * - `NOT NULL`, no default
       */
       domain: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **properties.email_from**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email_from: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
+      /**
+      * **properties.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **properties.name**
       * - `text` in database
@@ -619,12 +846,18 @@ declare module 'zapatos/schema' {
       name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **properties.domain**
-      * - `text` in database
+      * - `citext` in database
       * - `NOT NULL`, no default
       */
       domain?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **properties.email_from**
+      * - `citext` in database
+      * - `NOT NULL`, no default
+      */
+      email_from?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = 'properties_pkey';
+    export type UniqueIndex = 'properties_domain_key' | 'properties_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -639,11 +872,11 @@ declare module 'zapatos/schema' {
     export type Table = 'sessions';
     export interface Selectable {
       /**
-      * **sessions.domain**
-      * - `text` in database
+      * **sessions.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **sessions.user_id**
       * - `uuid` in database
@@ -662,20 +895,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token: string;
-      /**
-      * **sessions.data**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      data: db.JSONValue | null;
     }
     export interface JSONSelectable {
       /**
-      * **sessions.domain**
-      * - `text` in database
+      * **sessions.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **sessions.user_id**
       * - `uuid` in database
@@ -694,20 +921,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token: string;
-      /**
-      * **sessions.data**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      data: db.JSONValue | null;
     }
     export interface Whereable {
       /**
-      * **sessions.domain**
-      * - `text` in database
+      * **sessions.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **sessions.user_id**
       * - `uuid` in database
@@ -726,20 +947,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **sessions.data**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-      * **sessions.domain**
-      * - `text` in database
+      * **sessions.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string | db.Parameter<string> | db.SQLFragment;
+      property: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **sessions.user_id**
       * - `uuid` in database
@@ -758,20 +973,14 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
-      /**
-      * **sessions.data**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      data?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-      * **sessions.domain**
-      * - `text` in database
+      * **sessions.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **sessions.user_id**
       * - `uuid` in database
@@ -790,12 +999,6 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `gen_random_uuid()`
       */
       session_token?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **sessions.data**
-      * - `jsonb` in database
-      * - Nullable, no default
-      */
-      data?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'sessions_pkey';
     export type Column = keyof Selectable;
@@ -812,11 +1015,11 @@ declare module 'zapatos/schema' {
     export type Table = 'users';
     export interface Selectable {
       /**
-      * **users.domain**
-      * - `text` in database
+      * **users.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -856,11 +1059,11 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
-      * **users.domain**
-      * - `text` in database
+      * **users.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -900,11 +1103,11 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
-      * **users.domain**
-      * - `text` in database
+      * **users.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -944,11 +1147,11 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
-      * **users.domain**
-      * - `text` in database
+      * **users.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string | db.Parameter<string> | db.SQLFragment;
+      property: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -988,11 +1191,11 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
-      * **users.domain**
-      * - `text` in database
+      * **users.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -1045,11 +1248,11 @@ declare module 'zapatos/schema' {
     export type Table = 'verification_tokens';
     export interface Selectable {
       /**
-      * **verification_tokens.domain**
-      * - `text` in database
+      * **verification_tokens.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **verification_tokens.identifier**
       * - `text` in database
@@ -1071,11 +1274,11 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
-      * **verification_tokens.domain**
-      * - `text` in database
+      * **verification_tokens.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string;
+      property: string;
       /**
       * **verification_tokens.identifier**
       * - `text` in database
@@ -1097,11 +1300,11 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
-      * **verification_tokens.domain**
-      * - `text` in database
+      * **verification_tokens.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **verification_tokens.identifier**
       * - `text` in database
@@ -1123,11 +1326,11 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
-      * **verification_tokens.domain**
-      * - `text` in database
+      * **verification_tokens.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain: string | db.Parameter<string> | db.SQLFragment;
+      property: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **verification_tokens.identifier**
       * - `text` in database
@@ -1149,11 +1352,11 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
-      * **verification_tokens.domain**
-      * - `text` in database
+      * **verification_tokens.property**
+      * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      domain?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **verification_tokens.identifier**
       * - `text` in database
@@ -1183,20 +1386,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | pgmigrations.Table | properties.Table | sessions.Table | users.Table | verification_tokens.Table;
-    export type Selectable = accounts.Selectable | pgmigrations.Selectable | properties.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
-    export type Whereable = accounts.Whereable | pgmigrations.Whereable | properties.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
-    export type Insertable = accounts.Insertable | pgmigrations.Insertable | properties.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
-    export type Updatable = accounts.Updatable | pgmigrations.Updatable | properties.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
-    export type Column = accounts.Column | pgmigrations.Column | properties.Column | sessions.Column | users.Column | verification_tokens.Column;
+    export type Table = accounts.Table | block_list.Table | pgmigrations.Table | properties.Table | sessions.Table | users.Table | verification_tokens.Table;
+    export type Selectable = accounts.Selectable | block_list.Selectable | pgmigrations.Selectable | properties.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
+    export type Whereable = accounts.Whereable | block_list.Whereable | pgmigrations.Whereable | properties.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
+    export type Insertable = accounts.Insertable | block_list.Insertable | pgmigrations.Insertable | properties.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
+    export type Updatable = accounts.Updatable | block_list.Updatable | pgmigrations.Updatable | properties.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
+    export type Column = accounts.Column | block_list.Column | pgmigrations.Column | properties.Column | sessions.Column | users.Column | verification_tokens.Column;
   
-    export type AllBaseTables = [accounts.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllBaseTables = [accounts.Table, block_list.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllTablesAndViews = [accounts.Table, block_list.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
   }
 
 
@@ -1225,6 +1428,7 @@ declare module 'zapatos/schema' {
 
   export type SelectableForTable<T extends Table> = {
     "accounts": accounts.Selectable;
+    "block_list": block_list.Selectable;
     "pgmigrations": pgmigrations.Selectable;
     "properties": properties.Selectable;
     "sessions": sessions.Selectable;
@@ -1234,6 +1438,7 @@ declare module 'zapatos/schema' {
 
   export type JSONSelectableForTable<T extends Table> = {
     "accounts": accounts.JSONSelectable;
+    "block_list": block_list.JSONSelectable;
     "pgmigrations": pgmigrations.JSONSelectable;
     "properties": properties.JSONSelectable;
     "sessions": sessions.JSONSelectable;
@@ -1243,6 +1448,7 @@ declare module 'zapatos/schema' {
 
   export type WhereableForTable<T extends Table> = {
     "accounts": accounts.Whereable;
+    "block_list": block_list.Whereable;
     "pgmigrations": pgmigrations.Whereable;
     "properties": properties.Whereable;
     "sessions": sessions.Whereable;
@@ -1252,6 +1458,7 @@ declare module 'zapatos/schema' {
 
   export type InsertableForTable<T extends Table> = {
     "accounts": accounts.Insertable;
+    "block_list": block_list.Insertable;
     "pgmigrations": pgmigrations.Insertable;
     "properties": properties.Insertable;
     "sessions": sessions.Insertable;
@@ -1261,6 +1468,7 @@ declare module 'zapatos/schema' {
 
   export type UpdatableForTable<T extends Table> = {
     "accounts": accounts.Updatable;
+    "block_list": block_list.Updatable;
     "pgmigrations": pgmigrations.Updatable;
     "properties": properties.Updatable;
     "sessions": sessions.Updatable;
@@ -1270,6 +1478,7 @@ declare module 'zapatos/schema' {
 
   export type UniqueIndexForTable<T extends Table> = {
     "accounts": accounts.UniqueIndex;
+    "block_list": block_list.UniqueIndex;
     "pgmigrations": pgmigrations.UniqueIndex;
     "properties": properties.UniqueIndex;
     "sessions": sessions.UniqueIndex;
@@ -1279,6 +1488,7 @@ declare module 'zapatos/schema' {
 
   export type ColumnForTable<T extends Table> = {
     "accounts": accounts.Column;
+    "block_list": block_list.Column;
     "pgmigrations": pgmigrations.Column;
     "properties": properties.Column;
     "sessions": sessions.Column;
@@ -1288,6 +1498,7 @@ declare module 'zapatos/schema' {
 
   export type SQLForTable<T extends Table> = {
     "accounts": accounts.SQL;
+    "block_list": block_list.SQL;
     "pgmigrations": pgmigrations.SQL;
     "properties": properties.SQL;
     "sessions": sessions.SQL;
