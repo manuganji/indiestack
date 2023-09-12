@@ -16,7 +16,12 @@ import { headers } from "next/headers";
 import nodemailer from "nodemailer";
 import { htmlToText } from "nodemailer-html-to-text";
 import { cache } from "react";
-import { selectExactlyOne, selectOne, upsert } from "zapatos/db";
+import {
+  NotExactlyOneError,
+  selectExactlyOne,
+  selectOne,
+  upsert,
+} from "zapatos/db";
 import SignIn from "@/emails/SignIn";
 import SignUp from "@/emails/SignUp";
 import WelcomeMail from "@/emails/WelcomeMail";
@@ -90,12 +95,19 @@ export function getTransporter() {
 }
 
 export const getCurrentProperty = cache(async () => {
-  const property = await runQuery(
-    selectExactlyOne("properties", {
-      domain: getHostName(),
-    })
-  );
-  return property;
+  try {
+    const property = await runQuery(
+      selectExactlyOne("properties", {
+        domain: getHostName(),
+      })
+    );
+    return property;
+  } catch (e) {
+    if (e instanceof NotExactlyOneError) {
+      const property = upsertDomain(getHostName());
+      return property;
+    }
+  }
 });
 
 export async function sendMailOnSignUp({

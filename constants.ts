@@ -1,4 +1,4 @@
-import { ZAPATOS_CONFIG } from "./generate_zapatos_types.mjs";
+import { ZAPATOS_CONFIG } from "./zapatos_utils.mjs";
 
 // re-export the config from zapatos
 export { ZAPATOS_CONFIG };
