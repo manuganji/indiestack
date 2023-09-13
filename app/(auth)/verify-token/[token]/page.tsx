@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { verifyToken } from "../../actions";
 import { useRouter } from "next/navigation";
 import {
@@ -24,6 +24,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { SIGN_IN_PATH } from "@/constants";
 
 const formSchema = z.object({
   email: z.string().email().nonempty().default(""),
@@ -91,7 +93,7 @@ export default function VerifyEmail({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {status.reconfirm ? (
+        {status.reconfirm && (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
@@ -112,11 +114,17 @@ export default function VerifyEmail({
             </form>
             <FormMessage />
           </Form>
-        ) : "error" in status ? (
-          <h2>{status.error}</h2>
-        ) : (
-          <h2>Success</h2>
         )}
+        {"error" in status && (
+          <Fragment>
+            <h2>{status.error}</h2>
+            <br />
+            <Button type="button">
+              <Link href={SIGN_IN_PATH}>Sign In</Link>
+            </Button>
+          </Fragment>
+        )}
+        {status?.success && <h2>Success</h2>}
       </CardContent>
     </Card>
   );

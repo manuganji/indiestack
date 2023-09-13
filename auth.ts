@@ -22,7 +22,7 @@ import {
   sendWelcomeMail
 } from "@/lib/serverUtils";
 import { cookies } from "next/headers";
-import { LONG_SESSION_COOKIE, SECS_IN_DAY, SESSION_COOKIE } from "./constants";
+import { LONG_SESSION_COOKIE, SECS_IN_DAY, SESSION_COOKIE, prod } from "./constants";
 import { DEFAULT_AUTH_DURATION, LONG_AUTH_DURATION } from "./serverConstants";
 
 // const SC_ORG_ID = env.SC_ORG_ID;
@@ -67,7 +67,7 @@ export async function logUserIn(email: string) {
 
   cookies().set(SESSION_COOKIE, session.session_token, {
     path: "/",
-    secure: process.env.NODE_ENV === "production",
+    secure: prod,
     httpOnly: true,
     sameSite: "lax",
     expires: Date.parse(session.expires)

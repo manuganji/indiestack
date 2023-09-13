@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signUpAction } from "../actions";
+import { signUpAction } from "./actions";
 import { signUpSchema } from "../schemas";
 import { defaults } from "lodash";
 
@@ -37,9 +37,10 @@ export default function SignUp({
   };
 }) {
   const [status, setStatus] = useState<{
-    success: boolean;
+    success?: boolean;
     attempted: boolean;
     message?: string;
+    error?: string;
   }>({ success: false, attempted: false });
   const form = useForm({
     resolver: zodResolver(signUpSchema),
@@ -81,6 +82,11 @@ export default function SignUp({
                 ...res,
                 attempted: true,
               });
+              if (res?.error) {
+                form.setError("email", {
+                  message: res.error,
+                });
+              }
             })}
           >
             <FormField

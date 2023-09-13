@@ -1,11 +1,8 @@
 "use server";
 
 import {
-  createUser,
   createVerificationToken,
-  getUserByEmail,
-  logUserIn,
-  useVerificationToken,
+  getUserByEmail
 } from "@/auth";
 import { LONG_SESSION_COOKIE, POST_AUTH_REDIRECT_URL, prod } from "@/constants";
 import {
@@ -14,8 +11,7 @@ import {
   isBlockedEmail,
   isDisposableEmail,
   makeAbsoluteUrl,
-  sendMagicLink,
-  sendMailOnSignUp,
+  sendMagicLink
 } from "@/lib/serverUtils";
 import {
   DEFAULT_TOKEN_DURATION,
@@ -23,93 +19,8 @@ import {
 } from "@/serverConstants";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { emailSignInSchema, signUpSchema } from "./schemas";
+import { emailSignInSchema } from "../schemas";
 
-export async function signUpAction(data: {
-  email: string;
-  firstName: string;
-  lastName: string;
-  redirectUrl?: string;
-}) {
-  const property = await getCurrentProperty();
-  const insertable = signUpSchema.parse(data);
-
-  const { email, firstName } = insertable;
-  if ((await isDisposableEmail(email)) || (await isBlockedEmail(email))) {
-    return {
-      error: "Unable to sign you up. This email address is not allowed.",
-      ...data,
-    };
-  }
-  const redirectUrl = data?.redirectUrl || POST_AUTH_REDIRECT_URL;
-
-  try {
-    await createUser({
-      property: property.id,
-      email: data.email,
-      first_name: data.firstName,
-      last_name: data.lastName,
-    });
-  } catch (e) {
-    // @ts-ignore
-    if (e.code === "23505") {
-      return {
-        error: "A user with this email already exists. Maybe Sign In instead?",
-        ...insertable,
-        exists: true,
-      };
-    }
-    return { error: "Server Error. Please try again or contact support." };
-  }
-  // store email in cookie
-  cookies().set(TOKEN_IDENTIFIER_COOKIE, email, {
-    maxAge: 60 * 60, // 1 hour
-    secure: prod,
-    path: "/",
-    sameSite: "lax",
-    httpOnly: true,
-  });
-
-  const vtoken = await createVerificationToken({
-    identifier: email,
-    expires: deltaFromNow(DEFAULT_TOKEN_DURATION),
-    property: property.id,
-  });
-  const url = makeAbsoluteUrl(
-    `/verify-token/${vtoken.token}/?redirectUrl=${redirectUrl}`
-  );
-  const blockUrl = makeAbsoluteUrl(`/block-emails/${vtoken.token}`);
-  await sendMailOnSignUp({ email, url, firstName, blockUrl });
-  return {
-    success: true,
-  };
-}
-
-export const verifyToken = async function (token: string, email?: string) {
-  console.log("cookie value", cookies().get(TOKEN_IDENTIFIER_COOKIE)?.value);
-  const identifier = cookies().get(TOKEN_IDENTIFIER_COOKIE)?.value || email;
-
-  if (!identifier) {
-    return {
-      reconfirm: true,
-    };
-  } else {
-    cookies().delete(TOKEN_IDENTIFIER_COOKIE);
-  }
-
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await useVerificationToken({ identifier, token });
-  } catch (e) {
-    return {
-      error: "This link is invalid or expired. Please try again.",
-    };
-  }
-  await logUserIn(identifier);
-  return {
-    success: true,
-  };
-};
 
 export const emailSignIn = async function ({
   email: data,

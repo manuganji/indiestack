@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,11 +8,59 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Form,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SIGN_UP_PATH } from "@/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { emailSignIn } from "./actions";
+import { emailSignInSchema, signInSchema } from "../schemas";
 
-export default async function SignIn({}: {}) {
+export default function SignIn({}: {}) {
+  const [status, setStatus] = useState<{
+    success?: boolean;
+    attempted?: "email" | "simple";
+    message?: string;
+    error?: string;
+  }>({});
+
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      username: "",
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    if ("email" in data) {
+      const res = await emailSignIn(data);
+      console.log(res);
+      setStatus({
+        ...res,
+        attempted: "email",
+      });
+      if (res?.error) {
+        form.setError("email", {
+          message: res.error,
+        });
+      }
+    } else {
+      console.log("simple sign in");
+    }
+  };
+
   return (
     <Card className="mx-auto mt-20">
       <CardHeader>
@@ -28,32 +77,53 @@ export default async function SignIn({}: {}) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <label htmlFor="email" className="text-sm">
-                Email
-              </label>
-              <Input id="email" placeholder="Email" type="email" />
-              <Button type="submit" variant="default">
-                Get a magic link
-              </Button>
-            </div>
-            <label htmlFor="username" className="text-sm">
-              Username
-            </label>
-            <Input type="username" />
+        <Form {...form}>
+          <form
+            method="POST"
+            className="gap-2 flex flex-col"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="someone@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" variant="default">
-              Apple ID
+              Get a magic link
             </Button>
-            <Button type="submit" variant="default">
-              Google ID
+
+            <FormField
+              name="username"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input type="username" placeholder="username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="button" variant="default">
+              Sign In with Apple ID
             </Button>
-            <Button type="submit" variant="default">
-              Microsoft ID
+            <Button type="button" variant="default">
+              Sign In with Google ID
             </Button>
-          </div>
-        </form>
+            <Button type="button" variant="default">
+              Sign In with Microsoft ID
+            </Button>
+          </form>
+        </Form>
       </CardContent>
       <CardFooter className="flex gap-2 text-xs">
         <span className="text-sm">By clicking Sign In, you agree to our </span>
