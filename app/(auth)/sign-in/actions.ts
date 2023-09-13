@@ -71,6 +71,8 @@ export const emailSignIn = async function ({
     maxAge: 60 * 60, // 1 hour
     secure: prod,
     path: "/",
+    sameSite: "lax",
+    httpOnly: true,
   });
   // store email in cookie
   cookies().set(TOKEN_IDENTIFIER_COOKIE, email, {

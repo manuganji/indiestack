@@ -53,8 +53,6 @@ export default function SignUp({
     progressive: true,
   });
 
-  console.log(form.getValues());
-
   return (
     <Card className="mx-auto mt-20">
       <CardHeader>
@@ -77,7 +75,6 @@ export default function SignUp({
             className="gap-2 flex flex-col"
             onSubmit={form.handleSubmit(async (data) => {
               const res = await signUpAction(data);
-              console.log(res);
               setStatus({
                 ...res,
                 attempted: true,

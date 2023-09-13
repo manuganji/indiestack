@@ -56,7 +56,7 @@ export default function VerifyEmail({
 
   useEffect(() => {
     verifyToken(token).then((res) => {
-      console.log("res", res);
+      // console.log("res", res);
       setStatus(res);
       if ("error" in res) {
         form.setError("root", {
@@ -67,7 +67,7 @@ export default function VerifyEmail({
   }, [token, form]);
 
   useEffect(() => {
-    console.log("status", status);
+    // console.log("status", status);
     if (status?.success) {
       // @ts-ignore
       router.push(redirectUrl || "/");
@@ -76,7 +76,7 @@ export default function VerifyEmail({
 
   async function onSubmit(data: { email: string }) {
     const res = await verifyToken(token, data.email);
-    console.log("res", res);
+    // console.log("res", res);
     setStatus(res);
   }
 
@@ -86,7 +86,7 @@ export default function VerifyEmail({
         <CardTitle>Verify and Sign In</CardTitle>
         <CardDescription>
           {status.reconfirm &&
-            `Looks like you've opened the link in a new browser. Please re-confirm
+            `Looks like you've opened the link in a different browser. Please re-confirm
         your email address.`}
           {status.success &&
             `Thanks for signing up. We are excited to see what you'll build.`}
