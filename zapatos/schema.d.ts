@@ -1021,6 +1021,12 @@ declare module 'zapatos/schema' {
       */
       property: string;
       /**
+      * **users.welcomed**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      welcomed: boolean | null;
+      /**
       * **users.is_admin**
       * - `bool` in database
       * - Nullable, no default
@@ -1070,6 +1076,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       property: string;
+      /**
+      * **users.welcomed**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      welcomed: boolean | null;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -1121,6 +1133,12 @@ declare module 'zapatos/schema' {
       */
       property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **users.welcomed**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      welcomed?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **users.is_admin**
       * - `bool` in database
       * - Nullable, no default
@@ -1170,6 +1188,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **users.welcomed**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      welcomed?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
       /**
       * **users.is_admin**
       * - `bool` in database
@@ -1221,6 +1245,12 @@ declare module 'zapatos/schema' {
       */
       property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
+      * **users.welcomed**
+      * - `bool` in database
+      * - Nullable, default: `false`
+      */
+      welcomed?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
+      /**
       * **users.is_admin**
       * - `bool` in database
       * - Nullable, no default
@@ -1263,7 +1293,7 @@ declare module 'zapatos/schema' {
       */
       image?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'users_pkey';
+    export type UniqueIndex = 'users_email_unique' | 'users_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;

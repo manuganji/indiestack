@@ -8,13 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { SIGN_IN_PATH } from "@/constants";
-import Link from "next/link";
-import { signUpAction } from "../actions";
-import * as z from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -24,27 +17,42 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { SIGN_IN_PATH } from "@/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { signUpAction } from "../actions";
+import { signUpSchema } from "../schemas";
+import { defaults } from "lodash";
 
-const signUpSchema = z.object({
-  email: z.string().email().nonempty(),
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
-});
-
-export default function SignUp({ searchParams }: {
+export default function SignUp({
+  searchParams,
+}: {
   searchParams: {
-    email: string;
-    firstName: string;
-    lastName: string;
-  }
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+  };
 }) {
-  console.log(searchParams);
+  const [status, setStatus] = useState<{
+    success: boolean;
+    attempted: boolean;
+    message?: string;
+  }>({ success: false, attempted: false });
   const form = useForm({
     resolver: zodResolver(signUpSchema),
-    defaultValues: searchParams,
+    defaultValues: defaults({}, searchParams, {
+      email: "",
+      firstName: "",
+      lastName: "",
+    }),
     mode: "onTouched",
     progressive: true,
   });
+
+  console.log(form.getValues());
 
   return (
     <Card className="mx-auto mt-20">
@@ -66,8 +74,13 @@ export default function SignUp({ searchParams }: {
           <form
             method="POST"
             className="gap-2 flex flex-col"
-            onSubmit={form.handleSubmit((data) => {
-              signUpAction(data);
+            onSubmit={form.handleSubmit(async (data) => {
+              const res = await signUpAction(data);
+              console.log(res);
+              setStatus({
+                ...res,
+                attempted: true,
+              });
             })}
           >
             <FormField

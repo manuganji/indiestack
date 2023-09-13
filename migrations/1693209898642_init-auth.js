@@ -65,6 +65,10 @@ exports.up = (pgm) => {
       references: "properties(id)",
       notNull: true,
     },
+    welcomed: {
+      type: "boolean",
+      default: false,
+    },
     is_admin: {
       type: "boolean",
     },
@@ -92,6 +96,9 @@ exports.up = (pgm) => {
     image: {
       type: "text",
     },
+  });
+  pgm.createConstraint("users", "users_email_unique", {
+    unique: ["property", "email"],
   });
   pgm.createTable("sessions", {
     property: {

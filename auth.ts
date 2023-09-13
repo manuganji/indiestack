@@ -16,7 +16,14 @@ import type {
 } from "zapatos/schema";
 import { runQuery } from "./db";
 // import { sendWelcomeMail } from "./serverSideUtils";
-import { getCurrentProperty, getHostName } from "@/lib/serverUtils";
+import {
+  deltaFromNow,
+  getCurrentProperty,
+  sendWelcomeMail
+} from "@/lib/serverUtils";
+import { cookies } from "next/headers";
+import { LONG_SESSION_COOKIE, SECS_IN_DAY, SESSION_COOKIE } from "./constants";
+import { DEFAULT_AUTH_DURATION, LONG_AUTH_DURATION } from "./serverConstants";
 
 // const SC_ORG_ID = env.SC_ORG_ID;
 
@@ -34,42 +41,39 @@ export const findVerificatonToken = async function (
   return res ?? null;
 };
 
-// export async function logUserIn(email: string, cookies: Cookies) {
-//   const isLongSession = cookies.get(LONG_SESSION_COOKIE) === "true";
-//   const user = await getUserByEmail(email);
-//   if (!user) {
-//     throw new Error("User not found");
-//   }
-//   // send welcome email if user is new
+export async function logUserIn(email: string) {
+  const isLongSession = cookies().get(LONG_SESSION_COOKIE)?.value === "true";
+  const user = await getUserByEmail(email);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  // send welcome email if user is new
 
-//   if (!user.welcomed) {
-//     await sendWelcomeMail({
-//       email: user.email,
-//       firstName: user.first_name,
-//     });
-//     await runQuery(update("users", { welcomed: true }, { id: user.id }));
-//   }
+  if (!user.welcomed) {
+    await sendWelcomeMail({
+      email: user.email,
+      firstName: user.first_name,
+    });
+    await runQuery(update("users", { welcomed: true }, { id: user.id }));
+  }
 
-//   const session = await createSession({
-//     user_id: user.id,
-//     expires: isLongSession
-//       ? add(Date.now(), LONG_SESSION_DURATION)
-//       : add(Date.now(), DEFAULT_SESSION_DURATION),
-//   });
+  const session = await createSession({
+    user_id: user.id,
+    expires: isLongSession
+      ? deltaFromNow(LONG_AUTH_DURATION)
+      : deltaFromNow(DEFAULT_AUTH_DURATION),
+    property: user.property,
+  });
 
-//   // cookies.delete(LONG_SESSION_COOKIE);
-//   // cookies.delete(EMAIL_COOKIE);
-//   cookies.set(SESSION_COOKIE, session.session_token, {
-//     path: "/",
-//     secure: process.env.NODE_ENV === "production",
-//     httpOnly: true,
-//     sameSite: "lax",
-//     maxAge: isLongSession
-//       ? LONG_SESSION_DURATION.days * SECS_IN_DAY
-//       : DEFAULT_SESSION_DURATION.days * SECS_IN_DAY,
-//   });
-//   return session;
-// }
+  cookies().set(SESSION_COOKIE, session.session_token, {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    sameSite: "lax",
+    expires: Date.parse(session.expires)
+  });
+  return session;
+}
 
 export const createUser = async function createUser(user: users.Insertable) {
   const property = await getCurrentProperty();

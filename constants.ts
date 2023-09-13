@@ -6,14 +6,6 @@ export const prod = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 
 export const AWS_REGION = "eu-central-1";
 
-// Auth Settings
-export const DEFAULT_AUTH_DURATION = {
-  days: 7,
-};
-
-export const LONG_AUTH_DURATION = {
-  days: 180,
-};
 
 export const EMAIL_COOKIE = "auth-email";
 export const SESSION_COOKIE = "session_token";
@@ -36,3 +28,5 @@ export const RECAPTCHA_VERIFICATION_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 // 'https://www.google.com/recaptcha/api/siteverify';
 export const RECAPTCHA_FORM_FIELD_NAME = "cf-turnstile-response";
+
+export const POST_AUTH_REDIRECT_URL = "/dash";

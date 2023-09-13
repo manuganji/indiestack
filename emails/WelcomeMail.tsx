@@ -19,7 +19,7 @@ the highest value out of ${brandName}.`}
       headline="Getting Started"
       reason={`This mail is sent to help new users get started with ${brandName}`}
     >
-      <p style={`font-size="15px"`}>
+      <p>
         <b>
           Just curious, how much funding do you need to secure and how soon?
         </b>
@@ -32,7 +32,7 @@ the highest value out of ${brandName}.`}
           A video guide to {brandName}
         </a>
       </p>
-      <p style={`line-height="1.5"`}>
+      <p>
         I'd like to offer you a personal demo to create your first project and
         answer any questions on integrating with your existing setup. Please
         pick a slot at this link:
@@ -40,20 +40,14 @@ the highest value out of ${brandName}.`}
           Schedule a personal Demo
         </a>
       </p>
-      <p style={`line-height="1.5"`}>
+      <p>
         Support: If you're stuck at any time you can fill out the form at
         <a href={`https://${domain}/support/`} target="_blank">
           {brandName} Support
         </a>
         or email us at help@{domain}
       </p>
-      <p
-        style={`
-		font-size="15px";
-		font-family="open Sans Helvetica, Arial, sans-serif";
-		padding-left="25px";
-		padding-right="25px";`}
-      >
+      <p>
         Thanks, <br />
         Founder <br />
         help@{domain}
