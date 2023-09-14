@@ -53,8 +53,89 @@ export default function SignUp({
     progressive: true,
   });
 
+  let content;
+  if (status.success) {
+    content = (
+      <p>
+        Thanks for signing up! Click the link sent to your inbox to activate
+        your account.
+      </p>
+    );
+  } else {
+    content = (
+      <Form {...form}>
+        <form
+          method="POST"
+          className="gap-2 flex flex-col"
+          onSubmit={form.handleSubmit(async (data) => {
+            const res = await signUpAction(data);
+            console.log(res);
+            setStatus({
+              ...res,
+              attempted: true,
+            });
+            if (res?.error) {
+              form.setError("email", {
+                message: res.error,
+              });
+            }
+          })}
+        >
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="lastName"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="someone@example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" variant="default">
+            Sign Up
+          </Button>
+        </form>
+      </Form>
+    );
+  }
   return (
-    <Card className="mx-auto mt-20">
+    <Card className="mx-auto mt-20 max-w-md">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>
@@ -68,76 +149,7 @@ export default function SignUp({
           instead
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form
-            method="POST"
-            className="gap-2 flex flex-col"
-            onSubmit={form.handleSubmit(async (data) => {
-              const res = await signUpAction(data);
-              setStatus({
-                ...res,
-                attempted: true,
-              });
-              if (res?.error) {
-                form.setError("email", {
-                  message: res.error,
-                });
-              }
-            })}
-          >
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
-                  <FormControl>
-                    <Input type="text" {...field} />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="lastName"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input type="text" {...field} />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="email"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="someone@example.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" variant="default">
-              Sign Up
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
+      <CardContent>{content}</CardContent>
 
       <CardFooter className="flex gap-2 text-xs">
         <span className="text-sm">By clicking Sign Up, you agree to our </span>

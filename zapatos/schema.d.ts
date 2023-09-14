@@ -1068,6 +1068,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       image: string | null;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **users.last_logged_in**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      last_logged_in: Date;
     }
     export interface JSONSelectable {
       /**
@@ -1124,6 +1136,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       image: string | null;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **users.last_logged_in**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      last_logged_in: db.TimestampTzString;
     }
     export interface Whereable {
       /**
@@ -1180,6 +1204,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       image?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **users.last_logged_in**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      last_logged_in?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1236,6 +1272,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       image?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **users.last_logged_in**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      last_logged_in?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1292,6 +1340,18 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       image?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **users.last_logged_in**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      last_logged_in?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'users_email_unique' | 'users_pkey';
     export type Column = keyof Selectable;

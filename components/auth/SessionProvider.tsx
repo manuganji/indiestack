@@ -1,12 +1,12 @@
+"use client";
 import { useLocalStorage } from "usehooks-ts";
 import { getUserOnClient, now } from "./utils";
 
 import type { PublicUser } from "./types";
 
-import { LOCAL_USER, SIGN_IN_PATH } from "@/constants";
-import { isNil } from "lodash";
+import { LOCAL_USER, SIGN_IN_PATH, dev } from "@/constants";
 import { useRouter } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 function useOnline() {
   const [isOnline, setIsOnline] = useState(
@@ -43,17 +43,16 @@ export const AuthContext = createContext?.<AuthContextValueType | undefined>(
 export function useAuth(options: {
   required?: boolean;
   onUnauthenticated?: () => void;
-}): AuthContextValueType {
+}) {
   const router = useRouter();
   if (!AuthContext) {
     throw new Error("React Context is unavailable in Server Components");
   }
 
-  // @ts-expect-error Satisfy TS if branch on line below
-  const value: AuthContextValueType = React.useContext(AuthContext);
-  if (!value && process.env.NODE_ENV !== "production") {
+  const value = useContext(AuthContext);
+  if (!value && dev) {
     throw new Error(
-      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+      "[next-auth]: `useAuth` must be wrapped in a <SessionProvider />"
     );
   }
 
@@ -62,7 +61,7 @@ export function useAuth(options: {
     onUnauthenticated: undefined,
   };
 
-  const requiredAndNotLoading = required && value.status === "unauthenticated";
+  const requiredAndNotLoading = required && value?.status === "unauthenticated";
 
   useEffect(() => {
     if (requiredAndNotLoading) {

@@ -14,15 +14,20 @@ import type {
   users,
   verification_tokens,
 } from "zapatos/schema";
-import { runQuery } from "./db";
+import { runQuery, runQueryTxn } from "./db";
 // import { sendWelcomeMail } from "./serverSideUtils";
 import {
   deltaFromNow,
   getCurrentProperty,
-  sendWelcomeMail
+  sendWelcomeMail,
 } from "@/lib/serverUtils";
 import { cookies } from "next/headers";
-import { LONG_SESSION_COOKIE, SECS_IN_DAY, SESSION_COOKIE, prod } from "./constants";
+import {
+  LONG_SESSION_COOKIE,
+  SECS_IN_DAY,
+  SESSION_COOKIE,
+  prod,
+} from "./constants";
 import { DEFAULT_AUTH_DURATION, LONG_AUTH_DURATION } from "./serverConstants";
 
 // const SC_ORG_ID = env.SC_ORG_ID;
@@ -70,7 +75,7 @@ export async function logUserIn(email: string) {
     secure: prod,
     httpOnly: true,
     sameSite: "lax",
-    expires: Date.parse(session.expires)
+    expires: Date.parse(session.expires),
   });
   return session;
 }
@@ -86,12 +91,22 @@ export const createUser = async function createUser(user: users.Insertable) {
 };
 
 export const createSession = async function (session: sessions.Insertable) {
-  return runQuery(
-    insert("sessions", session, {
-      returning: ["session_token", "user_id", "expires"],
-    })
-    // .run(txNClient);
-  );
+  return runQueryTxn(async (txNClient) => {
+    return Promise.all([
+      insert("sessions", session, {
+        returning: ["session_token", "user_id", "expires"],
+      }).run(txNClient),
+      update(
+        "users",
+        {
+          last_logged_in: sql`now()`,
+        },
+        {
+          id: session.user_id,
+        }
+      ).run(txNClient),
+    ]);
+  });
 };
 
 export const deleteSession = async function (

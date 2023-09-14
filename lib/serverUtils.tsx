@@ -1,35 +1,32 @@
 import "server-only";
 
+import { PublicUser } from "@/components/auth/types";
 import {
   AWS_REGION,
   RECAPTCHA_FORM_FIELD_NAME,
   RECAPTCHA_VERIFICATION_URL,
+  SESSION_COOKIE,
   dev,
   prod,
 } from "@/constants";
 import { runQuery } from "@/db";
-import { S3 } from "@aws-sdk/client-s3";
-import * as aws from "@aws-sdk/client-ses";
-import { defaultProvider } from "@aws-sdk/credential-provider-node";
-import { HttpStatusCode } from "axios";
-import { customAlphabet } from "nanoid";
-import { headers } from "next/headers";
-import nodemailer from "nodemailer";
-import { htmlToText } from "nodemailer-html-to-text";
-import { cache } from "react";
-import {
-  NotExactlyOneError,
-  selectExactlyOne,
-  selectOne,
-  upsert,
-} from "zapatos/db";
 import SignIn from "@/emails/SignInMail";
 import SignUp from "@/emails/SignUpMail";
 import WelcomeMail from "@/emails/WelcomeMail";
-import { env } from "process";
+import { S3 } from "@aws-sdk/client-s3";
+import * as aws from "@aws-sdk/client-ses";
+import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { render } from "@react-email/render";
-import { properties } from "zapatos/schema";
+import { HttpStatusCode } from "axios";
 import { add } from "date-fns";
+import { customAlphabet } from "nanoid";
+import { cookies, headers } from "next/headers";
+import nodemailer from "nodemailer";
+import { htmlToText } from "nodemailer-html-to-text";
+import { env } from "process";
+import { cache } from "react";
+import { parent, selectExactlyOne, selectOne, upsert } from "zapatos/db";
+import { properties } from "zapatos/schema";
 
 export const getHostName = () => headers().get("host")!;
 
@@ -55,11 +52,11 @@ let EMAIL_TEST_ACCOUNT: nodemailer.TestAccount;
 if (dev) {
   nodemailer.createTestAccount().then((account) => {
     EMAIL_TEST_ACCOUNT = account;
-    console.log(
-      EMAIL_TEST_ACCOUNT.user,
-      EMAIL_TEST_ACCOUNT.pass,
-      EMAIL_TEST_ACCOUNT.web
-    );
+    // console.log(
+    //   EMAIL_TEST_ACCOUNT.user,
+    //   EMAIL_TEST_ACCOUNT.pass,
+    //   EMAIL_TEST_ACCOUNT.web
+    // );
   });
 }
 
@@ -333,3 +330,49 @@ export const makeAbsoluteUrl = function (path: string) {
     ? `https://${getHostName()}${path}`
     : `http://${getHostName()}${path}`;
 };
+
+/**
+ * Reads the session cookie and returns the user if it exists.
+ * Wrapped with React `cache` so that multiple calls to `getUserOnServer` in a single request
+ * will only hit the database once.
+ * @returns {Promise<PublicUser | null>} The user or null
+ */
+export const getUserOnServer = cache(async (): Promise<PublicUser | null> => {
+  const session_token_cookie = cookies().get(SESSION_COOKIE);
+  // console.log("upsert domain", getHostName());
+  // await upsertDomain(getHostName());
+  if (!session_token_cookie) {
+    return null;
+  } else {
+    const session = await runQuery(
+      selectOne(
+        "sessions",
+        {
+          session_token: session_token_cookie.value,
+        },
+        {
+          lateral: {
+            user: selectExactlyOne(
+              "users",
+              {
+                id: parent("user_id"),
+              },
+              {
+                columns: [
+                  "email",
+                  "id",
+                  "first_name",
+                  "last_name",
+                  "image",
+                  "email_verified",
+                  "is_admin",
+                ],
+              }
+            ),
+          },
+        }
+      )
+    );
+    return session?.user ?? null;
+  }
+});
