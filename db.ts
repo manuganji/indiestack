@@ -1,6 +1,6 @@
 import { createPool } from "@vercel/postgres";
-import { DB_CONFIG, dev } from "./constants";
-import { ZAPATOS_CONFIG } from "./constants";
+import pg from "pg";
+import { DB_CONFIG, dev } from "./serverConstants";
 
 import {
   readCommitted,
@@ -8,23 +8,13 @@ import {
   type SQLFragment,
   type TxnClientForReadCommitted,
 } from "zapatos/db";
-import { generate } from "zapatos/generate";
-
-let generated = !dev;
-
-
-export async function initDB() {
-  if (!generated) {
-    // console.log('generating zapatos');
-    await generate(ZAPATOS_CONFIG).then(() => {
-      console.log("generated zapatos");
-    });
-    generated = true;
-  }
-}
 
 export function getPool() {
-  const pool = createPool(DB_CONFIG);
+  const pool = dev
+    ? new pg.Pool({
+        connectionString: DB_CONFIG.connectionString,
+      })
+    : createPool(DB_CONFIG);
   // pool.on('error', (err) => {
   // 	pool = null;
   // 	console.error('Unexpected error on pool client');
@@ -66,6 +56,6 @@ export async function runQueryTxn<T>(
 //   });
 // }
 
-if (dev) {
-  initDB();
-}
+// if (dev) {
+//   initDB();
+// }
