@@ -62,7 +62,7 @@ export async function logUserIn(email: string) {
     await runQuery(update("users", { welcomed: true }, { id: user.id }));
   }
 
-  const session = await createSession({
+  const [session, _] = await createSession({
     user_id: user.id,
     expires: isLongSession
       ? deltaFromNow(LONG_AUTH_DURATION)

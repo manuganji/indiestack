@@ -10,7 +10,7 @@ export default function SideBar({ isRoot }: { isRoot: boolean }) {
   if (!active) {
     redirect(menu[0].path);
   }
-  console.log("active", active);
+  // console.log("active", active);
   return (
     <div className="flex flex-col gap-2 p-4 w-1/6">
       {menu.map((item) => (

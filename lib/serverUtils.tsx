@@ -341,7 +341,7 @@ export const getUserOnServer = cache(async (): Promise<PublicUser | null> => {
   const session_token_cookie = cookies().get(SESSION_COOKIE);
   // console.log("upsert domain", getHostName());
   // await upsertDomain(getHostName());
-  if (!session_token_cookie) {
+  if (!session_token_cookie?.value) {
     return null;
   } else {
     const session = await runQuery(

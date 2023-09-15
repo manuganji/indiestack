@@ -20,7 +20,7 @@ export default async function DashLayout({
   return (
     <div className="flex flex-row">
       <SideBar isRoot={isRoot} />
-      <AuthProvider user={user}>{children}</AuthProvider>;
+      <AuthProvider user={user}>{children}</AuthProvider>
     </div>
   );
 }
