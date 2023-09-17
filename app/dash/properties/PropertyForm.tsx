@@ -53,10 +53,8 @@ export default function PropertyForm({
           onSubmit={form.handleSubmit(async (data: FormValues) => {
             if (!id) {
               const res = await insertProperty(data);
-              console.log("save new", res);
             } else {
               const res = await updateProperty(data, id);
-              console.log("save existing", res);
             }
             router.push("/dash/properties");
             router.refresh();

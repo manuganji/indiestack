@@ -4,7 +4,7 @@ import { PublicUser } from "./types";
 export async function getUserOnClient() {
   const user: PublicUser | null = await fetch(`${SESSION_PATH}`)
     .then<PublicUser | null>((res) => {
-      console.log("res", res);
+      // console.log("res", res);
       return res.json();
     })
     .catch((e) => {
