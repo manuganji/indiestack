@@ -2,7 +2,13 @@ import { users } from "zapatos/schema";
 
 export type PublicUser = Pick<
   users.JSONSelectable,
-  "first_name" | "last_name" | "email" | "id" | "image" | "email_verified"
+  | "first_name"
+  | "last_name"
+  | "email"
+  | "id"
+  | "image"
+  | "email_verified"
+  | "is_admin"
 >;
 
 /**

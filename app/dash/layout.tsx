@@ -1,8 +1,7 @@
-import { getHostName, getUserOnServer } from "@/lib/serverUtils";
-import SideBar from "./SideBar";
 import { AuthProvider } from "@/components/auth/SessionProvider";
-import { redirect } from "next/navigation";
-import { SIGN_IN_PATH } from "@/constants";
+import { requireAuth } from "@/lib/checks";
+import { getHostName } from "@/lib/serverUtils";
+import SideBar from "./SideBar";
 
 export const preferredRegion = "home";
 
@@ -13,10 +12,7 @@ export default async function DashLayout({
 }) {
   const domain = getHostName();
   const isRoot = domain == process.env.ROOT_DOMAIN;
-  const user = await getUserOnServer();
-  if (!user) {
-    redirect(SIGN_IN_PATH);
-  }
+  const user = await requireAuth();
   return (
     <div className="flex flex-row">
       <SideBar isRoot={isRoot} />

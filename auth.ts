@@ -80,6 +80,11 @@ export async function logUserIn(email: string) {
   return session;
 }
 
+export function logUserOut() {
+  cookies().delete(SESSION_COOKIE);
+  cookies().delete(LONG_SESSION_COOKIE);
+}
+
 export const createUser = async function createUser(user: users.Insertable) {
   const property = await getCurrentProperty();
   return runQuery(
