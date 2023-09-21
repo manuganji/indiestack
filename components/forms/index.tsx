@@ -1,4 +1,5 @@
 "use client";
+import "./forms.css";
 import { JsonForms } from "@jsonforms/react";
 import type { JsonSchema7 } from "@jsonforms/core/lib/models/jsonSchema7";
 import type { ErrorObject } from "ajv";
