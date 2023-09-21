@@ -12,7 +12,8 @@
 		"zapatos": "node ./generate_zapatos_types.mjs",
 		"migrate": "node-pg-migrate --config-file pgMigrateConfig.json",
 		"migrate:up": "pnpm run migrate up",
-		"migrate:down": "pnpm run migrate down"
+		"migrate:down": "pnpm run migrate down",
+		"compile:schemas": "ajv compile -c ajv-formats --code-es5 --code-lines -s \"./schemas/*.json\" -o ./schemas/validator.js"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.410.0",

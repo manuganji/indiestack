@@ -5,24 +5,17 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { getPage } from "./utils";
-import { loginSchema, loginValidator } from "@/schemas/login";
+import Form from "@/components/forms";
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
 export const dynamic = "auto";
 export async function generateStaticParams() {
 	return ["home", "about"];
 }
+import loginSchema from "@/schemas/login.json";
 // if (dev) {
 //   initDB();
 // }
-try {
-	const v = loginValidator({
-		email: "",
-	});
-	console.log(loginValidator.schemaEnv);
-	console.log(loginValidator.schema);
-} catch (e) {
-	console.log("error");
-}
+
 export default async function Home({
 	params,
 }: {
@@ -54,9 +47,8 @@ export default async function Home({
 				</div>
 			</div>
 
-			<Link href="/somet/ing/gdsg">Something</Link>
-			<Link href="/someth/ing2">Something</Link>
-			<Link href="/some/thing3">Something</Link>
+			{/* @ts-ignore */}
+			<Form schema={loginSchema} />
 			<div className="relative flex flex-col gap-20 place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
 				{page.title}
 
