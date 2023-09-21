@@ -25,8 +25,8 @@ export default function SignUp({
 		>
 			<a href={url}>Sign In</a>
 			<p>
-				We are excited to see what you'll build. Click the button below to
-				verify your email and sign in to {brandName}.
+				We are excited to see what you'll build. Click the button below to verify
+				your email and sign in to {brandName}.
 			</p>
 			<p>{url}</p>
 			<p>

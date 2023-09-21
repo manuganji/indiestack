@@ -124,11 +124,7 @@ export function AuthProvider({
 		};
 		document.addEventListener("visibilitychange", visibilityHandler, false);
 		return () =>
-			document.removeEventListener(
-				"visibilitychange",
-				visibilityHandler,
-				false,
-			);
+			document.removeEventListener("visibilitychange", visibilityHandler, false);
 	}, []);
 
 	const value: any = {

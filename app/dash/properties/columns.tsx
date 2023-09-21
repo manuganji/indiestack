@@ -11,9 +11,7 @@ export const columns: ColumnDef<properties.JSONSelectable>[] = [
 		accessorKey: "id",
 		header: () => "ID",
 		cell: ({ row }) => (
-			<Link href={`/dash/properties/${row.original.id}/`}>
-				{row.original.id}
-			</Link>
+			<Link href={`/dash/properties/${row.original.id}/`}>{row.original.id}</Link>
 		),
 	},
 	{

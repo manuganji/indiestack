@@ -550,11 +550,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.provider_account_id**
@@ -579,11 +575,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.access_token**
@@ -598,11 +590,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.expires_at**
@@ -617,11 +605,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| number
-						| db.Parameter<number>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.token_type**
@@ -636,11 +620,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.scope**
@@ -655,11 +635,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.id_token**
@@ -674,11 +650,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **accounts.session_state**
@@ -693,11 +665,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 		}
 		export type UniqueIndex = "accounts_id_key";
@@ -893,11 +861,7 @@ declare module "zapatos/schema" {
 			 * - `bool` in database
 			 * - `NOT NULL`, default: `true`
 			 */
-			active?:
-				| boolean
-				| db.Parameter<boolean>
-				| db.DefaultType
-				| db.SQLFragment;
+			active?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
 			/**
 			 * **block_list.updated_at**
 			 * - `timestamptz` in database
@@ -2023,11 +1987,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| boolean
-						| db.Parameter<boolean>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **users.is_admin**
@@ -2042,11 +2002,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| boolean
-						| db.Parameter<boolean>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **users.id**
@@ -2085,11 +2041,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **users.email**
@@ -2133,11 +2085,7 @@ declare module "zapatos/schema" {
 				| db.SQLFragment
 				| db.SQLFragment<
 						any,
-						| string
-						| db.Parameter<string>
-						| null
-						| db.DefaultType
-						| db.SQLFragment
+						string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment
 				  >;
 			/**
 			 * **users.created_at**

@@ -5,8 +5,10 @@ export function middleware(request: NextRequest) {
 	const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 	const cspHeader = `
     default-src 'self';
-    script-src 'self' '${dev ? 'unsafe-eval': ''}' 'nonce-${nonce}' 'strict-dynamic';
-    style-src 'self' '${dev ? 'unsafe-inline': 'nonce-${nonce}'}' ;
+    script-src 'self' '${
+					dev ? "unsafe-eval" : ""
+				}' 'nonce-${nonce}' 'strict-dynamic';
+    style-src 'self' '${dev ? "unsafe-inline" : "nonce-${nonce}"}' ;
     img-src 'self' blob: data:;
     font-src 'self';
     object-src 'none';

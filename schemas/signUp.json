@@ -26,10 +26,5 @@
 			"const": true
 		}
 	},
-	"required": [
-		"firstName",
-		"lastName",
-		"email",
-		"tos"
-	]
+	"required": ["firstName", "lastName", "email", "tos"]
 }

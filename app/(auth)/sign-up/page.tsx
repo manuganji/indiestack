@@ -57,8 +57,8 @@ export default function SignUp({
 	if (status.success) {
 		content = (
 			<p>
-				Thanks for signing up! Click the link sent to your inbox to activate
-				your account.
+				Thanks for signing up! Click the link sent to your inbox to activate your
+				account.
 			</p>
 		);
 	} else {
@@ -116,11 +116,7 @@ export default function SignUp({
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input
-										type="email"
-										placeholder="someone@example.com"
-										{...field}
-									/>
+									<Input type="email" placeholder="someone@example.com" {...field} />
 								</FormControl>
 								<FormDescription></FormDescription>
 								<FormMessage />

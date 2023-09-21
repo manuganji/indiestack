@@ -20,9 +20,7 @@ the highest value out of ${brandName}.`}
 			reason={`This mail is sent to help new users get started with ${brandName}`}
 		>
 			<p>
-				<b>
-					Just curious, how much funding do you need to secure and how soon?
-				</b>
+				<b>Just curious, how much funding do you need to secure and how soon?</b>
 			</p>
 			<p>Some tips for you to get started:</p>
 
@@ -34,8 +32,8 @@ the highest value out of ${brandName}.`}
 			</p>
 			<p>
 				I'd like to offer you a personal demo to create your first project and
-				answer any questions on integrating with your existing setup. Please
-				pick a slot at this link:
+				answer any questions on integrating with your existing setup. Please pick a
+				slot at this link:
 				<a href={`https://${domain}/request-demo/`} target="_blank">
 					Schedule a personal Demo
 				</a>

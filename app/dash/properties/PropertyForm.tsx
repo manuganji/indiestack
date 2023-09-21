@@ -44,9 +44,7 @@ export default function PropertyForm({
 
 	return (
 		<div>
-			<h1 className="text-2xl my-2">
-				{id ? "Update Property" : "New Property"}
-			</h1>
+			<h1 className="text-2xl my-2">{id ? "Update Property" : "New Property"}</h1>
 			<Form {...form}>
 				<form
 					className="space-y-4"

@@ -13,4 +13,3 @@ So the order is:
 Tester is a function that helps determine which renderer to use for a given schema. It's a function that takes a schema and returns a boolean. There are some helpful utils to make the tester function.
 
 Like `rankWith`, `scopeEndsWith`, `uiTypeIs`. Find this list at https://jsonforms.io/api/core/index.html
-

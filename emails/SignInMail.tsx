@@ -34,8 +34,7 @@ export default function SignIn({
 			</p>
 			<a href={url}>Login</a>
 			<p>
-				If the link doesn't work, paste this url into your browser and hit
-				enter:
+				If the link doesn't work, paste this url into your browser and hit enter:
 			</p>
 			<p>{url}</p>
 			<p>

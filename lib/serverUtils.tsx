@@ -275,16 +275,13 @@ export const checkCaptchaToken = async function (formData: FormData) {
 		// 	response: captchaToken as string
 		// };
 		// console.log('verificationPayload', verificationPayload);
-		const { success, action, ...rest } = await fetch(
-			RECAPTCHA_VERIFICATION_URL,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded",
-				},
-				body: `secret=${env.RECAPTCHA_SECRET}&response=${captchaToken}`,
+		const { success, action, ...rest } = await fetch(RECAPTCHA_VERIFICATION_URL, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
 			},
-		).then<{
+			body: `secret=${env.RECAPTCHA_SECRET}&response=${captchaToken}`,
+		}).then<{
 			success: boolean;
 			challenge_ts: string;
 			hostname: string;
