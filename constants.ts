@@ -13,22 +13,22 @@ export const LONG_SESSION_COOKIE = "long-session";
 export const SECS_IN_DAY = 86400;
 
 export const SIGN_UP_PATH: __next_route_internal_types__.StaticRoutes =
-  "/sign-up";
+	"/sign-up";
 export const SIGN_IN_PATH: __next_route_internal_types__.StaticRoutes =
-  "/sign-in";
+	"/sign-in";
 export const SIGN_OUT_PATH: __next_route_internal_types__.StaticRoutes =
-  "/sign-out";
+	"/sign-out";
 export const SESSION_PATH: __next_route_internal_types__.StaticRoutes =
-  "/session";
+	"/session";
 
 export const WIDGET_IDS = {
-  COVER: 1,
-  BENEFITS: 2,
-  TESTIMONIALS: 3,
+	COVER: 1,
+	BENEFITS: 2,
+	TESTIMONIALS: 3,
 };
 
 export const RECAPTCHA_VERIFICATION_URL =
-  "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+	"https://challenges.cloudflare.com/turnstile/v0/siteverify";
 // 'https://www.google.com/recaptcha/api/siteverify';
 export const RECAPTCHA_FORM_FIELD_NAME = "cf-turnstile-response";
 

@@ -1,14 +1,12 @@
 // from https://github.com/carstenlebek/svelte-email/blob/master/src/lib/render.ts
 
-import {
-	convert
-} from 'html-to-text';
-import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
+import { convert } from "html-to-text";
+import type { ComponentProps, ComponentType, SvelteComponent } from "svelte";
 
 export const render = <Component extends SvelteComponent>({
 	template,
 	props,
-	options
+	options,
 }: {
 	template: ComponentType<Component>;
 	props?: ComponentProps<Component>;
@@ -33,8 +31,8 @@ export const render = <Component extends SvelteComponent>({
 const renderAsPlainText = (markup: string) => {
 	return convert(markup, {
 		selectors: [
-			{ selector: 'img', format: 'skip' },
-			{ selector: '#__svelte-email-preview', format: 'skip' }
-		]
+			{ selector: "img", format: "skip" },
+			{ selector: "#__svelte-email-preview", format: "skip" },
+		],
 	});
 };

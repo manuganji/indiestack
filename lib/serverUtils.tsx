@@ -2,12 +2,12 @@ import "server-only";
 
 import { PublicUser } from "@/components/auth/types";
 import {
-  AWS_REGION,
-  RECAPTCHA_FORM_FIELD_NAME,
-  RECAPTCHA_VERIFICATION_URL,
-  SESSION_COOKIE,
-  dev,
-  prod,
+	AWS_REGION,
+	RECAPTCHA_FORM_FIELD_NAME,
+	RECAPTCHA_VERIFICATION_URL,
+	SESSION_COOKIE,
+	dev,
+	prod,
 } from "@/constants";
 import { runQuery } from "@/db";
 import SignIn from "@/emails/SignInMail";
@@ -31,304 +31,304 @@ import { properties } from "zapatos/schema";
 export const getHostName = () => headers().get("host")!;
 
 export const upsertDomain = async (domain: string, name?: string) => {
-  const res = await runQuery(
-    upsert(
-      "properties",
-      {
-        id: shortId(10),
-        email_from: `no-reply@${domain}`,
-        domain,
-        name: name ?? domain,
-      },
-      {
-        value: "properties_pkey",
-      }
-    )
-  );
-  return res;
+	const res = await runQuery(
+		upsert(
+			"properties",
+			{
+				id: shortId(10),
+				email_from: `no-reply@${domain}`,
+				domain,
+				name: name ?? domain,
+			},
+			{
+				value: "properties_pkey",
+			},
+		),
+	);
+	return res;
 };
 
 let EMAIL_TEST_ACCOUNT: nodemailer.TestAccount;
 if (dev) {
-  nodemailer.createTestAccount().then((account) => {
-    EMAIL_TEST_ACCOUNT = account;
-    // console.log(
-    //   EMAIL_TEST_ACCOUNT.user,
-    //   EMAIL_TEST_ACCOUNT.pass,
-    //   EMAIL_TEST_ACCOUNT.web
-    // );
-  });
+	nodemailer.createTestAccount().then((account) => {
+		EMAIL_TEST_ACCOUNT = account;
+		// console.log(
+		//   EMAIL_TEST_ACCOUNT.user,
+		//   EMAIL_TEST_ACCOUNT.pass,
+		//   EMAIL_TEST_ACCOUNT.web
+		// );
+	});
 }
 
 export function getTransporter() {
-  let transporter: nodemailer.Transporter;
-  if (dev) {
-    transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      auth: {
-        user: EMAIL_TEST_ACCOUNT.user,
-        pass: EMAIL_TEST_ACCOUNT.pass,
-      },
-    });
-  } else {
-    const ses = new aws.SES({
-      credentials: defaultProvider(),
-      region: AWS_REGION,
-    });
-    transporter = nodemailer.createTransport({
-      SES: { ses, aws },
-      sendingRate: 1,
-    });
-  }
-  transporter.use(
-    "compile",
-    htmlToText({
-      wordwrap: 130,
-    })
-  );
-  return transporter;
+	let transporter: nodemailer.Transporter;
+	if (dev) {
+		transporter = nodemailer.createTransport({
+			host: "smtp.ethereal.email",
+			port: 587,
+			auth: {
+				user: EMAIL_TEST_ACCOUNT.user,
+				pass: EMAIL_TEST_ACCOUNT.pass,
+			},
+		});
+	} else {
+		const ses = new aws.SES({
+			credentials: defaultProvider(),
+			region: AWS_REGION,
+		});
+		transporter = nodemailer.createTransport({
+			SES: { ses, aws },
+			sendingRate: 1,
+		});
+	}
+	transporter.use(
+		"compile",
+		htmlToText({
+			wordwrap: 130,
+		}),
+	);
+	return transporter;
 }
 
 export const getCurrentProperty = cache(
-  async (): Promise<properties.JSONSelectable> => {
-    try {
-      const property = await runQuery(
-        selectExactlyOne("properties", {
-          domain: getHostName(),
-        })
-      );
-      return property;
-    } catch (e) {
-      const property = upsertDomain(getHostName());
-      return property;
-    }
-  }
+	async (): Promise<properties.JSONSelectable> => {
+		try {
+			const property = await runQuery(
+				selectExactlyOne("properties", {
+					domain: getHostName(),
+				}),
+			);
+			return property;
+		} catch (e) {
+			const property = upsertDomain(getHostName());
+			return property;
+		}
+	},
 );
 
 export async function sendMailOnSignUp({
-  email,
-  url,
-  firstName,
-  blockUrl,
+	email,
+	url,
+	firstName,
+	blockUrl,
 }: {
-  firstName: string;
-  email: string;
-  url: string;
-  blockUrl: string;
+	firstName: string;
+	email: string;
+	url: string;
+	blockUrl: string;
 }) {
-  // const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
-  // const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
+	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
+	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
 
-  const property = await getCurrentProperty();
-  const subject = `Sign in to ${property.name}`;
-  const transporter = getTransporter();
-  const info = await transporter.sendMail({
-    from: property.email_from,
-    to: email,
-    subject,
-    // text: textContent,
-    html: render(
-      <SignUp
-        {...{
-          firstName,
-          url,
-          blockUrl,
-          domain: property.domain,
-          brandName: property.name,
-        }}
-      />
-    ),
-  });
-  if (dev) {
-    console.log("login url: ", url);
-    console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
-  }
+	const property = await getCurrentProperty();
+	const subject = `Sign in to ${property.name}`;
+	const transporter = getTransporter();
+	const info = await transporter.sendMail({
+		from: property.email_from,
+		to: email,
+		subject,
+		// text: textContent,
+		html: render(
+			<SignUp
+				{...{
+					firstName,
+					url,
+					blockUrl,
+					domain: property.domain,
+					brandName: property.name,
+				}}
+			/>,
+		),
+	});
+	if (dev) {
+		console.log("login url: ", url);
+		console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
+	}
 }
 
 export async function sendWelcomeMail({
-  email,
-  firstName,
+	email,
+	firstName,
 }: {
-  firstName: string;
-  email: string;
+	firstName: string;
+	email: string;
 }) {
-  const property = await getCurrentProperty();
-  const subject = `Welcome to ${property.name}`;
-  const transporter = getTransporter();
-  const info = await transporter.sendMail({
-    from: property.email_from,
-    to: email,
-    subject,
-    html: render(
-      <WelcomeMail
-        {...{
-          firstName,
-          domain: property.domain,
-          brandName: property.name,
-        }}
-      />
-    ),
-  });
-  if (dev) {
-    console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
-  }
+	const property = await getCurrentProperty();
+	const subject = `Welcome to ${property.name}`;
+	const transporter = getTransporter();
+	const info = await transporter.sendMail({
+		from: property.email_from,
+		to: email,
+		subject,
+		html: render(
+			<WelcomeMail
+				{...{
+					firstName,
+					domain: property.domain,
+					brandName: property.name,
+				}}
+			/>,
+		),
+	});
+	if (dev) {
+		console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
+	}
 }
 
 export async function sendMagicLink({
-  email,
-  url,
-  firstName,
-  blockUrl,
+	email,
+	url,
+	firstName,
+	blockUrl,
 }: {
-  firstName: string;
-  email: string;
-  url: string;
-  blockUrl: string;
+	firstName: string;
+	email: string;
+	url: string;
+	blockUrl: string;
 }) {
-  // const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
-  // const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
-  const property = await getCurrentProperty();
-  const subject = `Sign in to ${property.name}`;
-  const transporter = getTransporter();
-  const info = await transporter.sendMail({
-    from: property.email_from,
-    to: email,
-    subject,
-    html: render(
-      <SignIn
-        blockUrl={blockUrl}
-        url={url}
-        firstName={firstName}
-        domain={property.domain}
-        brandName={property.name}
-      />
-    ),
-  });
-  if (dev) {
-    console.log("login url: ", url);
-    console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
-  }
+	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
+	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
+	const property = await getCurrentProperty();
+	const subject = `Sign in to ${property.name}`;
+	const transporter = getTransporter();
+	const info = await transporter.sendMail({
+		from: property.email_from,
+		to: email,
+		subject,
+		html: render(
+			<SignIn
+				blockUrl={blockUrl}
+				url={url}
+				firstName={firstName}
+				domain={property.domain}
+				brandName={property.name}
+			/>,
+		),
+	});
+	if (dev) {
+		console.log("login url: ", url);
+		console.log("Preview URL: ", nodemailer.getTestMessageUrl(info));
+	}
 }
 
 export async function isDisposableEmail(email: string) {
-  const API_BASE_URL = "https://api.mailcheck.ai";
-  const domain = email.split("@")[1].trim();
-  const resp = await fetch(`${API_BASE_URL}/domain/${domain}`, {
-    method: "GET",
-  }).then<{
-    status:
-      | HttpStatusCode.Ok
-      | HttpStatusCode.BadRequest
-      | HttpStatusCode.TooManyRequests;
-    domain: string;
-    mx: boolean;
-    disposable: boolean;
-    did_you_mean: string | null;
-  }>((res) => res.json());
+	const API_BASE_URL = "https://api.mailcheck.ai";
+	const domain = email.split("@")[1].trim();
+	const resp = await fetch(`${API_BASE_URL}/domain/${domain}`, {
+		method: "GET",
+	}).then<{
+		status:
+			| HttpStatusCode.Ok
+			| HttpStatusCode.BadRequest
+			| HttpStatusCode.TooManyRequests;
+		domain: string;
+		mx: boolean;
+		disposable: boolean;
+		did_you_mean: string | null;
+	}>((res) => res.json());
 
-  if (resp.status === HttpStatusCode.TooManyRequests) {
-    console.error("Rate limit reached for mailcheck.");
-    return true;
-  }
+	if (resp.status === HttpStatusCode.TooManyRequests) {
+		console.error("Rate limit reached for mailcheck.");
+		return true;
+	}
 
-  return resp.disposable;
-  // try {
-  // 	await disClient.validate();
-  // 	const query = sql<disposable_email_domains.SQL>`SELECT domain
-  // 		FROM disposable_email_domains
-  // 		WHERE split_part(${param(email)}, '@', 2) ILIKE ('%' || domain)
-  // 		AND char_length(domain) > 0
-  // 		LIMIT 1`;
-  // 	const result = await runQuery(query);
-  // 	return result.length > 0;
-  // } catch (e) {
-  // 	console.error(e);
-  // 	return false;
-  // }
+	return resp.disposable;
+	// try {
+	// 	await disClient.validate();
+	// 	const query = sql<disposable_email_domains.SQL>`SELECT domain
+	// 		FROM disposable_email_domains
+	// 		WHERE split_part(${param(email)}, '@', 2) ILIKE ('%' || domain)
+	// 		AND char_length(domain) > 0
+	// 		LIMIT 1`;
+	// 	const result = await runQuery(query);
+	// 	return result.length > 0;
+	// } catch (e) {
+	// 	console.error(e);
+	// 	return false;
+	// }
 }
 
 export async function isBlockedEmail(email: string) {
-  try {
-    return (
-      (await runQuery(
-        selectOne(
-          "block_list",
-          { email, active: true },
-          {
-            columns: ["email", "active"],
-          }
-        )
-      )) !== undefined
-    );
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
+	try {
+		return (
+			(await runQuery(
+				selectOne(
+					"block_list",
+					{ email, active: true },
+					{
+						columns: ["email", "active"],
+					},
+				),
+			)) !== undefined
+		);
+	} catch (e) {
+		console.error(e);
+		return false;
+	}
 }
 
 export const checkCaptchaToken = async function (formData: FormData) {
-  if (formData.has(RECAPTCHA_FORM_FIELD_NAME)) {
-    const captchaToken = formData.get(RECAPTCHA_FORM_FIELD_NAME);
-    // const verificationPayload = {
-    // 	secret: env.RECAPTCHA_SECRET,
-    // 	response: captchaToken as string
-    // };
-    // console.log('verificationPayload', verificationPayload);
-    const { success, action, ...rest } = await fetch(
-      RECAPTCHA_VERIFICATION_URL,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `secret=${env.RECAPTCHA_SECRET}&response=${captchaToken}`,
-      }
-    ).then<{
-      success: boolean;
-      challenge_ts: string;
-      hostname: string;
-      "error-codes": any[];
-      action: string;
-      cdata: string;
-    }>((res) => res.json());
-    // console.log(success, rest, score, action);
-    if (!success) {
-      console.log(rest, captchaToken);
-      throw new Error("Verification failed");
-    } else {
-      return;
-    }
-  } else {
-    throw new Error("No captcha token found");
-  }
+	if (formData.has(RECAPTCHA_FORM_FIELD_NAME)) {
+		const captchaToken = formData.get(RECAPTCHA_FORM_FIELD_NAME);
+		// const verificationPayload = {
+		// 	secret: env.RECAPTCHA_SECRET,
+		// 	response: captchaToken as string
+		// };
+		// console.log('verificationPayload', verificationPayload);
+		const { success, action, ...rest } = await fetch(
+			RECAPTCHA_VERIFICATION_URL,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+				body: `secret=${env.RECAPTCHA_SECRET}&response=${captchaToken}`,
+			},
+		).then<{
+			success: boolean;
+			challenge_ts: string;
+			hostname: string;
+			"error-codes": any[];
+			action: string;
+			cdata: string;
+		}>((res) => res.json());
+		// console.log(success, rest, score, action);
+		if (!success) {
+			console.log(rest, captchaToken);
+			throw new Error("Verification failed");
+		} else {
+			return;
+		}
+	} else {
+		throw new Error("No captcha token found");
+	}
 };
 
 export const s3Client = new S3({
-  region: "auto",
-  endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: process.env.CLOUDFLARE_ACCESS_ID!,
-    secretAccessKey: process.env.CLOUDFLARE_ACCESS_SECRET!,
-  },
+	region: "auto",
+	endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+	credentials: {
+		accessKeyId: process.env.CLOUDFLARE_ACCESS_ID!,
+		secretAccessKey: process.env.CLOUDFLARE_ACCESS_SECRET!,
+	},
 });
 
 // https://zelark.github.io/nano-id-cc/
 const ALPHABET =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const ID_LENGTH = 12;
 
 export const shortId = customAlphabet(ALPHABET, ID_LENGTH);
 
 export const deltaFromNow = function (duration: Duration) {
-  const now = new Date();
-  return add(now, duration);
+	const now = new Date();
+	return add(now, duration);
 };
 
 export const makeAbsoluteUrl = function (path: string) {
-  return prod
-    ? `https://${getHostName()}${path}`
-    : `http://${getHostName()}${path}`;
+	return prod
+		? `https://${getHostName()}${path}`
+		: `http://${getHostName()}${path}`;
 };
 
 /**
@@ -338,41 +338,41 @@ export const makeAbsoluteUrl = function (path: string) {
  * @returns {Promise<PublicUser | null>} The user or null
  */
 export const getUserOnServer = cache(async (): Promise<PublicUser | null> => {
-  const session_token_cookie = cookies().get(SESSION_COOKIE);
-  // console.log("upsert domain", getHostName());
-  // await upsertDomain(getHostName());
-  if (!session_token_cookie?.value) {
-    return null;
-  } else {
-    const session = await runQuery(
-      selectOne(
-        "sessions",
-        {
-          session_token: session_token_cookie.value,
-        },
-        {
-          lateral: {
-            user: selectExactlyOne(
-              "users",
-              {
-                id: parent("user_id"),
-              },
-              {
-                columns: [
-                  "email",
-                  "id",
-                  "first_name",
-                  "last_name",
-                  "image",
-                  "email_verified",
-                  "is_admin",
-                ],
-              }
-            ),
-          },
-        }
-      )
-    );
-    return session?.user ?? null;
-  }
+	const session_token_cookie = cookies().get(SESSION_COOKIE);
+	// console.log("upsert domain", getHostName());
+	// await upsertDomain(getHostName());
+	if (!session_token_cookie?.value) {
+		return null;
+	} else {
+		const session = await runQuery(
+			selectOne(
+				"sessions",
+				{
+					session_token: session_token_cookie.value,
+				},
+				{
+					lateral: {
+						user: selectExactlyOne(
+							"users",
+							{
+								id: parent("user_id"),
+							},
+							{
+								columns: [
+									"email",
+									"id",
+									"first_name",
+									"last_name",
+									"image",
+									"email_verified",
+									"is_admin",
+								],
+							},
+						),
+					},
+				},
+			),
+		);
+		return session?.user ?? null;
+	}
 });

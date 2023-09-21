@@ -3,45 +3,45 @@ import pg from "pg";
 import { DB_CONFIG, dev } from "./serverConstants";
 
 import {
-  readCommitted,
-  type Queryable,
-  type SQLFragment,
-  type TxnClientForReadCommitted,
+	readCommitted,
+	type Queryable,
+	type SQLFragment,
+	type TxnClientForReadCommitted,
 } from "zapatos/db";
 
 export function getPool() {
-  const pool = dev
-    ? new pg.Pool({
-        connectionString: DB_CONFIG.connectionString,
-      })
-    : createPool(DB_CONFIG);
-  // pool.on('error', (err) => {
-  // 	pool = null;
-  // 	console.error('Unexpected error on pool client');
-  // });
+	const pool = dev
+		? new pg.Pool({
+				connectionString: DB_CONFIG.connectionString,
+		  })
+		: createPool(DB_CONFIG);
+	// pool.on('error', (err) => {
+	// 	pool = null;
+	// 	console.error('Unexpected error on pool client');
+	// });
 
-  return pool;
+	return pool;
 }
 
 export async function runQuery<T>(query: SQLFragment<T>) {
-  const pool = getPool();
-  // const client = await pool.connect();
-  // console.log(query.compile());
-  const res = await query.run(pool);
-  await pool.end();
-  return res;
-  // client.release();
+	const pool = getPool();
+	// const client = await pool.connect();
+	// console.log(query.compile());
+	const res = await query.run(pool);
+	await pool.end();
+	return res;
+	// client.release();
 }
 
 export async function runQueryTxn<T>(
-  callback: (client: Queryable | TxnClientForReadCommitted) => Promise<T>
+	callback: (client: Queryable | TxnClientForReadCommitted) => Promise<T>,
 ) {
-  const pool = getPool();
-  // const client = await pool.connect();
-  const res = await readCommitted<T>(pool, callback);
-  // client.release();
-  await pool.end();
-  return res;
+	const pool = getPool();
+	// const client = await pool.connect();
+	const res = await readCommitted<T>(pool, callback);
+	// client.release();
+	await pool.end();
+	return res;
 }
 
 // export function getNeon() {

@@ -6,17 +6,17 @@ import SideBar from "./SideBar";
 export const preferredRegion = "home";
 
 export default async function DashLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const domain = getHostName();
-  const isRoot = domain == process.env.ROOT_DOMAIN;
-  const user = await requireAuth();
-  return (
-    <div className="flex flex-row">
-      <SideBar isRoot={isRoot} />
-      <AuthProvider user={user}>{children}</AuthProvider>
-    </div>
-  );
+	const domain = getHostName();
+	const isRoot = domain == process.env.ROOT_DOMAIN;
+	const user = await requireAuth();
+	return (
+		<div className="flex flex-row">
+			<SideBar isRoot={isRoot} />
+			<AuthProvider user={user}>{children}</AuthProvider>
+		</div>
+	);
 }

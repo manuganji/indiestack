@@ -26,28 +26,28 @@ import { config } from "dotenv";
 config();
 
 export const ZAPATOS_CONFIG = {
-  db: {
-    connectionString: process.env.POSTGRES_URL,
-  },
-  schemas: {
-    public: {
-      include: "*",
-      exclude: [
-        "geography_columns",
-        "geometry_columns",
-        "raster_columns",
-        "raster_overviews",
-        "spatial_ref_sys",
-      ],
-    },
-  },
-  outDir: ".",
-  customTypesTransform: "PgMyType",
+	db: {
+		connectionString: process.env.POSTGRES_URL,
+	},
+	schemas: {
+		public: {
+			include: "*",
+			exclude: [
+				"geography_columns",
+				"geometry_columns",
+				"raster_columns",
+				"raster_overviews",
+				"spatial_ref_sys",
+			],
+		},
+	},
+	outDir: ".",
+	customTypesTransform: "PgMyType",
 };
 
 export const initDB = () => {
-  console.log("generating zapatos");
-  generate(ZAPATOS_CONFIG).then(() => {
-    console.log("generated zapatos");
-  });
+	console.log("generating zapatos");
+	generate(ZAPATOS_CONFIG).then(() => {
+		console.log("generated zapatos");
+	});
 };
