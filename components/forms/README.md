@@ -2,7 +2,7 @@
 
 This implementation leverages JsonForms.
 
-Presently we just need to override the styles. If that's not enough, we can clone the renderers from the vannilla implementation and achieve exactly what we want.
+Presently we just need to override the styles. If that's not enough, we can clone the renderers from the vannilla implementation and achieve exactly what we want. Reference: https://github.com/eclipsesource/jsonforms/blob/master/packages/vanilla-renderers/Styles.md
 
 So the order is:
 

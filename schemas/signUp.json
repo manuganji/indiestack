@@ -7,24 +7,38 @@
 	"properties": {
 		"firstName": {
 			"type": "string",
-			"title": "First Name"
+			"title": "First Name",
+			"errorMessage": "Please enter your first name."
 		},
 		"lastName": {
 			"type": "string",
-			"title": "Last Name"
+			"title": "Last Name",
+			"errorMessage": "Please enter your last name."
 		},
 		"email": {
 			"type": "string",
 			"format": "email",
 			"title": "Email Address",
-			"description": "This will be your primary means of contact and account recovery. Please ensure it is correct."
+			"description": "This will be your primary means of contact and account recovery. Please ensure it is correct.",
+			"errorMessage": "Please enter a valid email address."
 		},
 		"tos": {
 			"type": "boolean",
 			"title": "Terms of Service",
 			"description": "I agree to the Terms of Service",
-			"const": true
+			"const": true,
+			"errorMessage": "You must agree to the Terms of Service to continue."
 		}
 	},
-	"required": ["firstName", "lastName", "email", "tos"]
+	"required": [
+		"firstName",
+		"lastName",
+		"email",
+		"tos"
+	],
+	"errorMessage": {
+		"required": {
+			"firstName": "Please fill out this field."
+		}
+	}
 }
