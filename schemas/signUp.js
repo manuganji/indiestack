@@ -1,7 +1,7 @@
 "use strict";
 export const validate = validate33;
 export default validate33;
-const schema32 = {"$schema":"http://json-schema.org/draft-07/schema#","$id":"signUp","type":"object","title":"Sign Up","description":"Sign up for an account","properties":{"firstName":{"type":"string","title":"First Name","errorMessage":"Please enter your first name."},"lastName":{"type":"string","title":"Last Name","errorMessage":"Please enter your last name."},"email":{"type":"string","format":"email","title":"Email Address","description":"This will be your primary means of contact and account recovery. Please ensure it is correct.","errorMessage":"Please enter a valid email address."},"tos":{"type":"boolean","title":"Terms of Service","description":"I agree to the Terms of Service","const":true,"errorMessage":"You must agree to the Terms of Service to continue."}},"required":["firstName","lastName","email","tos"],"errorMessage":{"required":{"firstName":"Please fill out this field."}}};
+const schema32 = {"$schema":"http://json-schema.org/draft-07/schema#","$id":"signUp","type":"object","title":"Sign Up","description":"Sign up for an account","properties":{"firstName":{"type":"string","title":"First Name","errorMessage":"Please enter your first name."},"lastName":{"type":"string","title":"Last Name","errorMessage":"Please enter your last name."},"email":{"type":"string","format":"email","title":"Email Address","description":"This will be your primary means of contact and account recovery. Please ensure it is correct.","errorMessage":"Please enter a valid email address."},"tos":{"type":"boolean","title":"Terms of Service","description":"I agree to the Terms of Service","const":true,"errorMessage":"You must agree to the Terms of Service to continue."}},"required":["firstName","lastName","email","tos"],"errorMessage":{"required":{"firstName":"Please enter your first name.","lastName":"Please enter your last name.","email":"Please enter a valid email address.","tos":"You must agree to the Terms of Service to continue."}}};
 const formats0 = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
 const obj0 = {"required":"missingProperty","dependencies":"property","dependentRequired":"property"};
 
@@ -242,7 +242,7 @@ vErrors.push(err22);
 errors++;
 }
 if(errors > 0){
-const emErrors0 = {"required":{"firstName":[]}};
+const emErrors0 = {"required":{"firstName":[],"lastName":[],"email":[],"tos":[]}};
 const templates0 = {required:{}};
 let emPropParams0;
 let emParamsErrors0;

@@ -15,7 +15,7 @@ export interface StyleDef {
 export const vanillaStyles: StyleDef[] = [
 	{
 		name: "control",
-		classNames: ["control", "grid", "grid-cols-2", "text-md", "justify-start"],
+		classNames: ["control", "grid", "grid-cols-1", "text-md", "justify-start"],
 	},
 	{
 		name: "control.trim",
@@ -39,7 +39,7 @@ export const vanillaStyles: StyleDef[] = [
 	},
 	{
 		name: "control.checkbox",
-		classNames: ["checkbox", "justify-self-start", "w-6"],
+		classNames: ["checkbox", "justify-self-start", "w-6", "h-6", "rounded-md"],
 	},
 	{
 		name: "control.radio",
@@ -59,7 +59,7 @@ export const vanillaStyles: StyleDef[] = [
 	},
 	{
 		name: "control.validation.error",
-		classNames: ["validation_error", "text-red-500", "text-sm", "my-1"],
+		classNames: ["validation_error", "text-orange-500", "text-sm", "my-1"],
 	},
 	{
 		name: "control.validation",
@@ -162,6 +162,12 @@ export const vanillaStyles: StyleDef[] = [
 	// inputs
 	{
 		name: "input.description",
-		classNames: ["input-description", "text-sm", "text-gray-500", "my-1"],
+		classNames: [
+			"input-description",
+			"text-sm",
+			"text-gray-500",
+			"my-1",
+			"col-span-1",
+		],
 	},
 ];

@@ -38,7 +38,10 @@
 	],
 	"errorMessage": {
 		"required": {
-			"firstName": "Please fill out this field."
+			"firstName": "Please enter your first name.",
+			"lastName": "Please enter your last name.",
+			"email": "Please enter a valid email address.",
+			"tos": "You must agree to the Terms of Service to continue."
 		}
 	}
 }
