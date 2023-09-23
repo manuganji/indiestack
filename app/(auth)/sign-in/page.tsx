@@ -1,4 +1,5 @@
 "use client";
+import DeclarativeForm from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -8,24 +9,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Form,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { SIGN_UP_PATH } from "@/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/schemas";
+import { loginValidator } from "@/schemas/validators";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { emailSignIn } from "./actions";
-import { emailSignInSchema, signInSchema } from "../schemas";
 
 export default function SignIn({}: {}) {
 	const [status, setStatus] = useState<{
@@ -35,59 +24,35 @@ export default function SignIn({}: {}) {
 		error?: string;
 	}>({});
 
-	const form = useForm<z.infer<typeof signInSchema>>({
-		resolver: zodResolver(signInSchema),
-		defaultValues: {
-			email: "",
-			username: "",
-		},
-	});
-
-	const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-		if ("email" in data) {
-			const res = await emailSignIn(data);
-			console.log(res);
-			setStatus({
-				...res,
-				attempted: "email",
-			});
-			if (res?.error) {
-				form.setError("email", {
-					message: res.error,
-				});
-			}
-		} else {
-			console.log("simple sign in");
-		}
-	};
-
 	const successEmail = status?.success && status?.attempted === "email";
 
 	const formEl = !successEmail && (
-		<Form {...form}>
-			<form
-				method="POST"
-				className="gap-2 flex flex-col"
-				onSubmit={form.handleSubmit(onSubmit)}
-			>
-				<FormField
-					name="email"
-					control={form.control}
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Email</FormLabel>
-							<FormControl>
-								<Input placeholder="someone@example.com" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button type="submit" variant="default">
-					Get a magic link
-				</Button>
+		<DeclarativeForm
+			schema={loginSchema}
+			validator={loginValidator}
+			method="POST"
+			className="gap-2 flex flex-col"
+			onSubmit={async (data, setErrors) => {
+				if ("email" in data) {
+					const res = await emailSignIn(data);
+					console.log(res);
+					setStatus({
+						...res,
+						attempted: "email",
+					});
+					if (res?.error) {
+						setErrors(res.error);
+					}
+				} else {
+					console.log("simple sign in");
+				}
+			}}
+		>
+			<Button type="submit" variant="default">
+				Get a magic link
+			</Button>
 
-				{/* <FormField
+			{/* <FormField
           name="username"
           control={form.control}
           render={({ field }) => (
@@ -109,8 +74,7 @@ export default function SignIn({}: {}) {
         <Button type="button" variant="default">
           Sign In with Microsoft ID
         </Button>*/}
-			</form>
-		</Form>
+		</DeclarativeForm>
 	);
 
 	return (

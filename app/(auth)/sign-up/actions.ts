@@ -15,7 +15,7 @@ import {
 	TOKEN_IDENTIFIER_COOKIE,
 } from "@/serverConstants";
 import { cookies } from "next/headers";
-import { signUpSchema } from "../schemas";
+import { signUpValidator } from "@/schemas/validators";
 
 export async function signUpAction(data: {
 	email: string;
@@ -24,9 +24,12 @@ export async function signUpAction(data: {
 	redirectUrl?: string;
 }) {
 	const property = await getCurrentProperty();
-	const insertable = signUpSchema.parse(data);
+	const isValid = signUpValidator(data);
 
-	const { email, firstName } = insertable;
+	if (!isValid) {
+		return signUpValidator?.errors;
+	}
+	const { email, firstName } = data;
 	if ((await isDisposableEmail(email)) || (await isBlockedEmail(email))) {
 		return {
 			error: "Unable to sign you up. This email address is not allowed.",

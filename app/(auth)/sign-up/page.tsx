@@ -1,4 +1,5 @@
 "use client";
+import DeclarativeForm from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -8,24 +9,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { SIGN_IN_PATH } from "@/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "@/schemas/index";
+import signUpValidator from "@/schemas/signUpValidator";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { signUpAction } from "./actions";
-import { signUpSchema } from "../schemas";
-import { defaults } from "lodash";
 
 export default function SignUp({
 	searchParams,
@@ -42,16 +31,6 @@ export default function SignUp({
 		message?: string;
 		error?: string;
 	}>({ success: false, attempted: false });
-	const form = useForm({
-		resolver: zodResolver(signUpSchema),
-		defaultValues: defaults({}, searchParams, {
-			email: "",
-			firstName: "",
-			lastName: "",
-		}),
-		mode: "onTouched",
-		progressive: true,
-	});
 
 	let content;
 	if (status.success) {
@@ -63,71 +42,37 @@ export default function SignUp({
 		);
 	} else {
 		content = (
-			<Form {...form}>
-				<form
-					method="POST"
-					className="gap-2 flex flex-col"
-					onSubmit={form.handleSubmit(async (data) => {
-						const res = await signUpAction(data);
-						console.log(res);
-						setStatus({
-							...res,
-							attempted: true,
-						});
-						if (res?.error) {
-							form.setError("email", {
+			<DeclarativeForm
+				schema={signUpSchema}
+				validator={signUpValidator}
+				method="POST"
+				className="gap-2 flex flex-col"
+				initialData={searchParams}
+				onSubmit={async (data, setErrors) => {
+					const res = await signUpAction(data);
+					console.log(res);
+					setStatus({
+						...res,
+						attempted: true,
+					});
+
+					if (res?.error) {
+						setErrors([
+							{
+								instancePath: "",
+								schemaPath: "",
+								keyword: "",
 								message: res.error,
-							});
-						}
-					})}
-				>
-					<FormField
-						control={form.control}
-						name="firstName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>First Name</FormLabel>
-								<FormControl>
-									<Input type="text" {...field} />
-								</FormControl>
-								<FormDescription></FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						name="lastName"
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Last Name</FormLabel>
-								<FormControl>
-									<Input type="text" {...field} />
-								</FormControl>
-								<FormDescription></FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						name="email"
-						control={form.control}
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Email</FormLabel>
-								<FormControl>
-									<Input type="email" placeholder="someone@example.com" {...field} />
-								</FormControl>
-								<FormDescription></FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button type="submit" variant="default">
-						Sign Up
-					</Button>
-				</form>
-			</Form>
+								propertyName: "",
+							},
+						]);
+					}
+				}}
+			>
+				<Button type="submit" variant="default">
+					Sign Up
+				</Button>
+			</DeclarativeForm>
 		);
 	}
 	return (

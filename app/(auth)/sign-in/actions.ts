@@ -10,17 +10,16 @@ import {
 	makeAbsoluteUrl,
 	sendMagicLink,
 } from "@/lib/serverUtils";
+import { loginValidator } from "@/schemas/validators";
 import {
 	DEFAULT_TOKEN_DURATION,
 	TOKEN_IDENTIFIER_COOKIE,
 } from "@/serverConstants";
 import { cookies } from "next/headers";
-import { z } from "zod";
-import { emailSignInSchema } from "../schemas";
 
 export const emailSignIn = async function ({
-	email: data,
 	redirectUrl = POST_AUTH_REDIRECT_URL,
+	...data
 }: {
 	email: string;
 	redirectUrl?: string;
@@ -36,20 +35,11 @@ export const emailSignIn = async function ({
 	// }
 	// const longSession = data.get("remember-me") as string;
 	const longSession = "false";
-	let email: string;
-	try {
-		email = emailSignInSchema.parse({
-			email: data,
-		}).email;
-	} catch (e) {
-		if (e instanceof z.ZodError) {
-			return {
-				error: "Invalid email address",
-			};
-		} else {
-			throw e;
-		}
+	const isValid = loginValidator(data);
+	if (!isValid) {
+		return loginValidator?.errors;
 	}
+	const email = data.email;
 	if ((await isDisposableEmail(email)) || (await isBlockedEmail(email))) {
 		return {
 			error: "Unable to log you in. This email address is not allowed.",

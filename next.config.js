@@ -6,6 +6,7 @@ const nextConfig = {
 			config.plugins.push(
 				new webpack.IgnorePlugin({ resourceRegExp: /^aws-crt$/ }),
 			);
+
 		return config;
 	},
 	experimental: {

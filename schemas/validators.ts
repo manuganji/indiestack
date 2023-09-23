@@ -1,9 +1,11 @@
-import signUp from "./signUp";
-import login from "./login";
+import loginValidator from "./loginValidator";
+import signUpValidator from "./signUpValidator";
+import type { DataValidateFunction } from "ajv/dist/types";
+loginValidator;
+signUpValidator as DataValidateFunction;
 
-const validators = {
-	signUp,
-	login,
+
+export {
+	loginValidator,
+	signUpValidator,
 };
-
-export default validators;

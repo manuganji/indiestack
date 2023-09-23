@@ -1,3 +1,3 @@
-`JSONSchema` files in this folder are automatically compiled to validator functions on load.
+`JSONSchema` files in this folder are compiled to standalone functions using `pnpm run compile:schemas`.
 
 These are they used in validation everywhere in the stack.

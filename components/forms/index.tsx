@@ -1,20 +1,25 @@
 "use client";
-import "./forms.css";
+import { dev } from "@/constants";
 import { JsonForms } from "@jsonforms/react";
-import type { JsonSchema7 } from "@jsonforms/core/lib/models/jsonSchema7";
-import type { ErrorObject } from "ajv";
-import { useEffect, useMemo, useRef, useState } from "react";
-import validators from "@/schemas/validators";
 import {
 	JsonFormsStyleContext,
 	vanillaCells,
 	vanillaRenderers,
 } from "@jsonforms/vanilla-renderers";
+import type { ErrorObject, JSONSchemaType } from "ajv";
+import { DataValidateFunction } from "ajv/dist/types";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
+import "./forms.css";
 import { vanillaStyles } from "./styles";
-import { dev } from "@/constants";
 
-function transformError(error: ErrorObject): ErrorObject {
-	if (error.params.errors[0].keyword === "required") {
+function transformError(
+	error: NonNullable<DataValidateFunction["errors"]>[number],
+) {
+	if (
+		error?.params &&
+		"errors" in error.params &&
+		error.params.errors[0].keyword === "required"
+	) {
 		// console.log(error);
 		const newError = structuredClone(error);
 		newError.params = error.params.errors[0].params;
@@ -24,58 +29,84 @@ function transformError(error: ErrorObject): ErrorObject {
 	return error;
 }
 
-export default function Form({
+export default function DeclarativeForm<T>({
 	schema,
+	validator,
 	initialData,
+	onSubmit,
+	method,
+	className,
+	children,
 }: {
-	schema: JsonSchema7 & {
-		$id: keyof typeof validators;
-	};
-	initialData?: object;
+	schema: JSONSchemaType<T>;
+	validator: DataValidateFunction;
+	initialData?: Partial<T>;
+	onSubmit?: (
+		data: T,
+		setErrors: Dispatch<
+			SetStateAction<
+				Partial<ErrorObject<string, Record<string, any>, unknown>>[] | undefined
+			>
+		>,
+	) => void | Promise<void>;
+	method: "POST" | "GET";
+	className?: string;
+	children?: React.ReactNode;
 }) {
-	const validator = useMemo(() => validators[schema.$id], [schema.$id]);
-
-	const [data, setData] = useState<object>(initialData ?? {});
-	const [errors, setErrors] = useState<Array<ErrorObject>>([]);
+	const [data, setData] = useState<T>(initialData || ({} as any));
+	const [errors, setErrors] = useState<DataValidateFunction["errors"]>([]);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	let mounted = useRef(false);
 	return (
-		<JsonFormsStyleContext.Provider
-			value={{
-				styles: vanillaStyles,
+		<form
+			method={method}
+			className={className}
+			onSubmit={async (e) => {
+				e.preventDefault();
+				if (onSubmit && isValid) {
+					await onSubmit(data, setErrors);
+				}
 			}}
 		>
-			<JsonForms
-				config={{
-					restrict: false,
-					trim: true,
-					showUnfocusedDescription: true,
-					hideRequiredAsterisk: true,
+			<JsonFormsStyleContext.Provider
+				value={{
+					styles: vanillaStyles,
 				}}
-				schema={schema}
-				data={data}
-				cells={vanillaCells}
-				renderers={vanillaRenderers}
-				onChange={({ data }) => {
-					setData(data);
-					setIsValid(validator(data));
-					if (!mounted.current) {
-						mounted.current = true;
-						if (dev) console.log("ready");
-						return;
-					}
-					if (validator?.errors) {
-						// @ts-ignore
-						setErrors(validator.errors?.map(transformError));
-					} else {
-						setErrors([]);
-					}
-					// consider it touched only after the first pass.
-				}}
-				validationMode="NoValidation"
-				// @ts-ignore
-				additionalErrors={errors}
-			/>
-		</JsonFormsStyleContext.Provider>
+			>
+				<JsonForms
+					config={{
+						restrict: false,
+						trim: true,
+						showUnfocusedDescription: true,
+						hideRequiredAsterisk: true,
+					}}
+					// @ts-ignore
+					schema={schema}
+					data={data}
+					cells={vanillaCells}
+					renderers={vanillaRenderers}
+					onChange={async ({ data }) => {
+						setData(data);
+						const isValid = await validator(data);
+						setIsValid(isValid);
+						if (!mounted.current) {
+							// consider it touched only after the first pass.
+							mounted.current = true;
+							if (dev) console.log("ready");
+							return;
+						}
+						if (validator?.errors) {
+							setErrors(validator.errors?.map(transformError));
+						} else {
+							setErrors([]);
+						}
+					}}
+					validationMode="NoValidation"
+					// @ts-ignore
+					additionalErrors={errors}
+				/>
+			</JsonFormsStyleContext.Provider>
+			{children}
+		</form>
 	);
 }
