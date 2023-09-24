@@ -84,7 +84,7 @@ export async function signUpAction(data: {
 }
 
 export const verifyToken = async function (token: string, email?: string) {
-	console.log("cookie value", cookies().get(TOKEN_IDENTIFIER_COOKIE)?.value);
+	// console.log("cookie value", cookies().get(TOKEN_IDENTIFIER_COOKIE)?.value);
 	const identifier = cookies().get(TOKEN_IDENTIFIER_COOKIE)?.value || email;
 
 	if (!identifier) {

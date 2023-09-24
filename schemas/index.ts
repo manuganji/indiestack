@@ -69,3 +69,34 @@ export const signUpSchema: JSONSchemaType<{
 		},
 	},
 };
+
+export const propertySchema: JSONSchemaType<{
+	name: string;
+	domain: string;
+}> = {
+	$schema: "http://json-schema.org/draft-07/schema#",
+	$id: "property",
+	type: "object",
+	title: "Property",
+	description: "",
+	properties: {
+		name: {
+			type: "string",
+			title: "Property Name",
+			errorMessage: "Please enter a property name.",
+		},
+		domain: {
+			type: "string",
+			title: "Domain",
+			format: "hostname",
+			errorMessage: "Please enter a valid domain.",
+		},
+	},
+	required: ["name", "domain"],
+	errorMessage: {
+		required: {
+			name: "Please enter a property name.",
+			domain: "Please enter a valid domain.",
+		},
+	},
+};
