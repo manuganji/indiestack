@@ -23,7 +23,10 @@ export function middleware(request: NextRequest) {
 		request,
 	});
 
-	resp.headers.set("x-nonce", nonce);
+	// share nonce with the downstream code
+	request.headers.set("x-nonce", nonce);
+
+	// add CSP header if not already present
 	if (!resp.headers.has("Content-Security-Policy")) {
 		resp.headers.set(
 			"Content-Security-Policy",
