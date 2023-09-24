@@ -3,6 +3,7 @@
 import { createVerificationToken, getUserByEmail } from "@/auth";
 import { LONG_SESSION_COOKIE, POST_AUTH_REDIRECT_URL, prod } from "@/constants";
 import {
+	createErrorObject,
 	deltaFromNow,
 	getCurrentProperty,
 	isBlockedEmail,
@@ -17,7 +18,7 @@ import {
 } from "@/serverConstants";
 import { cookies } from "next/headers";
 
-export const emailSignIn = async function ({
+export async function emailSignIn({
 	redirectUrl = POST_AUTH_REDIRECT_URL,
 	...data
 }: {
@@ -37,19 +38,33 @@ export const emailSignIn = async function ({
 	const longSession = "false";
 	const isValid = loginValidator(data);
 	if (!isValid) {
-		return loginValidator?.errors;
+		// @ts-ignore
+		return {
+			errors: loginValidator?.errors,
+			success: false,
+		};
 	}
 	const email = data.email;
 	if ((await isDisposableEmail(email)) || (await isBlockedEmail(email))) {
 		return {
-			error: "Unable to log you in. This email address is not allowed.",
+			errors: [
+				createErrorObject(
+					"email",
+					"Unable to sign you in. This email address is not allowed.",
+				),
+			],
+			success: false,
 		};
 	}
 	const user = await getUserByEmail(email);
 	if (!user) {
 		return {
-			error: "Unable to log you in. Are you sure you have an account with us?",
-			email,
+			errors: [
+				createErrorObject(
+					"email",
+					"Unable to log you in. Are you sure you have an account with us?",
+				),
+			],
 		};
 	}
 	// store long session preference in cookie
@@ -91,4 +106,4 @@ export const emailSignIn = async function ({
 			error: "Unable to send verification email. Please try again later.",
 		};
 	}
-};
+}

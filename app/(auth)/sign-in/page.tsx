@@ -33,19 +33,15 @@ export default function SignIn({}: {}) {
 			method="POST"
 			className="gap-2 flex flex-col"
 			onSubmit={async (data, setErrors) => {
-				if ("email" in data) {
-					const res = await emailSignIn(data);
-					console.log(res);
-					setStatus({
-						...res,
-						attempted: "email",
-					});
-					if (res?.error) {
-						setErrors(res.error);
-					}
-				} else {
-					console.log("simple sign in");
+				const res = await emailSignIn(data);
+				if (res?.errors) {
+					setErrors(res.errors);
+					return;
 				}
+				setStatus({
+					...res,
+					attempted: "email",
+				});
 			}}
 		>
 			<Button type="submit" variant="default">
