@@ -15,6 +15,7 @@ import signUpValidator from "@/schemas/signUpValidator";
 import Link from "next/link";
 import { useState } from "react";
 import { signUpAction } from "./actions";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function SignUp({
 	searchParams,
@@ -25,6 +26,7 @@ export default function SignUp({
 		lastName?: string;
 	};
 }) {
+	const { toast } = useToast();
 	const [status, setStatus] = useState<{
 		success?: boolean;
 		attempted: boolean;
@@ -50,22 +52,18 @@ export default function SignUp({
 				initialData={searchParams}
 				onSubmit={async (data, setErrors) => {
 					const res = await signUpAction(data);
-					console.log(res);
 					setStatus({
 						...res,
 						attempted: true,
 					});
 
+					if (res?.errors) {
+						setErrors(res?.errors);
+					}
 					if (res?.error) {
-						setErrors([
-							{
-								instancePath: "",
-								schemaPath: "",
-								keyword: "",
-								message: res.error,
-								propertyName: "",
-							},
-						]);
+						toast({
+							description: res?.error,
+						});
 					}
 				}}
 			>

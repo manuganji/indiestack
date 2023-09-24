@@ -82,7 +82,7 @@ export default function SignIn({}: {}) {
 			<CardHeader>
 				<CardTitle>Sign In</CardTitle>
 				<CardDescription>
-					No password to remember.
+					No password to remember.{" "}
 					<Link
 						className="text-gray-700 hover:text-gray-600 font-bold"
 						href={SIGN_UP_PATH}

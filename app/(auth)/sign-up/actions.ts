@@ -3,6 +3,7 @@
 import { createUser, createVerificationToken } from "@/auth";
 import { POST_AUTH_REDIRECT_URL, prod } from "@/constants";
 import {
+	createErrorObject,
 	deltaFromNow,
 	getCurrentProperty,
 	isBlockedEmail,
@@ -27,12 +28,21 @@ export async function signUpAction(data: {
 	const isValid = signUpValidator(data);
 
 	if (!isValid) {
-		return signUpValidator?.errors;
+		return {
+			// @ts-ignore
+			errors: signUpValidator?.errors,
+			success: false,
+		};
 	}
 	const { email, firstName } = data;
 	if ((await isDisposableEmail(email)) || (await isBlockedEmail(email))) {
 		return {
-			error: "Unable to sign you up. This email address is not allowed.",
+			errors: [
+				createErrorObject(
+					"email",
+					"Unable to sign you up. This email address is not allowed.",
+				),
+			],
 			...data,
 		};
 	}
@@ -48,13 +58,21 @@ export async function signUpAction(data: {
 	} catch (e) {
 		// @ts-ignore
 		if (e.code === "23505") {
-			return {
-				error: "A user with this email already exists. Maybe Sign In instead?",
-				...insertable,
-				exists: true,
+			const res = {
+				errors: [
+					createErrorObject(
+						"email",
+						"A user with this email already exists. Maybe sign in instead?",
+					),
+				],
+				success: false,
 			};
+			return res;
 		}
-		return { error: "Server Error. Please try again or contact support." };
+		return {
+			error: "Server Error. Please try again or contact support.",
+			success: false,
+		};
 	}
 	// store email in cookie
 	cookies().set(TOKEN_IDENTIFIER_COOKIE, email, {

@@ -1,5 +1,5 @@
 import "server-only";
-
+import { DataValidateFunction } from "ajv/dist/types";
 import { PublicUser } from "@/components/auth/types";
 import {
 	AWS_REGION,
@@ -373,3 +373,13 @@ export const getUserOnServer = cache(async (): Promise<PublicUser | null> => {
 		return session?.user ?? null;
 	}
 });
+
+export function createErrorObject(property: string, message: string) {
+	const keyword = "errorMessage";
+	return {
+		instancePath: `/${property}`,
+		schemaPath: `#/properties/${property}/${keyword}`,
+		keyword,
+		message,
+	};
+}

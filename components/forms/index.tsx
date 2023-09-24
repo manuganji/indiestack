@@ -24,6 +24,7 @@ function transformError(
 		const newError = structuredClone(error);
 		newError.params = error.params.errors[0].params;
 		newError.keyword = "required";
+		// console.log(newError);
 		return newError;
 	}
 	return error;

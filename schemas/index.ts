@@ -45,11 +45,16 @@ export const signUpSchema: JSONSchemaType<{
 			description:
 				"This will be your primary means of contact and account recovery. Please ensure it is correct.",
 			errorMessage: "Please enter a valid email address.",
+			// notExists: {
+			// 	column: "email",
+			// 	table: "users",
+			// 	errorMessage: "A user with this email already exists.",
+			// },
 		},
 		tos: {
 			type: "boolean",
 			title: "Terms of Service",
-			description: "I agree to the Terms of Service",
+			description: `I agree to the Terms of Service`,
 			const: true,
 			errorMessage: "You must agree to the Terms of Service to continue.",
 		},

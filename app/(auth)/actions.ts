@@ -22,8 +22,6 @@ import {
 	TOKEN_IDENTIFIER_COOKIE,
 } from "@/serverConstants";
 import { cookies } from "next/headers";
-import { z } from "zod";
-import { emailSignInSchema, signUpSchema } from "./schemas";
 
 export async function signUpAction(data: {
 	email: string;

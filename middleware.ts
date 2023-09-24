@@ -19,20 +19,19 @@ export function middleware(request: NextRequest) {
     upgrade-insecure-requests;
 `;
 
-	const requestHeaders = new Headers(request.headers);
-	requestHeaders.set("x-nonce", nonce);
-	requestHeaders.set(
-		"Content-Security-Policy",
-		// Replace newline characters and spaces
-		cspHeader.replace(/\s{2,}/g, " ").trim(),
-	);
-
-	return NextResponse.next({
-		headers: requestHeaders,
-		request: {
-			headers: requestHeaders,
-		},
+	const resp = NextResponse.next({
+		request,
 	});
+
+	resp.headers.set("x-nonce", nonce);
+	if (!resp.headers.has("Content-Security-Policy")) {
+		resp.headers.set(
+			"Content-Security-Policy",
+			// Replace newline characters and spaces
+			cspHeader.replace(/\s{2,}/g, " ").trim(),
+		);
+	}
+	return resp;
 }
 
 export const config = {
