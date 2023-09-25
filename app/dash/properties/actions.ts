@@ -27,5 +27,9 @@ export async function insertProperty(data: Omit<properties.Insertable, "id">) {
 export async function updateProperty(data: properties.Updatable, id: string) {
 	requireRoot();
 	await requireAuth();
-	return runQuery(update("properties", data, { id }));
+	return runQuery(
+		update("properties", data, {
+			id,
+		}),
+	);
 }

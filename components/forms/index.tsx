@@ -35,7 +35,7 @@ export default function DeclarativeForm<T>({
 	validator,
 	initialData,
 	onSubmit,
-	method,
+	method = "POST",
 	className,
 	children,
 }: {
@@ -50,7 +50,7 @@ export default function DeclarativeForm<T>({
 			>
 		>,
 	) => void | Promise<void>;
-	method: "POST" | "GET";
+	method?: "POST" | "GET";
 	className?: string;
 	children?: React.ReactNode;
 }) {

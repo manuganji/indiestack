@@ -1,11 +1,11 @@
 "use strict";
-export const validate = validate34;
-export default validate34;
-const schema33 = {"$schema":"http://json-schema.org/draft-07/schema#","$id":"signUp","type":"object","title":"Sign Up","description":"Sign up for an account","properties":{"firstName":{"type":"string","title":"First Name","errorMessage":"Please enter your first name."},"lastName":{"type":"string","title":"Last Name","errorMessage":"Please enter your last name."},"email":{"type":"string","format":"email","title":"Email Address","description":"This will be your primary means of contact and account recovery. Please ensure it is correct.","errorMessage":"Please enter a valid email address."},"tos":{"type":"boolean","title":"Terms of Service","description":"I agree to the Terms of Service","const":true,"errorMessage":"You must agree to the Terms of Service to continue."}},"required":["firstName","lastName","email","tos"],"errorMessage":{"required":{"firstName":"Please enter your first name.","lastName":"Please enter your last name.","email":"Please enter a valid email address.","tos":"You must agree to the Terms of Service to continue."}}};
+export const validate = validate36;
+export default validate36;
+const schema36 = {"$schema":"http://json-schema.org/draft-07/schema#","$id":"signUp","type":"object","title":"Sign Up","description":"Sign up for an account","properties":{"firstName":{"type":"string","title":"First Name","errorMessage":"Please enter your first name."},"lastName":{"type":"string","title":"Last Name","errorMessage":"Please enter your last name."},"email":{"type":"string","format":"email","title":"Email Address","description":"This will be your primary means of contact and account recovery. Please ensure it is correct.","errorMessage":"Please enter a valid email address."},"tos":{"type":"boolean","title":"Terms of Service","description":"I agree to the Terms of Service","const":true,"errorMessage":"You must agree to the Terms of Service to continue."}},"required":["firstName","lastName","email","tos"],"errorMessage":{"required":{"firstName":"Please enter your first name.","lastName":"Please enter your last name.","email":"Please enter a valid email address.","tos":"You must agree to the Terms of Service to continue."}}};
 const formats0 = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
 const obj0 = {"required":"missingProperty","dependencies":"property","dependentRequired":"property"};
 
-function validate34(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
+function validate36(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
 /*# sourceURL="signUp" */;
 let vErrors = null;
 let errors = 0;
@@ -261,7 +261,7 @@ for(const keyProp0 in emErrors0[key0]){
 emParamsErrors0 = emErrors0[key0][keyProp0];
 if(emParamsErrors0.length){
 const tmpl0 = templates0[key0] && templates0[key0][keyProp0];
-const err24 = {instancePath,schemaPath:"#/errorMessage",keyword:"errorMessage",params:{errors: emParamsErrors0},message:tmpl0 ? tmpl0() : schema33.errorMessage[key0][keyProp0]};
+const err24 = {instancePath,schemaPath:"#/errorMessage",keyword:"errorMessage",params:{errors: emParamsErrors0},message:tmpl0 ? tmpl0() : schema36.errorMessage[key0][keyProp0]};
 if(vErrors === null){
 vErrors = [err24];
 }
@@ -281,6 +281,6 @@ emErrs8.push(err25);
 vErrors = emErrs8;
 errors = emErrs8.length;
 }
-validate34.errors = vErrors;
+validate36.errors = vErrors;
 return errors === 0;
 }

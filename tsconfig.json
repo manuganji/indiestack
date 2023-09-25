@@ -20,13 +20,14 @@
 		],
 		"paths": {
 			"@/*": ["./*"]
-		}
+		},
 	},
 	"ts-node": {
 		"transpileOnly": true,
 		"esm": true,
 		"moduleTypes": {
-			"schemas/index.ts": "esm"
+			"schemas/index.ts": "esm",
+			"ajvSetup.ts": "esm"
 		}
 	},
 	"include": [
@@ -35,8 +36,7 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"zapatos/**/*",
-		"schemas/index.ts",
-		"compileValidators.mts"
+		"schemas/index.ts"
 	],
 	"exclude": ["node_modules"]
 }

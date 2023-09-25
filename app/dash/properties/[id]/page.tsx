@@ -1,11 +1,4 @@
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { runQuery } from "@/db";
-import { select, selectExactlyOne } from "zapatos/db";
+import { getProperty } from "@/lib/serverUtils";
 import PropertyForm from "../PropertyForm";
 
 export default async function PropertyHome({
@@ -15,6 +8,6 @@ export default async function PropertyHome({
 		id: string;
 	};
 }) {
-	const property = await runQuery(selectExactlyOne("properties", { id }));
+	const property = await getProperty(id);
 	return <PropertyForm defaultValues={property} id={property.id} />;
 }

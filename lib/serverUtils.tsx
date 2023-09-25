@@ -36,7 +36,6 @@ export const upsertDomain = async (domain: string, name?: string) => {
 			"properties",
 			{
 				id: shortId(10),
-				email_from: `no-reply@${domain}`,
 				domain,
 				name: name ?? domain,
 			},
@@ -106,6 +105,10 @@ export const getCurrentProperty = cache(
 	},
 );
 
+export const getProperty = cache(async function (id: string) {
+	return await runQuery(selectExactlyOne("properties", { id }));
+})
+
 export async function sendMailOnSignUp({
 	email,
 	url,
@@ -157,7 +160,7 @@ export async function sendWelcomeMail({
 	const subject = `Welcome to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
-		from: property.email_from,
+		from: property.settings.email_from,
 		to: email,
 		subject,
 		html: render(

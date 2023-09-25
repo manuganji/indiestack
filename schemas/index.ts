@@ -1,4 +1,6 @@
 import type { JSONSchemaType } from "ajv";
+import type { PgPropertySettings } from "zapatos/custom";
+import { properties } from "zapatos/schema";
 
 export const loginSchema: JSONSchemaType<{
 	email: string;
@@ -70,10 +72,76 @@ export const signUpSchema: JSONSchemaType<{
 	},
 };
 
-export const propertySchema: JSONSchemaType<{
-	name: string;
-	domain: string;
-}> = {
+export const propertySettingsSchema: JSONSchemaType<PgPropertySettings> = {
+	$schema: "http://json-schema.org/draft-07/schema#",
+	$id: "propertySettings",
+	type: "object",
+	title: "Property Settings",
+	description: "",
+	properties: {
+		auth: {
+			type: "object",
+			title: "Authentication",
+			description: "",
+			properties: {
+				allowSignUp: {
+					type: "boolean",
+					title: "Allow Sign Up",
+					description: "",
+					default: true,
+				},
+				allowSignIn: {
+					type: "boolean",
+					title: "Allow Sign In",
+					description: "",
+					default: true,
+				},
+			},
+			required: ["allowSignUp", "allowSignIn"],
+			errorMessage: {},
+		},
+		email: {
+			type: "object",
+			title: "Email",
+			description: "Email Settings",
+			properties: {
+				emailFrom: {
+					type: "string",
+					format: "email",
+					title: "Email From",
+					description: "The email address that emails will be sent from",
+					errorMessage: "Please enter an email address.",
+				},
+				emailFromName: {
+					type: "string",
+					title: "Email Sender Name",
+					description: "The sender name that emails will be sent from",
+					errorMessage: "Please enter a name.",
+				},
+			},
+			required: ["emailFrom", "emailFromName"],
+		},
+		analytics: {
+			type: "object",
+			title: "Analytics",
+			description: "Analytics Settings",
+			properties: {
+				googleAnalyticsId: {
+					type: "string",
+					title: "Google Analytics ID",
+					description: "The ID of your Google Analytics provider",
+					errorMessage: "Please enter an ID.",
+				},
+			},
+			required: ["googleAnalyticsId"],
+		},
+	},
+	required: ["auth", "email"],
+};
+
+export const propertySchema: JSONSchemaType<
+	Omit<properties.JSONSelectable, "id">
+> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
 	$id: "property",
 	type: "object",
@@ -91,8 +159,11 @@ export const propertySchema: JSONSchemaType<{
 			format: "hostname",
 			errorMessage: "Please enter a valid domain.",
 		},
+		settings: {
+			$ref: "propertySettings",
+		}
 	},
-	required: ["name", "domain"],
+	required: ["name", "domain", "settings"],
 	errorMessage: {
 		required: {
 			name: "Please enter a property name.",
