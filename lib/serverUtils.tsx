@@ -25,7 +25,15 @@ import nodemailer from "nodemailer";
 import { htmlToText } from "nodemailer-html-to-text";
 import { env } from "process";
 import { cache } from "react";
-import { all, parent, selectExactlyOne, selectOne, sql, upsert } from "zapatos/db";
+import {
+	all,
+	parent,
+	select,
+	selectExactlyOne,
+	selectOne,
+	sql,
+	upsert,
+} from "zapatos/db";
 import { properties } from "zapatos/schema";
 import { PgPropertySettings } from "zapatos/custom";
 
@@ -98,16 +106,19 @@ export const getCurrentProperty = cache(async (withSettings = false) => {
 				{
 					domain: getHostName(),
 				},
-				withSettings ? {} : {
-					columns: ["domain", "id", "name"],
-					extras: {
-						settings: sql<properties.SQL, PgPropertySettings>`{}::jsonb`
-					}
-				},
+				withSettings
+					? {}
+					: {
+							columns: ["domain", "id", "name"],
+							extras: {
+								settings: sql<properties.SQL, PgPropertySettings>`'{}'::jsonb`,
+							},
+					  },
 			),
 		);
 		return property;
 	} catch (e) {
+		console.error(e);
 		const property = upsertDomain(getHostName());
 		return property;
 	}
@@ -121,12 +132,14 @@ export const getProperty = cache(async function (
 		selectExactlyOne(
 			"properties",
 			{ id },
-			withSettings ? {} : {
-				columns: ["domain", "id", "name"],
-				extras: {
-					settings: sql<properties.SQL, PgPropertySettings>`{}::jsonb`
-				}
-			},
+			withSettings
+				? {}
+				: {
+						columns: ["domain", "id", "name"],
+						extras: {
+							settings: sql<properties.SQL, PgPropertySettings>`'{}'::jsonb`,
+						},
+				  },
 		),
 	);
 });
@@ -149,8 +162,8 @@ export async function sendMailOnSignUp({
 	const subject = `Sign in to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
-		from: property.settings?.email.emailFrom,
-		sender: property.settings?.email.emailFromName,
+		from: property.settings?.email?.emailFrom || `admin@${property.domain}`,
+		sender: property.settings?.email?.emailFromName || `Admin`,
 		to: email,
 		subject,
 		// text: textContent,
@@ -179,12 +192,12 @@ export async function sendWelcomeMail({
 	firstName: string;
 	email: string;
 }) {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty(true);
 	const subject = `Welcome to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
-		from: property.settings?.email.emailFrom,
-		sender: property.settings?.email.emailFromName,
+		from: property.settings?.email?.emailFrom || `admin@${property.domain}`,
+		sender: property.settings?.email?.emailFromName || `Admin`,
 		to: email,
 		subject,
 		html: render(
@@ -215,12 +228,12 @@ export async function sendMagicLink({
 }) {
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty(true);
 	const subject = `Sign in to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
-		from: property.settings?.email.emailFrom,
-		sender: property.settings?.email.emailFromName,
+		from: property.settings?.email?.emailFrom || `admin@${property.domain}`,
+		sender: property.settings?.email?.emailFromName || `Admin`,
 		to: email,
 		subject,
 		html: render(
