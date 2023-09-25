@@ -8,6 +8,6 @@ export default async function PropertyHome({
 		id: string;
 	};
 }) {
-	const property = await getProperty(id);
+	const property = await getProperty(id, true);
 	return <PropertyForm defaultValues={property} id={property.id} />;
 }

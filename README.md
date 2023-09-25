@@ -52,3 +52,12 @@ Public `layout` doesn't make any user specific requests. But `(app)/layout` does
 ## Settings
 
 Read through `.env.example` for basic settings.
+
+### Property Level Settings
+
+Defined in properties.settings.
+
+Steps to introduce a new setting:
+
+- Update schema in schemas
+- Update the type in zapatos/custom/PgPropertySettings.d.ts

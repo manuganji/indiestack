@@ -6,6 +6,7 @@ import {
 	vanillaCells,
 	vanillaRenderers,
 } from "@jsonforms/vanilla-renderers";
+import { customRenders } from "./renderers";
 import type { ErrorObject, JSONSchemaType } from "ajv";
 import { DataValidateFunction } from "ajv/dist/types";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
@@ -85,7 +86,7 @@ export default function DeclarativeForm<T>({
 					schema={schema}
 					data={data}
 					cells={vanillaCells}
-					renderers={vanillaRenderers}
+					renderers={[...vanillaRenderers, ...customRenders]}
 					onChange={async ({ data }) => {
 						setData(data);
 						const isValid = await validator(data);

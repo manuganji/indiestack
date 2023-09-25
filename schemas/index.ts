@@ -76,7 +76,7 @@ export const propertySettingsSchema: JSONSchemaType<PgPropertySettings> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
 	$id: "propertySettings",
 	type: "object",
-	title: "Property Settings",
+	title: "Settings",
 	description: "",
 	properties: {
 		auth: {
@@ -156,7 +156,7 @@ export const propertySchema: JSONSchemaType<
 		domain: {
 			type: "string",
 			title: "Domain",
-			format: "hostname",
+			// format: "hostname",
 			errorMessage: "Please enter a valid domain.",
 		},
 		settings: {
