@@ -1,3 +1,7 @@
+// import { getCurrentProperty } from "@/lib/serverUtils";
+import { headers } from "next/headers";
+import { Router } from "next/router";
+
 type MenuItemType = {
 	name: string;
 	desc?: string;
@@ -27,3 +31,8 @@ export const PROPERTY_MENU: Array<MenuItemType> = [
 		path: "/dash/users",
 	},
 ];
+
+// export const getDashSidebarMenu = async (): Array<MenuItemType> => {
+// 	const property = await getCurrentProperty();
+
+// };

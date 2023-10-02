@@ -27,9 +27,14 @@ export async function runQuery<T>(query: SQLFragment<T>) {
 	const pool = getPool();
 	// const client = await pool.connect();
 	// console.log(query.compile());
-	const res = await query.run(pool);
-	await pool.end();
-	return res;
+	try {
+		const res = await query.run(pool);
+		await pool.end();
+		return res;
+	} catch (e) {
+		// console.error(e);
+		throw e;
+	}
 	// client.release();
 }
 

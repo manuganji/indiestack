@@ -16,15 +16,18 @@ export function middleware(request: NextRequest) {
     form-action 'self';
     frame-ancestors 'none';
     block-all-mixed-content;
-    upgrade-insecure-requests;
-`;
+    ${dev ? "" : "upgrade-insecure-requests"};
+	`;
+
+	const { pathname } = request.nextUrl;
+	request.headers.set("x-pathname", pathname);
+	// share nonce with the downstream code
+	request.headers.set("x-nonce", nonce);
 
 	const resp = NextResponse.next({
 		request,
 	});
-
-	// share nonce with the downstream code
-	request.headers.set("x-nonce", nonce);
+	// resp.headers.delete('x-pathname');
 
 	// add CSP header if not already present
 	if (!resp.headers.has("Content-Security-Policy")) {

@@ -19,7 +19,11 @@ declare module 'zapatos/schema' {
   /* === schema: public === */
 
   /* --- enums --- */
-  /* (none) */
+
+  export type menu_type = 'footer' | 'header';
+  export namespace every {
+    export type menu_type = ['footer', 'header'];
+  }
 
   /* --- tables --- */
 
@@ -603,6 +607,179 @@ declare module 'zapatos/schema' {
       updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'block_list_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **menus**
+   * - Table in database
+   */
+  export namespace menus {
+    export type Table = 'menus';
+    export interface Selectable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path: c.PgLtree;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: menu_type;
+      /**
+      * **menus.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items: c.PgMenuItems;
+    }
+    export interface JSONSelectable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path: c.PgLtree;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: menu_type;
+      /**
+      * **menus.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items: c.PgMenuItems;
+    }
+    export interface Whereable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path?: c.PgLtree | db.Parameter<c.PgLtree> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgLtree | db.Parameter<c.PgLtree> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: menu_type | db.Parameter<menu_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, menu_type | db.Parameter<menu_type> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path?: c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: menu_type | db.Parameter<menu_type> | db.SQLFragment;
+      /**
+      * **menus.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path?: c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: menu_type | db.Parameter<menu_type> | db.SQLFragment | db.SQLFragment<any, menu_type | db.Parameter<menu_type> | db.SQLFragment>;
+      /**
+      * **menus.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = never;
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -1507,20 +1684,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | block_list.Table | pgmigrations.Table | properties.Table | sessions.Table | users.Table | verification_tokens.Table;
-    export type Selectable = accounts.Selectable | block_list.Selectable | pgmigrations.Selectable | properties.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
-    export type Whereable = accounts.Whereable | block_list.Whereable | pgmigrations.Whereable | properties.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
-    export type Insertable = accounts.Insertable | block_list.Insertable | pgmigrations.Insertable | properties.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
-    export type Updatable = accounts.Updatable | block_list.Updatable | pgmigrations.Updatable | properties.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
-    export type Column = accounts.Column | block_list.Column | pgmigrations.Column | properties.Column | sessions.Column | users.Column | verification_tokens.Column;
+    export type Table = accounts.Table | block_list.Table | menus.Table | pgmigrations.Table | properties.Table | sessions.Table | users.Table | verification_tokens.Table;
+    export type Selectable = accounts.Selectable | block_list.Selectable | menus.Selectable | pgmigrations.Selectable | properties.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | menus.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
+    export type Whereable = accounts.Whereable | block_list.Whereable | menus.Whereable | pgmigrations.Whereable | properties.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
+    export type Insertable = accounts.Insertable | block_list.Insertable | menus.Insertable | pgmigrations.Insertable | properties.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
+    export type Updatable = accounts.Updatable | block_list.Updatable | menus.Updatable | pgmigrations.Updatable | properties.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | menus.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
+    export type Column = accounts.Column | block_list.Column | menus.Column | pgmigrations.Column | properties.Column | sessions.Column | users.Column | verification_tokens.Column;
   
-    export type AllBaseTables = [accounts.Table, block_list.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllBaseTables = [accounts.Table, block_list.Table, menus.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, block_list.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllTablesAndViews = [accounts.Table, block_list.Table, menus.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
   }
 
 
@@ -1550,6 +1727,7 @@ declare module 'zapatos/schema' {
   export type SelectableForTable<T extends Table> = {
     "accounts": accounts.Selectable;
     "block_list": block_list.Selectable;
+    "menus": menus.Selectable;
     "pgmigrations": pgmigrations.Selectable;
     "properties": properties.Selectable;
     "sessions": sessions.Selectable;
@@ -1560,6 +1738,7 @@ declare module 'zapatos/schema' {
   export type JSONSelectableForTable<T extends Table> = {
     "accounts": accounts.JSONSelectable;
     "block_list": block_list.JSONSelectable;
+    "menus": menus.JSONSelectable;
     "pgmigrations": pgmigrations.JSONSelectable;
     "properties": properties.JSONSelectable;
     "sessions": sessions.JSONSelectable;
@@ -1570,6 +1749,7 @@ declare module 'zapatos/schema' {
   export type WhereableForTable<T extends Table> = {
     "accounts": accounts.Whereable;
     "block_list": block_list.Whereable;
+    "menus": menus.Whereable;
     "pgmigrations": pgmigrations.Whereable;
     "properties": properties.Whereable;
     "sessions": sessions.Whereable;
@@ -1580,6 +1760,7 @@ declare module 'zapatos/schema' {
   export type InsertableForTable<T extends Table> = {
     "accounts": accounts.Insertable;
     "block_list": block_list.Insertable;
+    "menus": menus.Insertable;
     "pgmigrations": pgmigrations.Insertable;
     "properties": properties.Insertable;
     "sessions": sessions.Insertable;
@@ -1590,6 +1771,7 @@ declare module 'zapatos/schema' {
   export type UpdatableForTable<T extends Table> = {
     "accounts": accounts.Updatable;
     "block_list": block_list.Updatable;
+    "menus": menus.Updatable;
     "pgmigrations": pgmigrations.Updatable;
     "properties": properties.Updatable;
     "sessions": sessions.Updatable;
@@ -1600,6 +1782,7 @@ declare module 'zapatos/schema' {
   export type UniqueIndexForTable<T extends Table> = {
     "accounts": accounts.UniqueIndex;
     "block_list": block_list.UniqueIndex;
+    "menus": menus.UniqueIndex;
     "pgmigrations": pgmigrations.UniqueIndex;
     "properties": properties.UniqueIndex;
     "sessions": sessions.UniqueIndex;
@@ -1610,6 +1793,7 @@ declare module 'zapatos/schema' {
   export type ColumnForTable<T extends Table> = {
     "accounts": accounts.Column;
     "block_list": block_list.Column;
+    "menus": menus.Column;
     "pgmigrations": pgmigrations.Column;
     "properties": properties.Column;
     "sessions": sessions.Column;
@@ -1620,6 +1804,7 @@ declare module 'zapatos/schema' {
   export type SQLForTable<T extends Table> = {
     "accounts": accounts.SQL;
     "block_list": block_list.SQL;
+    "menus": menus.SQL;
     "pgmigrations": pgmigrations.SQL;
     "properties": properties.SQL;
     "sessions": sessions.SQL;

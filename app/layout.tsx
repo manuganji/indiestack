@@ -2,34 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
+import NavMenu from "@/components/NavMenu";
 import { getCurrentProperty } from "@/lib/serverUtils";
 import { ResolvingMetadata } from "next";
-import { dev } from "@/constants";
-import { headers } from "next/headers";
-
-function setCSPHeaders() {
-	const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-	const cspHeader = `
-    default-src 'self';
-    script-src 'self' ${
-					dev ? "'unsafe-eval'" : " 'strict-dynamic'"
-				} 'nonce-${nonce}';
-    style-src 'self' '${dev ? "unsafe-inline" : "nonce-${nonce}"}' ;
-    img-src 'self' blob: data:;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    block-all-mixed-content;
-    upgrade-insecure-requests;
-`;
-	headers().set("Content-Security-Policy", cspHeader);
-}
 
 type Props = {
 	params: { id: string };
@@ -56,15 +34,19 @@ export async function generateMetadata(
 
 export default async function RootLayout({
 	children,
+	params,
 }: {
+	params: { id: string };
 	children: React.ReactNode;
 }) {
 	return (
 		<html lang={process.env.NEXT_PUBLIC_GLOBAL_LANG}>
 			<body className={inter.className}>
 				<div className="flex flex-col">
-					<Providers>{children}</Providers>
-					<Toaster />
+					<Providers>
+						<NavMenu />
+						{children}
+					</Providers>
 				</div>
 			</body>
 		</html>
