@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
 	const cspHeader = `
     default-src 'self';
     script-src 'self' ${
-					dev ? "'unsafe-eval'" : " 'strict-dynamic'"
+					dev ? "'unsafe-eval'" : "'strict-dynamic'"
 				} 'nonce-${nonce}';
     style-src 'self' '${dev ? "unsafe-inline" : "nonce-${nonce}"}' ;
     img-src 'self' blob: data:;

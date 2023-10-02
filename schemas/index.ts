@@ -161,7 +161,7 @@ export const propertySchema: JSONSchemaType<
 		},
 		settings: {
 			$ref: "propertySettings",
-		}
+		},
 	},
 	required: ["name", "domain", "settings"],
 	errorMessage: {
@@ -170,4 +170,20 @@ export const propertySchema: JSONSchemaType<
 			domain: "Please enter a valid domain.",
 		},
 	},
+};
+
+export const reconfirmEmailSchema: JSONSchemaType<{ email: string }> = {
+	$schema: "http://json-schema.org/draft-07/schema#",
+	$id: "reconfirmEmail",
+	title: "Reconfirm Email",
+	type: "object",
+	properties: {
+		email: {
+			title: "Email",
+			type: "string",
+			format: "email",
+			errorMessage: "Invalid email",
+		},
+	},
+	required: ["email"],
 };

@@ -1,7 +1,6 @@
 import { SIGN_IN_PATH, SIGN_UP_PATH } from "@/constants";
 import { runQuery } from "@/db";
 import { getCurrentProperty } from "@/lib/serverUtils";
-import { isNil } from "lodash";
 import { RequestContext } from "next/dist/server/base-server";
 import { NextRequest, NextResponse } from "next/server";
 import { cache } from "react";
@@ -29,6 +28,7 @@ const getMenusForPath = cache(
 				)}`,
 			},
 			{
+				columns: ["items"],
 				order: {
 					by: sql`char_length(path::text)`,
 					direction: "DESC",

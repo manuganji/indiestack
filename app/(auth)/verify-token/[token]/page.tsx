@@ -1,19 +1,9 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
-import { verifyToken } from "../../actions";
 import { useRouter } from "next/navigation";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
-import * as z from "zod";
+import { Fragment, useEffect, useState } from "react";
+import { verifyToken } from "./actions";
+import DeclarativeForm from "@/components/forms";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -21,15 +11,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { SIGN_IN_PATH } from "@/constants";
-
-const formSchema = z.object({
-	email: z.string().email().nonempty().default(""),
-});
+import { reconfirmEmailSchema } from "@/schemas";
+import { reconfirmEmailValidator } from "@/schemas/validators";
+import Link from "next/link";
 
 export default function VerifyEmail({
 	params: { token },
@@ -45,26 +30,11 @@ export default function VerifyEmail({
 		error?: string;
 	}>({ reconfirm: false, success: false });
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			email: "",
-		},
-		mode: "onTouched",
-		progressive: true,
-	});
-
 	useEffect(() => {
 		verifyToken(token).then((res) => {
-			// console.log("res", res);
 			setStatus(res);
-			if ("error" in res) {
-				form.setError("root", {
-					message: res.error,
-				});
-			}
 		});
-	}, [token, form]);
+	}, [token]);
 
 	useEffect(() => {
 		// console.log("status", status);
@@ -73,12 +43,6 @@ export default function VerifyEmail({
 			router.push(redirectUrl || "/");
 		}
 	}, [status?.success, redirectUrl, router]);
-
-	async function onSubmit(data: { email: string }) {
-		const res = await verifyToken(token, data.email);
-		// console.log("res", res);
-		setStatus(res);
-	}
 
 	return (
 		<Card className="mx-auto max-w-md my-20 p-4">
@@ -94,8 +58,22 @@ export default function VerifyEmail({
 			</CardHeader>
 			<CardContent>
 				{status.reconfirm && (
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+					<DeclarativeForm
+						schema={reconfirmEmailSchema}
+						validator={reconfirmEmailValidator}
+						method="POST"
+						className="gap-2 flex flex-col"
+						onSubmit={async (data, setErrors) => {
+							const res = await verifyToken(token, data.email);
+							if (res?.errors) {
+								setErrors(res.errors);
+							}
+							if (res?.success) {
+								setStatus(res);
+							}
+						}}
+					>
+						{/* <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 							<FormField
 								control={form.control}
 								name="email"
@@ -109,11 +87,10 @@ export default function VerifyEmail({
 										<FormMessage />
 									</FormItem>
 								)}
-							/>
-							<Button type="submit">Submit</Button>
-						</form>
-						<FormMessage />
-					</Form>
+							/> */}
+						<Button type="submit">Submit</Button>
+						{/* </form> */}
+					</DeclarativeForm>
 				)}
 				{"error" in status && (
 					<Fragment>

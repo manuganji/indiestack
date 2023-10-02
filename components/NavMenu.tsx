@@ -13,6 +13,7 @@ import { Fragment, useEffect, useState } from "react";
 import { PgMenuItems } from "zapatos/custom";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
+import { ModeToggle } from "./ModeToggle";
 
 export default function NavMenu() {
 	const pathname = usePathname();
@@ -33,15 +34,13 @@ export default function NavMenu() {
 	}, [pathname]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <Skeleton className="w-full" />;
 	}
 
 	return (
-		<div className="flex justify-between px-2">
-			{loading ? (
-				<Skeleton className="w-full" />
-			) : (
-				menuItems.map((subMenu, i) => {
+		<div className="flex">
+			<div className="flex justify-between px-2 flex-grow">
+				{menuItems.map((subMenu, i) => {
 					return (
 						<NavigationMenu key={`menu${i}`}>
 							<NavigationMenuList key={`menuList${i}`}>
@@ -89,8 +88,11 @@ export default function NavMenu() {
 							</NavigationMenuList>
 						</NavigationMenu>
 					);
-				})
-			)}
+				})}
+			</div>
+			<div className="place-self-end p-2">
+				<ModeToggle />
+			</div>
 		</div>
 	);
 }

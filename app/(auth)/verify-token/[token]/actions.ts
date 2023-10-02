@@ -1,6 +1,7 @@
 "use server";
 
 import { logUserIn, useVerificationToken } from "@/auth";
+import { createErrorObject } from "@/lib/serverUtils";
 import { TOKEN_IDENTIFIER_COOKIE } from "@/serverConstants";
 import { cookies } from "next/headers";
 
@@ -21,7 +22,9 @@ export const verifyToken = async function (token: string, email?: string) {
 		await useVerificationToken({ identifier, token });
 	} catch (e) {
 		return {
-			error: "This link is invalid or expired. Please try again.",
+			errors: [
+				createErrorObject("", "This link is invalid or expired. Please try again."),
+			],
 		};
 	}
 	await logUserIn(identifier);
