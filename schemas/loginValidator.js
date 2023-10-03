@@ -1,10 +1,10 @@
 "use strict";
-export const validate = validate33;
-export default validate33;
-const schema32 = {"$schema":"http://json-schema.org/draft-07/schema#","$id":"login","type":"object","properties":{"email":{"type":"string","format":"email","errorMessage":"Invalid email"}},"required":["email"]};
+export const validate = validate34;
+export default validate34;
+const schema33 = {"$schema":"http://json-schema.org/draft-07/schema#","$id":"login","type":"object","properties":{"email":{"type":"string","format":"email","errorMessage":"Invalid email"}},"required":["email"]};
 const formats0 = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
 
-function validate33(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
+function validate34(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
 /*# sourceURL="login" */;
 let vErrors = null;
 let errors = 0;
@@ -82,6 +82,6 @@ vErrors.push(err6);
 }
 errors++;
 }
-validate33.errors = vErrors;
+validate34.errors = vErrors;
 return errors === 0;
 }

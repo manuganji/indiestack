@@ -633,17 +633,17 @@ declare module 'zapatos/schema' {
       */
       path: c.PgLtree;
       /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated: boolean;
+      /**
       * **menus.type**
       * - `menu_type` in database
       * - `NOT NULL`, no default
       */
       type: menu_type;
-      /**
-      * **menus.name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      name: string;
       /**
       * **menus.items**
       * - `menu_items` (base type: `jsonb`) in database
@@ -665,17 +665,17 @@ declare module 'zapatos/schema' {
       */
       path: c.PgLtree;
       /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated: boolean;
+      /**
       * **menus.type**
       * - `menu_type` in database
       * - `NOT NULL`, no default
       */
       type: menu_type;
-      /**
-      * **menus.name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      name: string;
       /**
       * **menus.items**
       * - `menu_items` (base type: `jsonb`) in database
@@ -697,17 +697,17 @@ declare module 'zapatos/schema' {
       */
       path?: c.PgLtree | db.Parameter<c.PgLtree> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgLtree | db.Parameter<c.PgLtree> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **menus.type**
       * - `menu_type` in database
       * - `NOT NULL`, no default
       */
       type?: menu_type | db.Parameter<menu_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, menu_type | db.Parameter<menu_type> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **menus.name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **menus.items**
       * - `menu_items` (base type: `jsonb`) in database
@@ -729,17 +729,17 @@ declare module 'zapatos/schema' {
       */
       path?: c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment;
       /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+      /**
       * **menus.type**
       * - `menu_type` in database
       * - `NOT NULL`, no default
       */
       type: menu_type | db.Parameter<menu_type> | db.SQLFragment;
-      /**
-      * **menus.name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      name: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **menus.items**
       * - `menu_items` (base type: `jsonb`) in database
@@ -761,17 +761,17 @@ declare module 'zapatos/schema' {
       */
       path?: c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment>;
       /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+      /**
       * **menus.type**
       * - `menu_type` in database
       * - `NOT NULL`, no default
       */
       type?: menu_type | db.Parameter<menu_type> | db.SQLFragment | db.SQLFragment<any, menu_type | db.Parameter<menu_type> | db.SQLFragment>;
-      /**
-      * **menus.name**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **menus.items**
       * - `menu_items` (base type: `jsonb`) in database
@@ -779,7 +779,7 @@ declare module 'zapatos/schema' {
       */
       items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = never;
+    export type UniqueIndex = 'menus_path_type_auth_unique';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;

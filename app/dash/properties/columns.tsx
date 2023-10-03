@@ -8,11 +8,22 @@ const columnHelper = createColumnHelper<properties.JSONSelectable>();
 export const columns: ColumnDef<properties.JSONSelectable>[] = [
 	// columnHelper.display({}),
 	{
+		accessorKey: "admins",
+		header: "",
+		cell: ({ row }) => (
+			<Link href={`/dash/properties/${row.original.id}/admins/`}>Admins</Link>
+		),
+	},
+	{
+		accessorKey: "settings",
+		header: "",
+		cell: ({ row }) => (
+			<Link href={`/dash/properties/${row.original.id}/`}>Settings</Link>
+		),
+	},
+	{
 		accessorKey: "id",
 		header: () => "ID",
-		cell: ({ row }) => (
-			<Link href={`/dash/properties/${row.original.id}/`}>{row.original.id}</Link>
-		),
 	},
 	{
 		accessorKey: "domain",
@@ -21,9 +32,5 @@ export const columns: ColumnDef<properties.JSONSelectable>[] = [
 	{
 		accessorKey: "name",
 		header: "Name",
-	},
-	{
-		accessorKey: "email_from",
-		header: "Default Email From",
 	},
 ];

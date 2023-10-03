@@ -39,4 +39,5 @@ export const columns: ColumnDef<users.JSONSelectable>[] = [
 		header: "Last Logged In",
 		enableHiding: true,
 	},
+	
 ];

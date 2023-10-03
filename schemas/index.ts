@@ -187,3 +187,21 @@ export const reconfirmEmailSchema: JSONSchemaType<{ email: string }> = {
 	},
 	required: ["email"],
 };
+
+export const addAdminSchema: JSONSchemaType<{
+	email: string;
+}> = {
+	$schema: "http://json-schema.org/draft-07/schema#",
+	$id: "addAdmin",
+	title: "Add Admin",
+	type: "object",
+	properties: {
+		email: {
+			title: "Email",
+			type: "string",
+			format: "email",
+			errorMessage: "Invalid email",
+		},
+	},
+	required: ["email"],
+};

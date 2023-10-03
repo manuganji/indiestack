@@ -1,4 +1,5 @@
-import { SIGN_IN_PATH, SIGN_UP_PATH } from "@/constants";
+import { hasSessionCookie } from "@/auth";
+import { SIGN_IN_PATH, SIGN_OUT_PATH, SIGN_UP_PATH } from "@/constants";
 import { runQuery } from "@/db";
 import { getCurrentProperty } from "@/lib/serverUtils";
 import { RequestContext } from "next/dist/server/base-server";
@@ -8,6 +9,44 @@ import { PgMenuItems } from "zapatos/custom";
 import { param, selectOne, self, sql } from "zapatos/db";
 import { menus } from "zapatos/schema";
 
+const DEFAULT_AUTH_MENU: PgMenuItems = [
+	[
+		{
+			type: "link",
+			label: "Home",
+			path: "/",
+		},
+	],
+	[
+		{
+			type: "post",
+			label: "Logout",
+			path: SIGN_OUT_PATH,
+		},
+	],
+];
+
+const DEFAULT_ANON_MENU: PgMenuItems = [
+	[
+		{
+			type: "link",
+			label: "Home",
+			path: "/",
+		},
+	],
+	[
+		{
+			type: "button",
+			label: "Login",
+			path: SIGN_IN_PATH,
+		},
+		{
+			type: "button",
+			label: "Sign Up",
+			path: SIGN_UP_PATH,
+		},
+	],
+];
 const getMenusForPath = cache(
 	async ({
 		pathname,
@@ -17,11 +56,14 @@ const getMenusForPath = cache(
 		menuType: menus.JSONSelectable["type"];
 	}) => {
 		const property = await getCurrentProperty();
+		const isAuth = hasSessionCookie(); // basic check because menus are generally not sensitive.
+
 		const query = selectOne(
 			"menus",
 			{
 				property: property.id,
 				type: menuType,
+				authenticated: isAuth,
 				path: sql<menus.SQL>`${self} @> ${param(
 					pathname.replace("/", "").replaceAll("/", ".").replaceAll("-", "_"),
 					"ltree",
@@ -36,31 +78,11 @@ const getMenusForPath = cache(
 			},
 		);
 		const menu = await runQuery(query);
-		return (
-			menu || {
-				items: [
-					[
-						{
-							type: "link",
-							label: "Home",
-							path: "/",
-						},
-					],
-					[
-						{
-							type: "button",
-							label: "Login",
-							path: SIGN_IN_PATH,
-						},
-						{
-							type: "button",
-							label: "Sign Up",
-							path: SIGN_UP_PATH,
-						},
-					],
-				] satisfies PgMenuItems,
-			}
-		);
+		if (menu) {
+			return menu;
+		} else {
+			return { items: isAuth ? DEFAULT_AUTH_MENU : DEFAULT_ANON_MENU };
+		}
 	},
 );
 
