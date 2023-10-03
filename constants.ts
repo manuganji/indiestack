@@ -33,3 +33,7 @@ export const RECAPTCHA_VERIFICATION_URL =
 export const RECAPTCHA_FORM_FIELD_NAME = "cf-turnstile-response";
 
 export const POST_AUTH_REDIRECT_URL = "/dash";
+
+export const HEADER = "header";
+export const FOOTER = "footer";
+export const SIDEBAR = "sidebar";

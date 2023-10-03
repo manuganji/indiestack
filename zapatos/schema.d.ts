@@ -20,9 +20,9 @@ declare module 'zapatos/schema' {
 
   /* --- enums --- */
 
-  export type menu_type = 'footer' | 'header';
+  export type menu_type = 'footer' | 'header' | 'sidebar';
   export namespace every {
-    export type menu_type = ['footer', 'header'];
+    export type menu_type = ['footer', 'header', 'sidebar'];
   }
 
   /* --- tables --- */

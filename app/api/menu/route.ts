@@ -1,6 +1,12 @@
 import { hasSessionCookie } from "@/auth";
-import { SIGN_IN_PATH, SIGN_OUT_PATH, SIGN_UP_PATH } from "@/constants";
+import {
+	SIDEBAR,
+	SIGN_IN_PATH,
+	SIGN_OUT_PATH,
+	SIGN_UP_PATH,
+} from "@/constants";
 import { runQuery } from "@/db";
+import { isRoot } from "@/lib/checks";
 import { getCurrentProperty } from "@/lib/serverUtils";
 import { RequestContext } from "next/dist/server/base-server";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,6 +21,11 @@ const DEFAULT_AUTH_MENU: PgMenuItems = [
 			type: "link",
 			label: "Home",
 			path: "/",
+		},
+		{
+			type: "link",
+			label: "Dashboard",
+			path: "/dash/",
 		},
 	],
 	[
@@ -44,6 +55,42 @@ const DEFAULT_ANON_MENU: PgMenuItems = [
 			type: "button",
 			label: "Sign Up",
 			path: SIGN_UP_PATH,
+		},
+	],
+];
+
+const DEFAULT_ROOT_SIDEBAR_MENU: PgMenuItems = [
+	[
+		{
+			type: "link",
+			label: "Properties",
+			path: "/dash/properties",
+			desc: "Manage your properties",
+		},
+		{
+			type: "link",
+			label: "Users",
+			path: "/dash/users",
+		},
+		{
+			type: "link",
+			label: "Pages",
+			path: "/dash/pages",
+		},
+	],
+];
+
+const DEFAULT_REGULAR_SIDEBAR_MENU: PgMenuItems = [
+	[
+		{
+			type: "link",
+			label: "Pages",
+			path: "/dash/pages",
+		},
+		{
+			type: "link",
+			label: "Users",
+			path: "/dash/users",
 		},
 	],
 ];
@@ -80,6 +127,12 @@ const getMenusForPath = cache(
 		const menu = await runQuery(query);
 		if (menu) {
 			return menu;
+		} else if (menuType === SIDEBAR) {
+			if (isRoot()) {
+				return { items: DEFAULT_ROOT_SIDEBAR_MENU };
+			} else {
+				return { items: DEFAULT_REGULAR_SIDEBAR_MENU };
+			}
 		} else {
 			return { items: isAuth ? DEFAULT_AUTH_MENU : DEFAULT_ANON_MENU };
 		}

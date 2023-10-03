@@ -9,6 +9,7 @@ declare module "zapatos/custom" {
 		type: "link";
 		label: string;
 		path: string;
+    desc?: string;
 	};
 
 	type PostButtonType = {
@@ -28,6 +29,7 @@ declare module "zapatos/custom" {
 			  }
 			| {
 					type: "dropdown";
+          desc?: string;
 					label: string;
 					items: LinkType[];
 			  }

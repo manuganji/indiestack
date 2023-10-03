@@ -12,9 +12,12 @@ export async function requireAdmin() {
 	return user;
 }
 
+export function isRoot() {
+	return getHostName() === process.env.ROOT_DOMAIN;
+}
+
 export function requireRoot() {
-	const isRoot = getHostName() === process.env.ROOT_DOMAIN;
-	if (!isRoot) {
+	if (!isRoot()) {
 		throw new Error("You are not allowed to perform this action");
 	}
 }

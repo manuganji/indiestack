@@ -18,7 +18,7 @@ exports.up = (pgm) => {
 	pgm.createExtension("ltree", {
 		ifNotExists: true,
 	});
-	pgm.createType("menu_type", ["header", "footer"]);
+	pgm.createType("menu_type", ["header", "footer", "sidebar"]);
 	pgm.createTable("menus", {
 		property: {
 			type: "varchar(10)",
