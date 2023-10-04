@@ -2,7 +2,7 @@ import { runQuery } from "@/db";
 import { getCurrentProperty } from "@/lib/serverUtils";
 import { select } from "zapatos/db";
 import { columns } from "./columns";
-import { DataTable } from "./table";
+import { DataTable } from "@/components/table";
 
 export default async function UsersHome() {
 	const property = await getCurrentProperty();

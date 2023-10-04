@@ -1,7 +1,7 @@
 "use client";
 
 import { columns } from "@/app/dash/users/columns";
-import { DataTable } from "@/app/dash/users/table";
+import { DataTable } from "@/components/table";
 import DeclarativeForm from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { addAdminSchema } from "@/schemas";

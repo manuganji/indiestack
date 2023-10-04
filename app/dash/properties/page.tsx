@@ -1,7 +1,7 @@
 import { runQuery } from "@/db";
 import { all, select } from "zapatos/db";
 import { columns } from "./columns";
-import { DataTable } from "./table";
+import { DataTable } from "@/components/table";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
