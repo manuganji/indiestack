@@ -2,7 +2,7 @@ import Ajv from "ajv";
 import addErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 import addKeywords from "ajv-keywords";
-import * as schemas from "./schemas/index.js";
+// import * as schemas from "./schemas/index.js";
 
 export const getAjv = () => {
 	const ajv = new Ajv({
@@ -12,6 +12,7 @@ export const getAjv = () => {
 			esm: true,
 			source: true,
 		},
+		useDefaults: true,
 	});
 
 	addFormats(ajv);
@@ -44,9 +45,9 @@ export const getAjv = () => {
 		singleError: true,
 	});
 
-	for (const [key, sch] of Object.entries(schemas)) {
-		// add all schemas first so that they can be referenced by other schemas
-		ajv.addSchema(sch, key);
-	}
+	// for (const [key, sch] of Object.entries(schemas)) {
+	// 	// add all schemas first so that they can be referenced by other schemas
+	// 	ajv.addSchema(sch, key);
+	// }
 	return ajv;
 };

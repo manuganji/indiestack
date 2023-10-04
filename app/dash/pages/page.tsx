@@ -5,7 +5,8 @@ import { runQuery } from "@/db";
 import { getCurrentProperty } from "@/lib/serverUtils";
 import Link from "next/link";
 import { Suspense } from "react";
-import { all, select } from "zapatos/db";
+import { select } from "zapatos/db";
+import { columns } from "./columns";
 
 const PagesTable = async function () {
 	const currentProperty = await getCurrentProperty();
@@ -15,29 +16,7 @@ const PagesTable = async function () {
 		}),
 	);
 
-	return (
-		<DataTable
-			columns={[
-				{
-					accessorKey: "id",
-				},
-				{
-					accessorKey: "path",
-					enableSorting: true,
-				},
-				{
-					accessorKey: "title",
-				},
-				{
-					accessorKey: "created_at",
-				},
-				{
-					accessorKey: "updated_at",
-				},
-			]}
-			data={pages}
-		/>
-	);
+	return <DataTable columns={columns} data={pages} />;
 };
 
 export default async function PagesAdmin() {
@@ -50,7 +29,7 @@ export default async function PagesAdmin() {
 					<Button type="submit">New Page</Button>
 				</form>
 			</div>
-			List of Pages Edit, Delete Create
+			List of Pages Edit, Delete
 			<Suspense
 				fallback={
 					<div className="flex-col justify-around gap-4">
