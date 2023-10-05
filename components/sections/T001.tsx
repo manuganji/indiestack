@@ -29,5 +29,5 @@ export const schema: JSONSchemaType<PropsType> = {
 };
 
 export const Component = function T001({ text }: PropsType) {
-	return <div>{text}</div>;
+	return <div className="flex p-10 items-center">{text}</div>;
 };

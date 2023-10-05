@@ -1,3 +1,3 @@
-`JSONSchema` files in this folder are compiled to standalone functions using `pnpm run compile:schemas`.
+Register all `jsonschema` to ajv in ajvSetup.ts
 
-These are they used in validation everywhere in the stack.
+This `ajv` instance can then be used in actions and routes to validate data.

@@ -1,34 +1,131 @@
 "use client";
+import DeclarativeForm from "@/components/forms";
 import { components } from "@/components/sections/index";
-import { useParams } from "next/navigation";
-import { useEffect, useMemo, useReducer } from "react";
-import { pages, sections } from "zapatos/schema";
-import { getDefaultConfig, getPage } from "./actions";
 import { Button } from "@/components/ui/button";
-import { JSONValue } from "zapatos/db";
 import {
 	Sheet,
 	SheetContent,
 	SheetDescription,
 	SheetHeader,
 	SheetTitle,
-	SheetTrigger,
 } from "@/components/ui/sheet";
 import { shortId } from "@/lib/utils";
-import DeclarativeForm from "@/components/forms";
+import { useParams } from "next/navigation";
+import { useEffect, useMemo, useReducer } from "react";
+import { JSONValue } from "zapatos/db";
+import { pages, sections } from "zapatos/schema";
+import { getDefaultConfig, getPage } from "./actions";
+import {
+	PencilIcon,
+	TrashIcon,
+	ArrowUpIcon,
+	ArrowDownIcon,
+} from "@heroicons/react/20/solid";
+import { Input } from "@/components/ui/input";
 
+const ComponentWrapper = function ({
+	position,
+	swap,
+	canMoveDown,
+	setEditing,
+	deleteSection,
+	children,
+	section,
+}: {
+	section: StateType["sections"][0];
+	children: React.ReactNode;
+	position: number;
+	id: string;
+	swap: (position: number, to: number) => void;
+	canMoveDown: boolean;
+	setEditing: () => void;
+	deleteSection: () => void;
+}) {
+	const buttons: Array<{
+		icon: React.ComponentType<any>;
+		title: string;
+		disabled: boolean;
+		destructive?: boolean;
+		onClick: () => void;
+	}> = [
+		{
+			icon: PencilIcon,
+			title: "Edit this section",
+			disabled: false,
+			onClick: setEditing,
+		},
+		{
+			icon: ArrowDownIcon,
+			title: "Move down",
+			disabled: !canMoveDown,
+			onClick: () => {
+				swap(position, position + 1);
+			},
+		},
+		{
+			icon: ArrowUpIcon,
+			title: "Move up",
+			disabled: position === 0,
+			onClick: () => {
+				swap(position, position - 1);
+			},
+		},
+		{
+			icon: TrashIcon,
+			title: "Delete",
+			disabled: false,
+			destructive: true,
+			onClick: deleteSection,
+		},
+	];
+	return (
+		<div className="group w-full relative">
+			<div
+				className="hidden group-hover:flex 
+        justify-between
+        w-full
+        transition-all
+        top-0 
+        absolute
+        gap-1 px-2"
+			>
+				<p className="text-gray-200">{section.code}</p>
+				<div className="flex gap-1">
+					{buttons.map(({ icon: Icon, title, onClick, disabled, destructive }) => {
+						return (
+							<Button
+								key={title}
+								title={title}
+								onClick={onClick}
+								disabled={disabled}
+								variant={destructive ? "destructive" : "outline"}
+								className="min-w-fit px-2"
+							>
+								<Icon className="w-6 h-6" />
+							</Button>
+						);
+					})}
+				</div>
+			</div>
+			{children}
+		</div>
+	);
+};
 type ActionTypes =
-	// | {
-	// 		type: "loadPage";
-	// 		payload: {
-	// 			id: string;
-	// 			dispatch: React.Dispatch<ActionTypes>;
-	// 		};
-	//   }
 	| {
-			type: "editSection";
+			type: "setPage";
+			payload: Partial<StateType["page"]>;
+	  }
+	| {
+			type: "setEditingSection";
 			payload?: {
 				section?: sections.JSONSelectable["id"];
+			};
+	  }
+	| {
+			type: "deleteSection";
+			payload: {
+				sectionId: string;
 			};
 	  }
 	| {
@@ -43,12 +140,10 @@ type ActionTypes =
 			};
 	  }
 	| {
-			type: "validateConfig";
+			type: "swapPositions";
 			payload: {
-				section: {
-					code: keyof typeof components;
-					config: JSONValue;
-				};
+				position: number;
+				to: number;
 			};
 	  }
 	| {
@@ -59,16 +154,9 @@ type ActionTypes =
 			};
 	  }
 	| {
-			type: "setPage";
+			type: "setFullPage";
 			payload: {
 				page: Omit<pages.JSONSelectable, "id">;
-				sections: sections.JSONSelectable[];
-			};
-	  }
-	| {
-			type: "savePage";
-			payload: {
-				page: pages.JSONSelectable;
 				sections: sections.JSONSelectable[];
 			};
 	  };
@@ -82,6 +170,15 @@ type StateType = {
 function reducer(state: StateType, action: ActionTypes): StateType {
 	switch (action.type) {
 		case "setPage": {
+			return {
+				...state,
+				page: {
+					...state.page,
+					...action.payload,
+				},
+			};
+		}
+		case "setFullPage": {
 			return action.payload;
 		}
 		case "setConfig": {
@@ -104,10 +201,31 @@ function reducer(state: StateType, action: ActionTypes): StateType {
 				sections: [...state.sections, action.payload.section],
 			};
 		}
-		case "editSection": {
+		case "setEditingSection": {
 			return {
 				...state,
 				editedSection: action.payload?.section,
+			};
+		}
+		case "deleteSection": {
+			return {
+				...state,
+				sections: state.sections.filter(
+					(section) => section.id !== action.payload.sectionId,
+				),
+			};
+		}
+		case "swapPositions": {
+			const { position, to } = action.payload;
+			const sections = [...state.sections];
+			const outgoing = sections[position];
+			const incoming = sections[to];
+			[outgoing.order, incoming.order] = [incoming.order, outgoing.order];
+			sections[position] = incoming;
+			sections[to] = outgoing;
+			return {
+				...state,
+				sections,
 			};
 		}
 		default:
@@ -139,7 +257,7 @@ export default function PageEditor() {
 	useEffect(() => {
 		getPage(pageId).then(({ sections, ...page }) => {
 			dispatch({
-				type: "setPage",
+				type: "setFullPage",
 				payload: {
 					page,
 					sections,
@@ -150,14 +268,56 @@ export default function PageEditor() {
 
 	return (
 		<div className="flex gap-4">
-			<div className="">
-				<p>{state.page?.title}</p>
-				{state.sections.map((section) => {
+			<div className="px-2 flex flex-col">
+				<Input
+					value={state.page?.title}
+					className="text-3xl w-auto py-6"
+					onChange={({ currentTarget: { value } }) => {
+						dispatch({
+							type: "setPage",
+							payload: {
+								title: value,
+							},
+						});
+					}}
+				/>
+				{state.sections.map((section, index) => {
 					return (
-						<div key={section.id}>
+						<ComponentWrapper
+							section={section}
+							key={section.id}
+							position={index}
+							canMoveDown={index < state.sections.length - 1}
+							swap={(position: number, to: number) => {
+								dispatch({
+									type: "swapPositions",
+									payload: {
+										position,
+										to,
+									},
+								});
+							}}
+							deleteSection={() => {
+								dispatch({
+									type: "deleteSection",
+									payload: {
+										sectionId: section.id,
+									},
+								});
+							}}
+							setEditing={() => {
+								dispatch({
+									type: "setEditingSection",
+									payload: {
+										section: section.id,
+									},
+								});
+							}}
+							id={section.id}
+						>
 							{/* Wrap with editing controls */}
 							{components[section.code].Component(section.config)}
-						</div>
+						</ComponentWrapper>
 					);
 				})}
 				<div className="p-4 bg-gray-100 shadow-inner rounded-md flex flex-col gap-2 my-4">
@@ -182,7 +342,7 @@ export default function PageEditor() {
 										},
 									});
 									dispatch({
-										type: "editSection",
+										type: "setEditingSection",
 										payload: {
 											section: newId,
 										},
@@ -200,7 +360,7 @@ export default function PageEditor() {
 				onOpenChange={(open) => {
 					if (!open) {
 						dispatch({
-							type: "editSection",
+							type: "setEditingSection",
 							payload: {
 								section: undefined,
 							},
@@ -217,13 +377,21 @@ export default function PageEditor() {
 					{sectionSchema ? (
 						<DeclarativeForm
 							schema={sectionSchema}
+							// @ts-ignore
+							initialData={editedSection?.config}
 							onSubmit={(newConfig) => {
-								console.log(newConfig);
+								// console.log(newConfig);
 								dispatch({
 									type: "setConfig",
 									payload: {
 										sectionId: editedSection?.id!,
 										config: newConfig,
+									},
+								});
+								dispatch({
+									type: "setEditingSection",
+									payload: {
+										section: undefined,
 									},
 								});
 							}}

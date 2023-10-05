@@ -17,6 +17,7 @@
 		"@aws-sdk/client-s3": "^3.410.0",
 		"@aws-sdk/client-ses": "^3.410.0",
 		"@aws-sdk/credential-provider-node": "^3.410.0",
+		"@heroicons/react": "^2.0.18",
 		"@hookform/resolvers": "^3.3.1",
 		"@jsonforms/core": "^3.1.0",
 		"@jsonforms/react": "^3.1.0",

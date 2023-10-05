@@ -13,6 +13,7 @@ const nextConfig = {
 		typedRoutes: true,
 		serverActions: true,
 		typedRoutes: true,
+		// optimizePackageImports: ["lodash"],
 	},
 };
 
