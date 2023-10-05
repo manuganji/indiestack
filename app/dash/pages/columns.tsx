@@ -21,6 +21,13 @@ export const columns: ColumnDef<pages.JSONSelectable>[] = [
 	{
 		accessorKey: "path",
 		enableSorting: true,
+		cell({
+			row: {
+				original: { path },
+			},
+		}) {
+			return <Link href={`/${path}`}>{path}</Link>;
+		},
 	},
 	{
 		enableHiding: true,

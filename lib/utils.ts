@@ -9,6 +9,6 @@ export function cn(...inputs: ClassValue[]) {
 // https://zelark.github.io/nano-id-cc/
 const ALPHABET =
 	"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const ID_LENGTH = 12;
+const ID_LENGTH = 10;
 
 export const shortId = customAlphabet(ALPHABET, ID_LENGTH);

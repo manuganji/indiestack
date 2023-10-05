@@ -14,7 +14,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useReducer } from "react";
 import { JSONValue } from "zapatos/db";
 import { pages, sections } from "zapatos/schema";
-import { getDefaultConfig, getPage } from "./actions";
+import { PageType, getDefaultConfig, getPageById, savePage } from "./actions";
 import {
 	PencilIcon,
 	TrashIcon,
@@ -22,10 +22,12 @@ import {
 	ArrowDownIcon,
 } from "@heroicons/react/20/solid";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
 
 const ComponentWrapper = function ({
 	position,
-	swap,
+	moveUp,
+	moveDown,
 	canMoveDown,
 	setEditing,
 	deleteSection,
@@ -36,7 +38,8 @@ const ComponentWrapper = function ({
 	children: React.ReactNode;
 	position: number;
 	id: string;
-	swap: (position: number, to: number) => void;
+	moveUp: () => void;
+	moveDown: () => void;
 	canMoveDown: boolean;
 	setEditing: () => void;
 	deleteSection: () => void;
@@ -58,17 +61,13 @@ const ComponentWrapper = function ({
 			icon: ArrowDownIcon,
 			title: "Move down",
 			disabled: !canMoveDown,
-			onClick: () => {
-				swap(position, position + 1);
-			},
+			onClick: moveDown,
 		},
 		{
 			icon: ArrowUpIcon,
 			title: "Move up",
 			disabled: position === 0,
-			onClick: () => {
-				swap(position, position - 1);
-			},
+			onClick: moveUp,
 		},
 		{
 			icon: TrashIcon,
@@ -87,7 +86,7 @@ const ComponentWrapper = function ({
         transition-all
         top-0 
         absolute
-        gap-1 px-2"
+        gap-1 px-2 py-2"
 			>
 				<p className="text-gray-200">{section.code}</p>
 				<div className="flex gap-1">
@@ -140,9 +139,9 @@ type ActionTypes =
 			};
 	  }
 	| {
-			type: "swapPositions";
+			type: "changeOrder";
 			payload: {
-				position: number;
+				id: string;
 				to: number;
 			};
 	  }
@@ -161,10 +160,8 @@ type ActionTypes =
 			};
 	  };
 
-type StateType = {
+export type StateType = PageType & {
 	editedSection?: sections.JSONSelectable["id"];
-	sections: Pick<sections.JSONSelectable, "code" | "config" | "order" | "id">[];
-	page: Pick<pages.JSONSelectable, "title" | "path">;
 };
 
 function reducer(state: StateType, action: ActionTypes): StateType {
@@ -215,17 +212,18 @@ function reducer(state: StateType, action: ActionTypes): StateType {
 				),
 			};
 		}
-		case "swapPositions": {
-			const { position, to } = action.payload;
-			const sections = [...state.sections];
-			const outgoing = sections[position];
-			const incoming = sections[to];
-			[outgoing.order, incoming.order] = [incoming.order, outgoing.order];
-			sections[position] = incoming;
-			sections[to] = outgoing;
+		case "changeOrder": {
 			return {
 				...state,
-				sections,
+				sections: state.sections.map((section) => {
+					if (section.id === action.payload.id) {
+						return {
+							...section,
+							order: action.payload.to,
+						};
+					}
+					return section;
+				}),
 			};
 		}
 		default:
@@ -245,6 +243,20 @@ export default function PageEditor() {
 		},
 	});
 
+	const getOrderBetween = (from: number, to: number) => {
+		if (to == 0) {
+			return state.sections[0].order - 1;
+		} else if (to == state.sections.length - 1) {
+			return state.sections.at(-1)!.order + 1;
+		} else if (from > to) {
+			return (state.sections[to].order + state.sections[to - 1].order) / 2;
+		} else if (from < to) {
+			return (state.sections[to].order + state.sections[to + 1].order) / 2;
+		} else {
+			return state.sections[from].order;
+		}
+	};
+
 	const editedSection = useMemo(
 		() => state.sections.find((section) => section.id === state.editedSection),
 		[state.editedSection, state.sections],
@@ -255,7 +267,7 @@ export default function PageEditor() {
 	);
 
 	useEffect(() => {
-		getPage(pageId).then(({ sections, ...page }) => {
+		getPageById(pageId).then(({ sections, ...page }) => {
 			dispatch({
 				type: "setFullPage",
 				payload: {
@@ -269,57 +281,86 @@ export default function PageEditor() {
 	return (
 		<div className="flex gap-4">
 			<div className="px-2 flex flex-col">
-				<Input
-					value={state.page?.title}
-					className="text-3xl w-auto py-6"
-					onChange={({ currentTarget: { value } }) => {
-						dispatch({
-							type: "setPage",
-							payload: {
-								title: value,
-							},
-						});
-					}}
-				/>
-				{state.sections.map((section, index) => {
-					return (
-						<ComponentWrapper
-							section={section}
-							key={section.id}
-							position={index}
-							canMoveDown={index < state.sections.length - 1}
-							swap={(position: number, to: number) => {
-								dispatch({
-									type: "swapPositions",
-									payload: {
-										position,
-										to,
-									},
+				<div className="flex gap-2 items-baseline">
+					<Input
+						value={state.page?.title}
+						className="text-3xl w-auto py-6 flex-grow"
+						onChange={({ currentTarget: { value } }) => {
+							dispatch({
+								type: "setPage",
+								payload: {
+									title: value,
+								},
+							});
+						}}
+					/>
+					<div className="">
+						<Button
+							onClick={() => {
+								savePage(pageId, state).then(() => {
+									toast({
+										title: "Saved",
+										description: "Page saved successfully",
+										type: "background",
+									});
 								});
 							}}
-							deleteSection={() => {
-								dispatch({
-									type: "deleteSection",
-									payload: {
-										sectionId: section.id,
-									},
-								});
-							}}
-							setEditing={() => {
-								dispatch({
-									type: "setEditingSection",
-									payload: {
-										section: section.id,
-									},
-								});
-							}}
-							id={section.id}
+							variant={"outline"}
 						>
-							{/* Wrap with editing controls */}
-							{components[section.code].Component(section.config)}
-						</ComponentWrapper>
-					);
-				})}
+							Save Page
+						</Button>
+					</div>
+				</div>
+				{state.sections
+					.sort((a, b) => a.order - b.order)
+					.map((section, index) => {
+						return (
+							<ComponentWrapper
+								section={section}
+								key={section.id}
+								position={index}
+								canMoveDown={index < state.sections.length - 1}
+								moveUp={() => {
+									dispatch({
+										type: "changeOrder",
+										payload: {
+											id: section.id,
+											to: getOrderBetween(index, index - 1),
+										},
+									});
+								}}
+								moveDown={() => {
+									dispatch({
+										type: "changeOrder",
+										payload: {
+											id: section.id,
+											to: getOrderBetween(index, index + 1),
+										},
+									});
+								}}
+								deleteSection={() => {
+									dispatch({
+										type: "deleteSection",
+										payload: {
+											sectionId: section.id,
+										},
+									});
+								}}
+								setEditing={() => {
+									dispatch({
+										type: "setEditingSection",
+										payload: {
+											section: section.id,
+										},
+									});
+								}}
+								id={section.id}
+							>
+								{/* Wrap with editing controls */}
+								{components[section.code].Component(section.config)}
+							</ComponentWrapper>
+						);
+					})}
 				<div className="p-4 bg-gray-100 shadow-inner rounded-md flex flex-col gap-2 my-4">
 					<h2>Add new section</h2>
 					<div className="grid grid-cols-6">
