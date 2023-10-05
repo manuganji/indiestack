@@ -5,7 +5,6 @@ import { DataTable } from "@/components/table";
 import DeclarativeForm from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { addAdminSchema } from "@/schemas";
-import { addAdminValidator } from "@/schemas/validators";
 import { useRouter, useSearchParams } from "next/navigation";
 import { properties, users } from "zapatos/schema";
 import { addAdmin, deleteAdmin } from "./actions";
@@ -49,7 +48,6 @@ export default function PropertyAdminComponent({
 			<h2 className="font-bold text-xl mt-2">Add Admin</h2>
 			<DeclarativeForm
 				schema={addAdminSchema}
-				validator={addAdminValidator}
 				onSubmit={async (data) => {
 					await addAdmin(data.email, property.id);
 					router.refresh();

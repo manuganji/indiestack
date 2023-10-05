@@ -41,6 +41,11 @@ exports.up = (pgm) => {
 	});
 	pgm.createDomain("page_section_code", "varchar(255)");
 	pgm.createTable("sections", {
+		id: {
+			type: "varchar(10)",
+			primaryKey: true,
+			notNull: true,
+		},
 		page: {
 			type: "varchar(10)",
 			references: "pages(id)",

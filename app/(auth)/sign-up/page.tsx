@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { SIGN_IN_PATH } from "@/constants";
 import { signUpSchema } from "@/schemas/index";
-import signUpValidator from "@/schemas/signUpValidator";
 import Link from "next/link";
 import { useState } from "react";
 import { signUpAction } from "./actions";
@@ -46,7 +45,6 @@ export default function SignUp({
 		content = (
 			<DeclarativeForm
 				schema={signUpSchema}
-				validator={signUpValidator}
 				method="POST"
 				className="gap-2 flex flex-col"
 				initialData={searchParams}

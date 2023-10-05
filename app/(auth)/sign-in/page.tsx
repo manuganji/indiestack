@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { SIGN_UP_PATH } from "@/constants";
 import { loginSchema } from "@/schemas";
-import { loginValidator } from "@/schemas/validators";
 import Link from "next/link";
 import { useState } from "react";
 import { emailSignIn } from "./actions";
@@ -29,7 +28,6 @@ export default function SignIn({}: {}) {
 	const formEl = !successEmail && (
 		<DeclarativeForm
 			schema={loginSchema}
-			validator={loginValidator}
 			method="POST"
 			className="gap-2 flex flex-col"
 			onSubmit={async (data, setErrors) => {

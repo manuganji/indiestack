@@ -1,12 +1,13 @@
 import type { JSONSchemaType } from "ajv";
 import type { PgPropertySettings } from "zapatos/custom";
 import { properties } from "zapatos/schema";
+import IDS from "./ids";
 
 export const loginSchema: JSONSchemaType<{
 	email: string;
 }> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "login",
+	$id: IDS.login,
 	type: "object",
 	properties: {
 		email: {
@@ -25,7 +26,7 @@ export const signUpSchema: JSONSchemaType<{
 	tos: boolean;
 }> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "signUp",
+	$id: IDS.signUp,
 	type: "object",
 	title: "Sign Up",
 	description: "Sign up for an account",
@@ -74,7 +75,7 @@ export const signUpSchema: JSONSchemaType<{
 
 export const propertySettingsSchema: JSONSchemaType<PgPropertySettings> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "propertySettings",
+	$id: IDS.propertySettings,
 	type: "object",
 	title: "Settings",
 	description: "",
@@ -143,7 +144,7 @@ export const propertySchema: JSONSchemaType<
 	Omit<properties.JSONSelectable, "id">
 > = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "property",
+	$id: IDS.property,
 	type: "object",
 	title: "Property",
 	description: "",
@@ -174,7 +175,7 @@ export const propertySchema: JSONSchemaType<
 
 export const reconfirmEmailSchema: JSONSchemaType<{ email: string }> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "reconfirmEmail",
+	$id: IDS.reconfirmEmail,
 	title: "Reconfirm Email",
 	type: "object",
 	properties: {
@@ -192,7 +193,7 @@ export const addAdminSchema: JSONSchemaType<{
 	email: string;
 }> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "addAdmin",
+	$id: IDS.addAdmin,
 	title: "Add Admin",
 	type: "object",
 	properties: {

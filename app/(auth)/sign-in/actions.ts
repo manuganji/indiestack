@@ -1,6 +1,7 @@
 "use server";
 
 import { createVerificationToken, getUserByEmail } from "@/auth";
+import { validate } from "@/components/forms/actions";
 import { LONG_SESSION_COOKIE, POST_AUTH_REDIRECT_URL, prod } from "@/constants";
 import {
 	createErrorObject,
@@ -11,7 +12,6 @@ import {
 	makeAbsoluteUrl,
 	sendMagicLink,
 } from "@/lib/serverUtils";
-import { loginValidator } from "@/schemas/validators";
 import {
 	DEFAULT_TOKEN_DURATION,
 	TOKEN_IDENTIFIER_COOKIE,
@@ -36,11 +36,10 @@ export async function emailSignIn({
 	// }
 	// const longSession = data.get("remember-me") as string;
 	const longSession = "false";
-	const isValid = loginValidator(data);
+	const { valid: isValid, errors } = await validate("login", data);
 	if (!isValid) {
-		// @ts-ignore
 		return {
-			errors: loginValidator?.errors,
+			errors,
 			success: false,
 		};
 	}

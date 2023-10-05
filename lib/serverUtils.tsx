@@ -1,5 +1,3 @@
-import "server-only";
-import { DataValidateFunction } from "ajv/dist/types";
 import { PublicUser } from "@/components/auth/types";
 import {
 	AWS_REGION,
@@ -19,23 +17,22 @@ import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { render } from "@react-email/render";
 import { HttpStatusCode } from "axios";
 import { add } from "date-fns";
-import { customAlphabet } from "nanoid";
 import { cookies, headers } from "next/headers";
 import nodemailer from "nodemailer";
 import { htmlToText } from "nodemailer-html-to-text";
 import { env } from "process";
 import { cache } from "react";
+import "server-only";
+import { PgPropertySettings } from "zapatos/custom";
 import {
-	all,
 	parent,
-	select,
 	selectExactlyOne,
 	selectOne,
 	sql,
-	upsert,
+	upsert
 } from "zapatos/db";
 import { properties } from "zapatos/schema";
-import { PgPropertySettings } from "zapatos/custom";
+import { shortId } from "./utils";
 
 export const getHostName = () => headers().get("host")!;
 
@@ -351,12 +348,6 @@ export const s3Client = new S3({
 	},
 });
 
-// https://zelark.github.io/nano-id-cc/
-const ALPHABET =
-	"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-const ID_LENGTH = 12;
-
-export const shortId = customAlphabet(ALPHABET, ID_LENGTH);
 
 export const deltaFromNow = function (duration: Duration) {
 	const now = new Date();

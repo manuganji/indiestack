@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/card";
 import { SIGN_IN_PATH } from "@/constants";
 import { reconfirmEmailSchema } from "@/schemas";
-import { reconfirmEmailValidator } from "@/schemas/validators";
 import Link from "next/link";
 
 export default function VerifyEmail({
@@ -60,7 +59,6 @@ export default function VerifyEmail({
 				{status.reconfirm && (
 					<DeclarativeForm
 						schema={reconfirmEmailSchema}
-						validator={reconfirmEmailValidator}
 						method="POST"
 						className="gap-2 flex flex-col"
 						onSubmit={async (data, setErrors) => {

@@ -1,5 +1,7 @@
 import { logUserOut } from "@/auth";
 import { HttpStatusCode } from "axios";
+import { redirect } from "next/navigation";
+
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
@@ -9,4 +11,8 @@ export const POST = async (req: NextRequest) => {
 	return NextResponse.redirect(nextUrl, {
 		status: HttpStatusCode.SeeOther,
 	});
+};
+
+export const GET = async (req: NextRequest) => {
+	redirect("/");
 };

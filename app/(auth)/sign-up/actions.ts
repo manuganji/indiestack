@@ -1,6 +1,7 @@
 "use server";
 
 import { createUser, createVerificationToken } from "@/auth";
+import { validate } from "@/components/forms/actions";
 import { POST_AUTH_REDIRECT_URL, prod } from "@/constants";
 import {
 	createErrorObject,
@@ -16,7 +17,6 @@ import {
 	TOKEN_IDENTIFIER_COOKIE,
 } from "@/serverConstants";
 import { cookies } from "next/headers";
-import { signUpValidator } from "@/schemas/validators";
 
 export async function signUpAction(data: {
 	email: string;
@@ -25,12 +25,11 @@ export async function signUpAction(data: {
 	redirectUrl?: string;
 }) {
 	const property = await getCurrentProperty();
-	const isValid = signUpValidator(data);
+	const { valid, errors } = await validate("signUp", data);
 
-	if (!isValid) {
+	if (!valid) {
 		return {
-			// @ts-ignore
-			errors: signUpValidator?.errors,
+			errors,
 			success: false,
 		};
 	}

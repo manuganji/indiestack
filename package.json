@@ -4,15 +4,14 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "pnpm run compile:schemas && next build && pnpm run migrate:up",
+		"build": "next build && pnpm run migrate:up",
 		"start": "next start",
 		"lint": "next lint",
 		"format": "prettier --write .",
 		"zapatos": "node ./generate_zapatos_types.mjs",
 		"migrate": "node-pg-migrate --config-file pgMigrateConfig.json",
 		"migrate:up": "pnpm run migrate up",
-		"migrate:down": "pnpm run migrate down",
-		"compile:schemas": "ts-node ./compileValidators.mts"
+		"migrate:down": "pnpm run migrate down"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.410.0",

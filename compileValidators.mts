@@ -4,6 +4,9 @@ import { writeFileSync } from "fs";
 import { getAjv } from "./ajvSetup.js";
 import * as schemas from "./schemas/index.js";
 
+// Add this to package.json scripts section:
+// "compile:schemas": "ts-node ./compileValidators.mts"
+
 const ajv = getAjv();
 function saveStandaloneCode(func: AnyValidateFunction, outputFile: string) {
 	try {

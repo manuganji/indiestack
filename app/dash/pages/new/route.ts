@@ -1,5 +1,6 @@
 import { runQuery } from "@/db";
-import { getCurrentProperty, shortId } from "@/lib/serverUtils";
+import { getCurrentProperty } from "@/lib/serverUtils";
+import { shortId } from "@/lib/utils";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { insert, sql } from "zapatos/db";

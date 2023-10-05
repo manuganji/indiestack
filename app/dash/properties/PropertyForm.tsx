@@ -3,10 +3,8 @@
 import DeclarativeForm from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { propertySchema, propertySettingsSchema } from "@/schemas";
-import { propertyValidator } from "@/schemas/validators";
 import { useRouter } from "next/navigation";
 import { insertProperty, updateProperty } from "./actions";
-import { defaults, omit } from "lodash";
 
 export default function PropertyForm({
 	id,
@@ -27,7 +25,6 @@ export default function PropertyForm({
 			<h1 className="text-2xl my-2">{id ? "Update Property" : "New Property"}</h1>
 			<DeclarativeForm
 				schema={schema}
-				validator={propertyValidator}
 				initialData={defaultValues}
 				method="POST"
 				className="gap-2 flex flex-col"

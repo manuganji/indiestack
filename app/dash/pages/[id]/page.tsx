@@ -1,11 +1,21 @@
 "use client";
 import { components } from "@/components/sections/index";
 import { useParams } from "next/navigation";
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { pages, sections } from "zapatos/schema";
 import { getDefaultConfig, getPage } from "./actions";
 import { Button } from "@/components/ui/button";
 import { JSONValue } from "zapatos/db";
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet";
+import { shortId } from "@/lib/utils";
+import DeclarativeForm from "@/components/forms";
 
 type ActionTypes =
 	// | {
@@ -16,9 +26,16 @@ type ActionTypes =
 	// 		};
 	//   }
 	| {
+			type: "editSection";
+			payload?: {
+				section?: sections.JSONSelectable["id"];
+			};
+	  }
+	| {
 			type: "addSection";
 			payload: {
 				section: {
+					id: string;
 					code: keyof typeof components;
 					order: number;
 					config: JSONValue;
@@ -37,11 +54,8 @@ type ActionTypes =
 	| {
 			type: "setConfig";
 			payload: {
-				section: {
-					code: keyof typeof components;
-					order: number;
-					config: JSONValue;
-				};
+				sectionId: string;
+				config: JSONValue;
 			};
 	  }
 	| {
@@ -60,8 +74,8 @@ type ActionTypes =
 	  };
 
 type StateType = {
-	editedIndex?: number;
-	sections: Pick<sections.JSONSelectable, "code" | "config" | "order">[];
+	editedSection?: sections.JSONSelectable["id"];
+	sections: Pick<sections.JSONSelectable, "code" | "config" | "order" | "id">[];
 	page: Pick<pages.JSONSelectable, "title" | "path">;
 };
 
@@ -70,10 +84,30 @@ function reducer(state: StateType, action: ActionTypes): StateType {
 		case "setPage": {
 			return action.payload;
 		}
+		case "setConfig": {
+			return {
+				...state,
+				sections: state.sections.map((section) => {
+					if (section.id === action.payload.sectionId) {
+						return {
+							...section,
+							config: action.payload.config,
+						};
+					}
+					return section;
+				}),
+			};
+		}
 		case "addSection": {
 			return {
 				...state,
 				sections: [...state.sections, action.payload.section],
+			};
+		}
+		case "editSection": {
+			return {
+				...state,
+				editedSection: action.payload?.section,
 			};
 		}
 		default:
@@ -93,6 +127,15 @@ export default function PageEditor() {
 		},
 	});
 
+	const editedSection = useMemo(
+		() => state.sections.find((section) => section.id === state.editedSection),
+		[state.editedSection, state.sections],
+	);
+	const sectionSchema = useMemo(
+		() => (editedSection ? components[editedSection?.code].schema : undefined),
+		[editedSection],
+	);
+
 	useEffect(() => {
 		getPage(pageId).then(({ sections, ...page }) => {
 			dispatch({
@@ -111,7 +154,7 @@ export default function PageEditor() {
 				<p>{state.page?.title}</p>
 				{state.sections.map((section) => {
 					return (
-						<div key={section.order}>
+						<div key={section.id}>
 							{/* Wrap with editing controls */}
 							{components[section.code].Component(section.config)}
 						</div>
@@ -125,15 +168,23 @@ export default function PageEditor() {
 								key={code}
 								onClick={async () => {
 									const defaultConfig = await getDefaultConfig(code);
+									const newId = shortId();
 									dispatch({
 										type: "addSection",
 										payload: {
 											section: {
 												code,
+												id: newId,
 												// creates a long gap between new sections and existing sections for re-ordering
 												order: state.sections.length,
 												config: defaultConfig,
 											},
+										},
+									});
+									dispatch({
+										type: "editSection",
+										payload: {
+											section: newId,
 										},
 									});
 								}}
@@ -144,7 +195,44 @@ export default function PageEditor() {
 					</div>
 				</div>
 			</div>
-			<div className="">Settings</div>
+			<Sheet
+				open={!!state.editedSection}
+				onOpenChange={(open) => {
+					if (!open) {
+						dispatch({
+							type: "editSection",
+							payload: {
+								section: undefined,
+							},
+						});
+					}
+				}}
+			>
+				{/* <SheetTrigger>Open</SheetTrigger> */}
+				<SheetContent side={"right"}>
+					<SheetHeader>
+						<SheetTitle>{editedSection?.code}</SheetTitle>
+						<SheetDescription>Editing this section</SheetDescription>
+					</SheetHeader>
+					{sectionSchema ? (
+						<DeclarativeForm
+							schema={sectionSchema}
+							onSubmit={(newConfig) => {
+								console.log(newConfig);
+								dispatch({
+									type: "setConfig",
+									payload: {
+										sectionId: editedSection?.id!,
+										config: newConfig,
+									},
+								});
+							}}
+						>
+							<Button type="submit">Save</Button>
+						</DeclarativeForm>
+					) : null}
+				</SheetContent>
+			</Sheet>
 		</div>
 	);
 }

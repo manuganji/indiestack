@@ -4,7 +4,7 @@ import { preview, prod } from "@/constants";
 import { runQuery } from "@/db";
 import { requireAuth, requireRoot } from "@/lib/checks";
 import { addDomainToVercel } from "@/lib/domains";
-import { shortId } from "@/lib/serverUtils";
+import { shortId } from "@/lib/utils";
 import { insert, update } from "zapatos/db";
 import { properties } from "zapatos/schema";
 

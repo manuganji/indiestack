@@ -36,5 +36,3 @@ next-env.d.ts
 
 .env
 .react-email
-schemas/validators.ts
-schemas/*.js

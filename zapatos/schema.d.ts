@@ -1253,6 +1253,12 @@ declare module 'zapatos/schema' {
     export type Table = 'sections';
     export interface Selectable {
       /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
       * **sections.page**
       * - `varchar` in database
       * - `NOT NULL`, no default
@@ -1278,6 +1284,12 @@ declare module 'zapatos/schema' {
       config: db.JSONValue;
     }
     export interface JSONSelectable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
       /**
       * **sections.page**
       * - `varchar` in database
@@ -1305,6 +1317,12 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **sections.page**
       * - `varchar` in database
       * - `NOT NULL`, no default
@@ -1330,6 +1348,12 @@ declare module 'zapatos/schema' {
       config?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **sections.page**
       * - `varchar` in database
@@ -1357,6 +1381,12 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
       * **sections.page**
       * - `varchar` in database
       * - `NOT NULL`, no default
@@ -1381,7 +1411,7 @@ declare module 'zapatos/schema' {
       */
       config?: db.JSONValue | db.Parameter<db.JSONValue> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = never;
+    export type UniqueIndex = 'sections_page_order_unique' | 'sections_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
