@@ -6,6 +6,7 @@ import { logUserOut } from "@/auth";
 export async function requireAdmin() {
 	const user = await getUserOnServer();
 	if (!user?.is_admin) {
+		console.error("User is not admin", user);
 		logUserOut();
 		redirect(SIGN_IN_PATH);
 	}

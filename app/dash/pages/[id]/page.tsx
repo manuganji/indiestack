@@ -415,7 +415,7 @@ export default function PageEditor() {
 												code,
 												id: newId,
 												// creates a long gap between new sections and existing sections for re-ordering
-												order: sortedOrder.at(-1)![1] + 1,
+												order: sortedOrder.length > 0 ? sortedOrder.at(-1)![1] + 1 : 1,
 												config: defaultConfig,
 											},
 										},

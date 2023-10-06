@@ -82,6 +82,7 @@ export const savePage = async function (
 					throw e;
 				}),
 			deletes("sections", {
+				page: pageId,
 				id: conditions.isNotIn(sections.map((s) => s.id)),
 			})
 				.run(client)
