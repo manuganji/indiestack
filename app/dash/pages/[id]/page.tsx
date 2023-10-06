@@ -82,7 +82,8 @@ const ComponentWrapper = memo(function ({
 			onClick: () => deleteSection(id),
 		},
 	];
-	// console.log("rendering", config?.text);
+	/* @ts-ignore */
+	const cEl = useMemo(() => components[code].Component(config), [code, config]);
 	return (
 		<div className="group w-full relative">
 			<div
@@ -112,8 +113,7 @@ const ComponentWrapper = memo(function ({
 					})}
 				</div>
 			</div>
-			{/* @ts-ignore */}
-			{components[code].Component(config)}
+			{cEl}
 		</div>
 	);
 });
