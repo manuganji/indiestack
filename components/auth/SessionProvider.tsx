@@ -99,11 +99,11 @@ export function AuthProvider({
 		if (loading) return;
 		if (lastSync + (refetchInterval ?? 60) > now()) return;
 		if (visibility != "visible" || !isOnline) {
-			console.log("conditions", {
-				visibility,
-				loading,
-				isOnline,
-			});
+			// console.log("conditions", {
+			// 	visibility,
+			// 	loading,
+			// 	isOnline,
+			// });
 			return;
 		}
 		getUserOnClient().then((user) => {

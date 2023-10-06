@@ -439,6 +439,7 @@ export default function PageEditor() {
 					{sectionSchema && editSectionId ? (
 						<DeclarativeForm
 							schema={sectionSchema}
+							uiSchema={components[editedSection?.code!].uiSchema}
 							// @ts-ignore
 							initialData={editedSection?.config}
 							onSubmit={(newConfig) => {

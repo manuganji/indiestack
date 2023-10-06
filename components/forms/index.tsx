@@ -12,6 +12,7 @@ import { validate } from "./actions";
 import "./forms.css";
 import { customRenders } from "./renderers";
 import { vanillaStyles } from "./styles";
+import { UISchemaElement } from "@jsonforms/core";
 
 function transformError(
 	error: NonNullable<DataValidateFunction["errors"]>[number],
@@ -33,6 +34,7 @@ function transformError(
 
 export default function DeclarativeForm<T>({
 	schema,
+	uiSchema,
 	initialData,
 	onSubmit,
 	method = "POST",
@@ -40,6 +42,7 @@ export default function DeclarativeForm<T>({
 	children,
 }: {
 	schema: JSONSchemaType<T>;
+	uiSchema?: UISchemaElement;
 	initialData?: Partial<T>;
 	onSubmit?: (
 		data: T,
@@ -83,6 +86,7 @@ export default function DeclarativeForm<T>({
 				}}
 			>
 				<JsonForms
+					uischema={uiSchema}
 					config={{
 						restrict: false,
 						trim: true,

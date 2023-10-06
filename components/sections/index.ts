@@ -1,11 +1,12 @@
 import { JSONSchemaType } from "ajv";
 import * as T001 from "./T001";
+import { Layout } from "@jsonforms/core";
 
 type ComponentConfig<T> = {
 	title: string;
 	desc?: string;
 	schema: JSONSchemaType<T>;
-	uiSchema?: object;
+	uiSchema?: Layout;
 	Component: React.FunctionComponent<T>;
 };
 

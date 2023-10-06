@@ -1,3 +1,4 @@
+import { Layout, UISchemaElement, VerticalLayout } from "@jsonforms/core";
 import { JSONSchemaType } from "ajv";
 
 type PropsType = {
@@ -26,6 +27,20 @@ export const schema: JSONSchemaType<PropsType> = {
 			text: "Please enter some text.",
 		},
 	},
+};
+
+export const uiSchema: VerticalLayout = {
+	type: "VerticalLayout",
+	elements: [
+		{
+			type: "Control",
+			// @ts-ignore
+			scope: "#/properties/text",
+			options: {
+				multi: true,
+			},
+		},
+	],
 };
 
 export const Component = function T001({ text }: PropsType) {
