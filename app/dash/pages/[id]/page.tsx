@@ -29,6 +29,7 @@ import { memo, useEffect, useMemo, useReducer, useState } from "react";
 import { JSONValue } from "zapatos/db";
 import { pages, sections } from "zapatos/schema";
 import { getDefaultConfig, getPageById, savePage } from "./actions";
+import { pageSchema } from "@/schemas";
 
 const ComponentWrapper = memo(function ({
 	position,
@@ -258,7 +259,9 @@ function reducer(state: StateType, { type, payload }: ActionTypes): StateType {
 
 export default function PageEditor() {
 	const params = useParams();
+
 	const pageId = Array.isArray(params.id) ? params.id[0] : params.id;
+	const [pageFormOpen, setPageFormOpen] = useState(false);
 	const [editSectionId, setEditSectionId] = useState<
 		sections.JSONSelectable["id"] | undefined
 	>();
@@ -340,7 +343,11 @@ export default function PageEditor() {
 		<div className="flex gap-4">
 			<div className="px-2 flex flex-col">
 				<div className="flex gap-2 items-baseline justify-between">
-					<Collapsible className="flex-grow">
+					<Collapsible
+						className="flex-grow"
+						open={pageFormOpen}
+						onOpenChange={setPageFormOpen}
+					>
 						<div className="flex items-center justify-between space-x-4 px-4 w-full">
 							<p className="font-bold">Page Settings</p>
 							<CollapsibleTrigger asChild>
@@ -351,16 +358,16 @@ export default function PageEditor() {
 							</CollapsibleTrigger>
 						</div>
 						<CollapsibleContent>
-							<Input
-								value={page?.title}
-								className="w-auto flex-grow"
-								onChange={({ currentTarget: { value } }) => {
-									setPage({
-										...page,
-										title: value,
-									});
+							<DeclarativeForm
+								schema={pageSchema}
+								initialData={page}
+								onSubmit={(pageVal) => {
+									setPage({ id: pageId, ...pageVal });
+									setPageFormOpen(false);
 								}}
-							/>
+							>
+								<Button type="submit">Save</Button>
+							</DeclarativeForm>
 						</CollapsibleContent>
 					</Collapsible>
 
@@ -391,7 +398,7 @@ export default function PageEditor() {
 				{preview}
 				<div className="p-4 border-t border-gray-400 flex flex-col gap-2 my-4">
 					<h2>Add new section</h2>
-					<div className="grid grid-cols-6">
+					<div className="grid grid-cols-6 gap-1">
 						{Object.entries(components).map(([code, { title }]) => (
 							<Button
 								variant={"outline"}

@@ -26,7 +26,7 @@ export const columns: ColumnDef<pages.JSONSelectable>[] = [
 				original: { path },
 			},
 		}) {
-			return <Link href={`/${path}`}>{path}</Link>;
+			return <Link href={`/${path}`}>/{path}</Link>;
 		},
 	},
 	{

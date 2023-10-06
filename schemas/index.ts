@@ -1,6 +1,6 @@
 import type { JSONSchemaType } from "ajv";
 import type { PgPropertySettings } from "zapatos/custom";
-import { properties } from "zapatos/schema";
+import { pages, properties } from "zapatos/schema";
 import IDS from "./ids";
 
 export const loginSchema: JSONSchemaType<{
@@ -205,4 +205,32 @@ export const addAdminSchema: JSONSchemaType<{
 		},
 	},
 	required: ["email"],
+};
+
+export const pageSchema: JSONSchemaType<
+	Pick<pages.JSONSelectable, "title" | "path">
+> = {
+	$schema: "http://json-schema.org/draft-07/schema#",
+	$id: IDS.pageSchema,
+	type: "object",
+	properties: {
+		title: {
+			type: "string",
+			title: "Title",
+			errorMessage: "Please enter a title.",
+		},
+		path: {
+			type: "string",
+			title: "Path",
+			default: "",
+			errorMessage: "Please enter a path.",
+		},
+	},
+	required: ["title"],
+	errorMessage: {
+		required: {
+			title: "Please enter a title.",
+			path: "Please enter a path.",
+		},
+	},
 };

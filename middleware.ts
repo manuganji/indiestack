@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
 					dev ? "'unsafe-eval'" : "'strict-dynamic'"
 				} 'nonce-${nonce}';
     style-src 'self' '${dev ? "unsafe-inline" : "nonce-${nonce}"}' ;
-    img-src 'self' blob: data:;
+    img-src 'self' blob: data: https:;
     font-src 'self';
     object-src 'none';
     base-uri 'self';

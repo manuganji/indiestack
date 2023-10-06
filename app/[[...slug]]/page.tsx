@@ -70,6 +70,7 @@ export async function generateMetadata(
 	parent: ResolvingMetadata,
 ): Promise<Metadata> {
 	const pageOnDB = await getPage(params.slug?.join("/") || "");
+	// console.log(pageOnDB);
 	return {
 		title: pageOnDB?.page?.title || pageOnDB?.property?.name,
 		// openGraph: {
@@ -94,7 +95,7 @@ export default async function Home({
 	// console.log(params);
 	return (
 		<main className="flex min-h-screen flex-col items-center p-24">
-			{sections.map((section) => (
+			{sections?.map((section) => (
 				<Fragment key={section.id}>
 					{/* @ts-ignore */}
 					{components[section.code].Component(section.config)}

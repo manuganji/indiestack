@@ -5,6 +5,7 @@ const IDS = {
 	property: "property",
 	reconfirmEmail: "reconfirmEmail",
 	addAdmin: "addAdmin",
+	pageSchema: "pageSchema",
 } as const;
 
 export default IDS;

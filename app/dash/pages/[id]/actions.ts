@@ -59,6 +59,7 @@ export const savePage = async function (
 	pageId: string,
 	{ page, sections }: PageType,
 ) {
+	// console.log("Saving page", page);
 	await Promise.all([requireAdmin()]);
 	const property = await getCurrentProperty();
 	await runQueryTxn(async (client) => {
