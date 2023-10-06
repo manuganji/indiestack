@@ -23,6 +23,11 @@ import {
 } from "@heroicons/react/20/solid";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const ComponentWrapper = function ({
 	position,
@@ -281,19 +286,25 @@ export default function PageEditor() {
 	return (
 		<div className="flex gap-4">
 			<div className="px-2 flex flex-col">
-				<div className="flex gap-2 items-baseline">
-					<Input
-						value={state.page?.title}
-						className="text-3xl w-auto py-6 flex-grow"
-						onChange={({ currentTarget: { value } }) => {
-							dispatch({
-								type: "setPage",
-								payload: {
-									title: value,
-								},
-							});
-						}}
-					/>
+				<div className="flex gap-2 items-baseline justify-between">
+					<Collapsible>
+						<CollapsibleTrigger>Page Settings</CollapsibleTrigger>
+						<CollapsibleContent>
+							<Input
+								value={state.page?.title}
+								className="w-auto flex-grow"
+								onChange={({ currentTarget: { value } }) => {
+									dispatch({
+										type: "setPage",
+										payload: {
+											title: value,
+										},
+									});
+								}}
+							/>
+						</CollapsibleContent>
+					</Collapsible>
+
 					<div className="">
 						<Button
 							onClick={() => {
