@@ -3,51 +3,51 @@ import DeclarativeForm from "@/components/forms";
 import { components } from "@/components/sections/index";
 import { Button } from "@/components/ui/button";
 import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
+import {
 	Sheet,
 	SheetContent,
 	SheetDescription,
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/sheet";
+import { toast } from "@/components/ui/use-toast";
 import { shortId } from "@/lib/utils";
-import { useParams } from "next/navigation";
-import { useEffect, useMemo, useReducer } from "react";
-import { JSONValue } from "zapatos/db";
-import { pages, sections } from "zapatos/schema";
-import { PageType, getDefaultConfig, getPageById, savePage } from "./actions";
 import {
+	ArrowDownIcon,
+	ArrowUpIcon,
+	ChevronUpDownIcon,
 	PencilIcon,
 	TrashIcon,
-	ArrowUpIcon,
-	ArrowDownIcon,
 } from "@heroicons/react/20/solid";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { useParams } from "next/navigation";
+import { memo, useEffect, useMemo, useReducer, useState } from "react";
+import { JSONValue } from "zapatos/db";
+import { pages, sections } from "zapatos/schema";
+import { getDefaultConfig, getPageById, savePage } from "./actions";
 
-const ComponentWrapper = function ({
+const ComponentWrapper = memo(function ({
 	position,
-	moveUp,
-	moveDown,
+	changeOrder,
 	canMoveDown,
 	setEditing,
 	deleteSection,
-	children,
-	section,
+	code,
+	config,
+	id,
 }: {
-	section: StateType["sections"][0];
-	children: React.ReactNode;
-	position: number;
 	id: string;
-	moveUp: () => void;
-	moveDown: () => void;
+	config: SectionType["config"];
+	code: SectionType["code"];
+	position: number;
+	changeOrder: (id: string, to: number) => void;
 	canMoveDown: boolean;
-	setEditing: () => void;
-	deleteSection: () => void;
+	setEditing: (id: string) => void;
+	deleteSection: (id: string) => void;
 }) {
 	const buttons: Array<{
 		icon: React.ComponentType<any>;
@@ -60,28 +60,29 @@ const ComponentWrapper = function ({
 			icon: PencilIcon,
 			title: "Edit this section",
 			disabled: false,
-			onClick: setEditing,
+			onClick: () => setEditing(id),
 		},
 		{
 			icon: ArrowDownIcon,
 			title: "Move down",
 			disabled: !canMoveDown,
-			onClick: moveDown,
+			onClick: () => changeOrder(id, position + 1),
 		},
 		{
 			icon: ArrowUpIcon,
 			title: "Move up",
 			disabled: position === 0,
-			onClick: moveUp,
+			onClick: () => changeOrder(id, position - 1),
 		},
 		{
 			icon: TrashIcon,
 			title: "Delete",
 			disabled: false,
 			destructive: true,
-			onClick: deleteSection,
+			onClick: () => deleteSection(id),
 		},
 	];
+	// console.log("rendering", config?.text);
 	return (
 		<div className="group w-full relative">
 			<div
@@ -93,7 +94,7 @@ const ComponentWrapper = function ({
         absolute
         gap-1 px-2 py-2"
 			>
-				<p className="text-gray-200">{section.code}</p>
+				<p className="text-gray-200">{code}</p>
 				<div className="flex gap-1">
 					{buttons.map(({ icon: Icon, title, onClick, disabled, destructive }) => {
 						return (
@@ -111,21 +112,13 @@ const ComponentWrapper = function ({
 					})}
 				</div>
 			</div>
-			{children}
+			{/* @ts-ignore */}
+			{components[code].Component(config)}
 		</div>
 	);
-};
+});
+
 type ActionTypes =
-	| {
-			type: "setPage";
-			payload: Partial<StateType["page"]>;
-	  }
-	| {
-			type: "setEditingSection";
-			payload?: {
-				section?: sections.JSONSelectable["id"];
-			};
-	  }
 	| {
 			type: "deleteSection";
 			payload: {
@@ -160,79 +153,105 @@ type ActionTypes =
 	| {
 			type: "setFullPage";
 			payload: {
-				page: Omit<pages.JSONSelectable, "id">;
 				sections: sections.JSONSelectable[];
 			};
 	  };
 
-export type StateType = PageType & {
-	editedSection?: sections.JSONSelectable["id"];
+type SectionType = Pick<sections.JSONSelectable, "code" | "config">;
+
+type PageType = Pick<pages.JSONSelectable, "title" | "path" | "id">;
+
+export type StateType = {
+	sections: Map<string, SectionType>; // id -> section
+	order: {
+		[id: string]: number;
+	}; // id -> order
 };
 
-function reducer(state: StateType, action: ActionTypes): StateType {
-	switch (action.type) {
-		case "setPage": {
+const getSortedOrder = (state: StateType) =>
+	Object.entries(state.order).sort(([_, a], [__, b]) => {
+		return a - b;
+	});
+
+const getNewOrder = (state: StateType, id: string, to: number) => {
+	const sortedOrder = getSortedOrder(state);
+	let from: number;
+
+	for (from = 0; from < sortedOrder.length; from++) {
+		if (sortedOrder[from][0] == id) {
+			break;
+		}
+	}
+
+	if (to == 0) {
+		return sortedOrder[0][1] - 1;
+	} else if (to == state.sections.size - 1) {
+		return sortedOrder.at(-1)![1] + 1;
+	} else if (from > to) {
+		return (sortedOrder[to][1] + sortedOrder[to - 1][1]) / 2;
+	} else if (from < to) {
+		return (sortedOrder[to][1] + sortedOrder[to + 1][1]) / 2;
+	} else {
+		return sortedOrder[from][1];
+	}
+};
+
+function reducer(state: StateType, { type, payload }: ActionTypes): StateType {
+	switch (type) {
+		case "setFullPage": {
 			return {
-				...state,
-				page: {
-					...state.page,
-					...action.payload,
-				},
+				sections: new Map(
+					payload.sections.map(({ id, code, config }) => [id, { code, config }]),
+				),
+				order: Object.fromEntries(
+					payload.sections.map((section) => [section.id, section.order]),
+				),
 			};
 		}
-		case "setFullPage": {
-			return action.payload;
-		}
 		case "setConfig": {
+			const section = state.sections.get(payload.sectionId)!;
+			section["config"] = payload.config;
 			return {
 				...state,
-				sections: state.sections.map((section) => {
-					if (section.id === action.payload.sectionId) {
-						return {
-							...section,
-							config: action.payload.config,
-						};
-					}
-					return section;
-				}),
+				sections: state.sections.set(payload.sectionId, section),
 			};
 		}
 		case "addSection": {
 			return {
 				...state,
-				sections: [...state.sections, action.payload.section],
-			};
-		}
-		case "setEditingSection": {
-			return {
-				...state,
-				editedSection: action.payload?.section,
+				sections: state.sections.set(payload.section.id, {
+					code: payload.section.code,
+					config: payload.section.config,
+				}),
+				order: {
+					...state.order,
+					[payload.section.id]: payload.section.order,
+				},
 			};
 		}
 		case "deleteSection": {
+			state.sections.delete(payload.sectionId);
+			const order = {
+				...state.order,
+			};
+			delete order[payload.sectionId];
 			return {
 				...state,
-				sections: state.sections.filter(
-					(section) => section.id !== action.payload.sectionId,
-				),
+				sections: state.sections,
+				order,
 			};
 		}
 		case "changeOrder": {
 			return {
 				...state,
-				sections: state.sections.map((section) => {
-					if (section.id === action.payload.id) {
-						return {
-							...section,
-							order: action.payload.to,
-						};
-					}
-					return section;
-				}),
+				order: {
+					...state.order,
+					[payload.id]: getNewOrder(state, payload.id, payload.to),
+				},
 			};
 		}
 		default:
-			console.log(action);
+			console.log({ type, payload });
 			return state;
 	}
 }
@@ -240,65 +259,105 @@ function reducer(state: StateType, action: ActionTypes): StateType {
 export default function PageEditor() {
 	const params = useParams();
 	const pageId = Array.isArray(params.id) ? params.id[0] : params.id;
-	const [state, dispatch] = useReducer(reducer, {
-		sections: [],
-		page: {
-			title: "Page",
-			path: "/unknown",
-		},
+	const [editSectionId, setEditSectionId] = useState<
+		sections.JSONSelectable["id"] | undefined
+	>();
+	const [page, setPage] = useState<PageType>({
+		id: pageId,
+		title: "Page",
+		path: "/unknown",
 	});
-
-	const getOrderBetween = (from: number, to: number) => {
-		if (to == 0) {
-			return state.sections[0].order - 1;
-		} else if (to == state.sections.length - 1) {
-			return state.sections.at(-1)!.order + 1;
-		} else if (from > to) {
-			return (state.sections[to].order + state.sections[to - 1].order) / 2;
-		} else if (from < to) {
-			return (state.sections[to].order + state.sections[to + 1].order) / 2;
-		} else {
-			return state.sections[from].order;
-		}
-	};
-
-	const editedSection = useMemo(
-		() => state.sections.find((section) => section.id === state.editedSection),
-		[state.editedSection, state.sections],
-	);
-	const sectionSchema = useMemo(
-		() => (editedSection ? components[editedSection?.code].schema : undefined),
-		[editedSection],
-	);
+	const [state, dispatch] = useReducer(reducer, {
+		sections: new Map(),
+		order: {},
+	});
 
 	useEffect(() => {
 		getPageById(pageId).then(({ sections, ...page }) => {
 			dispatch({
 				type: "setFullPage",
 				payload: {
-					page,
 					sections,
 				},
 			});
+			setPage(page);
 		});
 	}, [pageId]);
+
+	const sections = state.sections;
+	const editedSection = editSectionId ? sections.get(editSectionId) : undefined;
+
+	const sortedOrder = useMemo(() => getSortedOrder(state), [state.order]);
+
+	const sectionSchema = useMemo(
+		() => (editSectionId ? components[editedSection?.code!].schema : undefined),
+		[editSectionId],
+	);
+
+	const changeOrder = useMemo(
+		() => (id: string, to: number) => {
+			dispatch({
+				type: "changeOrder",
+				payload: {
+					id,
+					to,
+				},
+			});
+		},
+		[],
+	);
+
+	const deleteSection = useMemo(
+		() => (id: string) => {
+			dispatch({
+				type: "deleteSection",
+				payload: {
+					sectionId: id,
+				},
+			});
+		},
+		[],
+	);
+
+	const preview = sortedOrder.map(([id], index) => {
+		const section = sections.get(id)!;
+		return (
+			<ComponentWrapper
+				code={section.code}
+				config={section.config}
+				key={`section${id}`}
+				position={index}
+				canMoveDown={index < sections.size - 1}
+				id={id}
+				changeOrder={changeOrder}
+				deleteSection={deleteSection}
+				setEditing={setEditSectionId}
+			/>
+		);
+	});
 
 	return (
 		<div className="flex gap-4">
 			<div className="px-2 flex flex-col">
 				<div className="flex gap-2 items-baseline justify-between">
-					<Collapsible>
-						<CollapsibleTrigger>Page Settings</CollapsibleTrigger>
+					<Collapsible className="flex-grow">
+						<div className="flex items-center justify-between space-x-4 px-4 w-full">
+							<p className="font-bold">Page Settings</p>
+							<CollapsibleTrigger asChild>
+								<Button variant={"ghost"}>
+									<ChevronUpDownIcon className="h-5 w-5"></ChevronUpDownIcon>
+									<span className="sr-only">Toggle</span>
+								</Button>
+							</CollapsibleTrigger>
+						</div>
 						<CollapsibleContent>
 							<Input
-								value={state.page?.title}
+								value={page?.title}
 								className="w-auto flex-grow"
 								onChange={({ currentTarget: { value } }) => {
-									dispatch({
-										type: "setPage",
-										payload: {
-											title: value,
-										},
+									setPage({
+										...page,
+										title: value,
 									});
 								}}
 							/>
@@ -308,7 +367,14 @@ export default function PageEditor() {
 					<div className="">
 						<Button
 							onClick={() => {
-								savePage(pageId, state).then(() => {
+								savePage(pageId, {
+									page,
+									sections: sortedOrder.map(([id, order]) => ({
+										id,
+										order,
+										...sections.get(id)!,
+									})),
+								}).then(() => {
 									toast({
 										title: "Saved",
 										description: "Page saved successfully",
@@ -322,83 +388,32 @@ export default function PageEditor() {
 						</Button>
 					</div>
 				</div>
-				{state.sections
-					.sort((a, b) => a.order - b.order)
-					.map((section, index) => {
-						return (
-							<ComponentWrapper
-								section={section}
-								key={section.id}
-								position={index}
-								canMoveDown={index < state.sections.length - 1}
-								moveUp={() => {
-									dispatch({
-										type: "changeOrder",
-										payload: {
-											id: section.id,
-											to: getOrderBetween(index, index - 1),
-										},
-									});
-								}}
-								moveDown={() => {
-									dispatch({
-										type: "changeOrder",
-										payload: {
-											id: section.id,
-											to: getOrderBetween(index, index + 1),
-										},
-									});
-								}}
-								deleteSection={() => {
-									dispatch({
-										type: "deleteSection",
-										payload: {
-											sectionId: section.id,
-										},
-									});
-								}}
-								setEditing={() => {
-									dispatch({
-										type: "setEditingSection",
-										payload: {
-											section: section.id,
-										},
-									});
-								}}
-								id={section.id}
-							>
-								{/* Wrap with editing controls */}
-								{components[section.code].Component(section.config)}
-							</ComponentWrapper>
-						);
-					})}
-				<div className="p-4 bg-gray-100 shadow-inner rounded-md flex flex-col gap-2 my-4">
+				{preview}
+				<div className="p-4 border-t border-gray-400 flex flex-col gap-2 my-4">
 					<h2>Add new section</h2>
 					<div className="grid grid-cols-6">
 						{Object.entries(components).map(([code, { title }]) => (
 							<Button
+								variant={"outline"}
 								key={code}
 								onClick={async () => {
+									// @ts-ignore
 									const defaultConfig = await getDefaultConfig(code);
 									const newId = shortId();
 									dispatch({
 										type: "addSection",
 										payload: {
 											section: {
+												// @ts-ignore
 												code,
 												id: newId,
 												// creates a long gap between new sections and existing sections for re-ordering
-												order: state.sections.length,
+												order: sortedOrder.at(-1)![1] + 1,
 												config: defaultConfig,
 											},
 										},
 									});
-									dispatch({
-										type: "setEditingSection",
-										payload: {
-											section: newId,
-										},
-									});
+									setEditSectionId(newId);
 								}}
 							>
 								{title}
@@ -408,15 +423,10 @@ export default function PageEditor() {
 				</div>
 			</div>
 			<Sheet
-				open={!!state.editedSection}
+				open={!!editSectionId}
 				onOpenChange={(open) => {
 					if (!open) {
-						dispatch({
-							type: "setEditingSection",
-							payload: {
-								section: undefined,
-							},
-						});
+						setEditSectionId(undefined);
 					}
 				}}
 			>
@@ -426,7 +436,7 @@ export default function PageEditor() {
 						<SheetTitle>{editedSection?.code}</SheetTitle>
 						<SheetDescription>Editing this section</SheetDescription>
 					</SheetHeader>
-					{sectionSchema ? (
+					{sectionSchema && editSectionId ? (
 						<DeclarativeForm
 							schema={sectionSchema}
 							// @ts-ignore
@@ -436,16 +446,11 @@ export default function PageEditor() {
 								dispatch({
 									type: "setConfig",
 									payload: {
-										sectionId: editedSection?.id!,
+										sectionId: editSectionId!,
 										config: newConfig,
 									},
 								});
-								dispatch({
-									type: "setEditingSection",
-									payload: {
-										section: undefined,
-									},
-								});
+								setEditSectionId(undefined);
 							}}
 						>
 							<Button type="submit">Save</Button>
