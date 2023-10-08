@@ -3,13 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { runQuery } from "@/db";
 import { getCurrentProperty } from "@/lib/serverUtils";
-import Link from "next/link";
 import { Suspense } from "react";
 import { select } from "zapatos/db";
 import { columns } from "./columns";
 
-const PagesTable = async function () {
-	const currentProperty = await getCurrentProperty();
+const PagesTable = async function ({ domain }: { domain: string }) {
+	const currentProperty = await getCurrentProperty({ domain });
 	const pages = await runQuery(
 		select("pages", {
 			property: currentProperty.id,
@@ -19,7 +18,11 @@ const PagesTable = async function () {
 	return <DataTable columns={columns} data={pages} />;
 };
 
-export default async function PagesAdmin() {
+export default async function PagesAdmin({
+	params: { d },
+}: {
+	params: { d: string };
+}) {
 	return (
 		<div className="flex flex-col gap-4 w-full mt-4 mx-4">
 			<div className="flex justify-between">
@@ -38,7 +41,7 @@ export default async function PagesAdmin() {
 					</div>
 				}
 			>
-				<PagesTable />
+				<PagesTable domain={d} />
 			</Suspense>
 		</div>
 	);

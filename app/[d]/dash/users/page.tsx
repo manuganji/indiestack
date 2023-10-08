@@ -4,8 +4,12 @@ import { select } from "zapatos/db";
 import { columns } from "./columns";
 import { DataTable } from "@/components/table";
 
-export default async function UsersHome() {
-	const property = await getCurrentProperty();
+export default async function UsersHome({
+	params: { d },
+}: {
+	params: { d: string };
+}) {
+	const property = await getCurrentProperty({ domain: d });
 	const users = await runQuery(
 		select(
 			"users",

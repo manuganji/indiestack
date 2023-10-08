@@ -95,6 +95,7 @@ export default function SideBar({ isRoot }: { isRoot: boolean }) {
 											case "button":
 												return (
 													<Button asChild>
+														{/* @ts-ignore */}
 														<Link href={item.path}>{item.label}</Link>
 													</Button>
 												);

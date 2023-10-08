@@ -24,13 +24,7 @@ import { env } from "process";
 import { cache } from "react";
 import "server-only";
 import { PgPropertySettings } from "zapatos/custom";
-import {
-	parent,
-	selectExactlyOne,
-	selectOne,
-	sql,
-	upsert
-} from "zapatos/db";
+import { parent, selectExactlyOne, selectOne, sql, upsert } from "zapatos/db";
 import { properties } from "zapatos/schema";
 import { shortId } from "./utils";
 
@@ -95,31 +89,36 @@ export function getTransporter() {
 	return transporter;
 }
 
-export const getCurrentProperty = cache(async (withSettings = false) => {
-	try {
-		const property = await runQuery(
-			selectExactlyOne(
-				"properties",
-				{
-					domain: getHostName(),
-				},
-				withSettings
-					? {}
-					: {
-							columns: ["domain", "id", "name"],
-							extras: {
-								settings: sql<properties.SQL, PgPropertySettings>`'{}'::jsonb`,
-							},
-					  },
-			),
-		);
-		return property;
-	} catch (e) {
-		console.error(e);
-		const property = upsertDomain(getHostName());
-		return property;
-	}
-});
+export const getCurrentProperty = cache(
+	async (params: { domain?: string; withSettings?: boolean } = {}) => {
+		const { domain: ipDomain, withSettings = false } = params ?? {};
+		let domain: string = ipDomain ? decodeURIComponent(ipDomain) : getHostName();
+		console.log("get current property", domain);
+		try {
+			const property = await runQuery(
+				selectExactlyOne(
+					"properties",
+					{
+						domain,
+					},
+					withSettings
+						? {}
+						: {
+								columns: ["domain", "id", "name"],
+								extras: {
+									settings: sql<properties.SQL, PgPropertySettings>`'{}'::jsonb`,
+								},
+						  },
+				),
+			);
+			return property;
+		} catch (e) {
+			// console.error(e);
+			const property = upsertDomain(getHostName());
+			return property;
+		}
+	},
+);
 
 export const getProperty = cache(async function (
 	id: string,
@@ -347,7 +346,6 @@ export const s3Client = new S3({
 		secretAccessKey: process.env.CLOUDFLARE_ACCESS_SECRET!,
 	},
 });
-
 
 export const deltaFromNow = function (duration: Duration) {
 	const now = new Date();

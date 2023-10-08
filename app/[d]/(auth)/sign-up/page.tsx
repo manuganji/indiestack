@@ -58,7 +58,7 @@ export default function SignUp({
 					if (res?.errors) {
 						setErrors(res?.errors);
 					}
-					if (res?.error) {
+					if ("error" in res) {
 						toast({
 							description: res?.error,
 						});

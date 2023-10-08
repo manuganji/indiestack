@@ -59,7 +59,7 @@ export interface SignOutParams<R extends boolean = true> {
 /** [Documentation](https://next-auth.js.org/getting-started/client#options) */
 export interface SessionProviderProps {
 	children: React.ReactNode;
-	session?: Session | null;
+	// session?: Session | null;
 	/**
 	 * A time interval (in seconds) after which the session will be re-fetched.
 	 * If set to `0` (default), the session is not polled.

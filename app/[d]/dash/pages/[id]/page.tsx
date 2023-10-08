@@ -30,8 +30,9 @@ import { JSONValue } from "zapatos/db";
 import { pages, sections } from "zapatos/schema";
 import { getDefaultConfig, getPageById, savePage } from "./actions";
 import { pageSchema } from "@/schemas";
+import { get } from "lodash";
 
-const ComponentWrapper = memo(function ({
+const MemoizedComponentWrapper = memo(function ComponentWrapper({
 	position,
 	changeOrder,
 	canMoveDown,
@@ -325,7 +326,7 @@ export default function PageEditor() {
 	const preview = sortedOrder.map(([id], index) => {
 		const section = sections.get(id)!;
 		return (
-			<ComponentWrapper
+			<MemoizedComponentWrapper
 				code={section.code}
 				config={section.config}
 				key={`section${id}`}
@@ -446,7 +447,7 @@ export default function PageEditor() {
 					{sectionSchema && editSectionId ? (
 						<DeclarativeForm
 							schema={sectionSchema}
-							uiSchema={components[editedSection?.code!].uiSchema}
+							uiSchema={get(components, `${editedSection?.code}.uiSchema`, undefined)}
 							// @ts-ignore
 							initialData={editedSection?.config}
 							onSubmit={(newConfig) => {

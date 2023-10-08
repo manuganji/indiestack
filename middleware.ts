@@ -19,14 +19,16 @@ export function middleware(request: NextRequest) {
     ${dev ? "" : "upgrade-insecure-requests"};
 	`;
 
+	const hostname = request.headers.get("host")!;
+
 	const { pathname } = request.nextUrl;
 	request.headers.set("x-pathname", pathname);
 	// share nonce with the downstream code
 	request.headers.set("x-nonce", nonce);
 
-	const resp = NextResponse.next({
-		request,
-	});
+	const resp = NextResponse.rewrite(
+		new URL(`/${hostname}${pathname}`, request.url),
+	);
 	// resp.headers.delete('x-pathname');
 
 	// add CSP header if not already present

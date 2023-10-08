@@ -1,6 +1,6 @@
 "use client";
 
-import { columns } from "@/app/dash/users/columns";
+import { columns } from "@/app/[d]/dash/users/columns";
 import { DataTable } from "@/components/table";
 import DeclarativeForm from "@/components/forms";
 import { Button } from "@/components/ui/button";

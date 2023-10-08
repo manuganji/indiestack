@@ -80,6 +80,7 @@ export default function NavMenu() {
 												case "button":
 													return (
 														<Button asChild>
+															{/* @ts-ignore */}
 															<Link href={item.path}>{item.label}</Link>
 														</Button>
 													);
