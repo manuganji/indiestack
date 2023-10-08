@@ -154,7 +154,7 @@ export async function sendMailOnSignUp({
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
 
-	const property = await getCurrentProperty(true);
+	const property = await getCurrentProperty({ withSettings: true });
 	const subject = `Sign in to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
@@ -188,7 +188,7 @@ export async function sendWelcomeMail({
 	firstName: string;
 	email: string;
 }) {
-	const property = await getCurrentProperty(true);
+	const property = await getCurrentProperty({ withSettings: true });
 	const subject = `Welcome to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
@@ -224,7 +224,7 @@ export async function sendMagicLink({
 }) {
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
-	const property = await getCurrentProperty(true);
+	const property = await getCurrentProperty({ withSettings: true });
 	const subject = `Sign in to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
