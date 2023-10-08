@@ -3,10 +3,11 @@
 import { createVerificationToken, getUserByEmail } from "@/auth";
 import { validate } from "@/components/forms/actions";
 import { LONG_SESSION_COOKIE, POST_AUTH_REDIRECT_URL, prod } from "@/constants";
+import { getCurrentProperty } from "@/lib/domains";
 import {
 	createErrorObject,
 	deltaFromNow,
-	getCurrentProperty,
+	getHostName,
 	isBlockedEmail,
 	isDisposableEmail,
 	makeAbsoluteUrl,
@@ -83,7 +84,9 @@ export async function emailSignIn({
 		httpOnly: true,
 	});
 
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({
+		domain: getHostName(),
+	});
 	const vtoken = await createVerificationToken({
 		identifier: email,
 		expires: deltaFromNow(DEFAULT_TOKEN_DURATION),

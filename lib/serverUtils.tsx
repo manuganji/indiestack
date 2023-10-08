@@ -24,28 +24,11 @@ import { env } from "process";
 import { cache } from "react";
 import "server-only";
 import { PgPropertySettings } from "zapatos/custom";
-import { parent, selectExactlyOne, selectOne, sql, upsert } from "zapatos/db";
+import { parent, selectExactlyOne, selectOne, sql } from "zapatos/db";
 import { properties } from "zapatos/schema";
-import { shortId } from "./utils";
+import { getCurrentProperty } from "./domains";
 
 export const getHostName = () => headers().get("host")!;
-
-export const upsertDomain = async (domain: string, name?: string) => {
-	const res = await runQuery(
-		upsert(
-			"properties",
-			{
-				id: shortId(10),
-				domain,
-				name: name ?? domain,
-			},
-			{
-				value: "properties_pkey",
-			},
-		),
-	);
-	return res;
-};
 
 let EMAIL_TEST_ACCOUNT: nodemailer.TestAccount;
 if (dev) {
@@ -89,37 +72,6 @@ export function getTransporter() {
 	return transporter;
 }
 
-export const getCurrentProperty = cache(
-	async (params: { domain?: string; withSettings?: boolean } = {}) => {
-		const { domain: ipDomain, withSettings = false } = params ?? {};
-		let domain: string = ipDomain ? decodeURIComponent(ipDomain) : getHostName();
-		console.log("get current property", domain);
-		try {
-			const property = await runQuery(
-				selectExactlyOne(
-					"properties",
-					{
-						domain,
-					},
-					withSettings
-						? {}
-						: {
-								columns: ["domain", "id", "name"],
-								extras: {
-									settings: sql<properties.SQL, PgPropertySettings>`'{}'::jsonb`,
-								},
-						  },
-				),
-			);
-			return property;
-		} catch (e) {
-			// console.error(e);
-			const property = upsertDomain(getHostName());
-			return property;
-		}
-	},
-);
-
 export const getProperty = cache(async function (
 	id: string,
 	withSettings = false,
@@ -154,7 +106,10 @@ export async function sendMailOnSignUp({
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
 
-	const property = await getCurrentProperty({ withSettings: true });
+	const property = await getCurrentProperty({
+		domain: getHostName(),
+		withSettings: true,
+	});
 	const subject = `Sign in to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
@@ -188,7 +143,10 @@ export async function sendWelcomeMail({
 	firstName: string;
 	email: string;
 }) {
-	const property = await getCurrentProperty({ withSettings: true });
+	const property = await getCurrentProperty({
+		domain: getHostName(),
+		withSettings: true,
+	});
 	const subject = `Welcome to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({
@@ -224,7 +182,10 @@ export async function sendMagicLink({
 }) {
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
-	const property = await getCurrentProperty({ withSettings: true });
+	const property = await getCurrentProperty({
+		domain: getHostName(),
+		withSettings: true,
+	});
 	const subject = `Sign in to ${property.name}`;
 	const transporter = getTransporter();
 	const info = await transporter.sendMail({

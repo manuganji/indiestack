@@ -3,7 +3,8 @@
 import { components } from "@/components/sections";
 import { runQuery, runQueryTxn } from "@/db";
 import { requireAdmin } from "@/lib/checks";
-import { getCurrentProperty } from "@/lib/serverUtils";
+import { getCurrentProperty } from "@/lib/domains";
+import { getHostName } from "@/lib/serverUtils";
 import { getAjv } from "@/schemas/ajvSetup";
 
 import { cache } from "react";
@@ -27,7 +28,7 @@ const ajv = getAjv();
 
 export const getPageById = cache(async function (id: string) {
 	await Promise.all([requireAdmin()]);
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	return await runQuery(
 		selectExactlyOne(
 			"pages",
@@ -61,7 +62,7 @@ export const savePage = async function (
 ) {
 	// console.log("Saving page", page);
 	await Promise.all([requireAdmin()]);
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	await runQueryTxn(async (client) => {
 		return Promise.all([
 			update(

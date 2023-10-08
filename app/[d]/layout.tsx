@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 
 import NavMenu from "@/components/NavMenu";
-import { getCurrentProperty } from "@/lib/serverUtils";
+import { getCurrentProperty } from "@/lib/domains";
+import { runQuery } from "@/db";
+import { select, all } from "zapatos/db";
 
 type Props = {
 	params: { d: string };
@@ -26,6 +28,11 @@ export async function generateMetadata({
 		// },
 	};
 }
+
+// export const generateStaticParams = async (): Promise<Array<{ d: string }>> => {
+// 	const properties = await runQuery(select("properties", all, {}));
+// 	return properties.map(({ domain }) => ({ d: domain }));
+// };
 
 export default async function RootLayout({
 	children,

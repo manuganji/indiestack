@@ -10,9 +10,8 @@ const nextConfig = {
 		return config;
 	},
 	experimental: {
-		typedRoutes: true,
+		// typedRoutes: true,
 		serverActions: true,
-		typedRoutes: true,
 		// optimizePackageImports: ["lodash"],
 	},
 };

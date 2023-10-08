@@ -12,14 +12,10 @@ export const LOCAL_USER = "local-user";
 export const LONG_SESSION_COOKIE = "long-session";
 export const SECS_IN_DAY = 86400;
 
-export const SIGN_UP_PATH: __next_route_internal_types__.StaticRoutes =
-	"/sign-up";
-export const SIGN_IN_PATH: __next_route_internal_types__.StaticRoutes =
-	"/sign-in";
-export const SIGN_OUT_PATH: __next_route_internal_types__.StaticRoutes =
-	"/sign-out";
-export const SESSION_PATH: __next_route_internal_types__.StaticRoutes =
-	"/session";
+export const SIGN_UP_PATH = "/sign-up";
+export const SIGN_IN_PATH = "/sign-in";
+export const SIGN_OUT_PATH = "/sign-out";
+export const SESSION_PATH = "/session";
 
 export const WIDGET_IDS = {
 	COVER: 1,

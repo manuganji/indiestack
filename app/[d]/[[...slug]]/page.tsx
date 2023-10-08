@@ -1,37 +1,71 @@
-// check if any page for the request
-// show 404
-
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { runQuery } from "@/db";
-import { getHostName } from "@/lib/serverUtils";
-import { parent, select, selectExactlyOne, selectOne } from "zapatos/db";
-import { Fragment, cache } from "react";
-import { notFound } from "next/navigation";
 import { components } from "@/components/sections";
+import { runQuery } from "@/db";
 import { Metadata, ResolvingMetadata } from "next";
+import { notFound } from "next/navigation";
+import { Fragment, cache } from "react";
+import { all, parent, select, selectExactlyOne } from "zapatos/db";
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
 export const dynamic = "auto";
-export async function generateStaticParams() {
-	return ["home", "about"];
-}
+export const revalidate = 60;
+
+export const generateStaticParams = async (): Promise<
+	Array<{ d: string; slug: null | string }>
+> => {
+	const properties = await runQuery(
+		select("properties", all, {
+			columns: ["domain"],
+		}),
+	);
+	const params = properties.map(({ domain }) => ({ d: domain, slug: null }));
+	// console.log("static params", params);
+	return params;
+	// const property = await runQuery(
+	// 	selectExactlyOne(
+	// 		"properties",
+	// 		{
+	// 			domain: d,
+	// 		},
+	// 		{
+	// 			lateral: {
+	// 				pages: select(
+	// 					"pages",
+	// 					{
+	// 						property: parent("id"),
+	// 					},
+	// 					{
+	// 						columns: ["path"],
+	// 						limit: 2,
+	// 					},
+	// 				),
+	// 			},
+	// 		},
+	// 	),
+	// );
+	// const params = property.pages.map(({ path }) => ({
+	// 	params: { d, slug: path },
+	// }));
+	// console.log("static params", d, params);
+	// return params;
+};
+
 // if (dev) {
 //   initDB();
 // }
 
-const getPage = cache(async (path: string) => {
-	const hostName = getHostName();
+const getPage = cache(async (path: string, domain: string) => {
+	// check if any page for the request
+	// show 404
+	// console.log("Generating", path, domain);
 	const { page, ...property } = await runQuery(
 		selectExactlyOne(
 			"properties",
 			{
-				domain: hostName,
+				domain: decodeURIComponent(domain),
 			},
 			{
 				columns: ["id", "name"],
 				lateral: {
-					page: selectOne(
+					page: selectExactlyOne(
 						"pages",
 						{
 							property: parent("id"),
@@ -66,10 +100,10 @@ const getPage = cache(async (path: string) => {
 });
 
 export async function generateMetadata(
-	{ params }: { params: { slug: string[] } },
+	{ params }: { params: { slug: string[]; d: string } },
 	parent: ResolvingMetadata,
 ): Promise<Metadata> {
-	const pageOnDB = await getPage(params.slug?.join("/") || "");
+	const pageOnDB = await getPage(params.slug?.join("/") || "", params.d);
 	// console.log(pageOnDB);
 	return {
 		title: pageOnDB?.page?.title || pageOnDB?.property?.name,
@@ -83,11 +117,11 @@ export default async function Home({
 	params,
 }: {
 	params: {
-		domain: string;
+		d: string;
 		slug?: string[];
 	};
 }) {
-	const pageOnDB = await getPage(params.slug?.join("/") || "");
+	const pageOnDB = await getPage(params.slug?.join("/") || "", params.d);
 	if (!pageOnDB) {
 		notFound();
 	}

@@ -1,8 +1,8 @@
 import { runQuery } from "@/db";
-import { getCurrentProperty } from "@/lib/serverUtils";
 import { select } from "zapatos/db";
 import { columns } from "./columns";
 import { DataTable } from "@/components/table";
+import { getCurrentProperty } from "@/lib/domains";
 
 export default async function UsersHome({
 	params: { d },

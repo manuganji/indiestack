@@ -16,18 +16,11 @@ import type {
 } from "zapatos/schema";
 import { runQuery, runQueryTxn } from "./db";
 // import { sendWelcomeMail } from "./serverSideUtils";
-import {
-	deltaFromNow,
-	getCurrentProperty,
-	sendWelcomeMail
-} from "@/lib/serverUtils";
+import { deltaFromNow, getHostName, sendWelcomeMail } from "@/lib/serverUtils";
 import { cookies } from "next/headers";
-import {
-	LONG_SESSION_COOKIE,
-	SESSION_COOKIE,
-	prod
-} from "./constants";
+import { LONG_SESSION_COOKIE, SESSION_COOKIE, prod } from "./constants";
 import { DEFAULT_AUTH_DURATION, LONG_AUTH_DURATION } from "./serverConstants";
+import { getCurrentProperty } from "./lib/domains";
 
 // const SC_ORG_ID = env.SC_ORG_ID;
 
@@ -71,11 +64,11 @@ export async function logUserIn(email: string) {
 
 	cookies().set(SESSION_COOKIE, session.session_token, {
 		path: "/",
-		
+
 		// https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_where_cookies_are_sent
 		// If Domain is specified, then subdomains are always included.
-		// Therefore, specifying Domain is less restrictive than omitting it. 
-		
+		// Therefore, specifying Domain is less restrictive than omitting it.
+
 		secure: prod,
 		httpOnly: true,
 		sameSite: "lax",
@@ -85,7 +78,9 @@ export async function logUserIn(email: string) {
 }
 
 export async function logUserOut() {
-	await runQuery(deletes("sessions", { session_token: cookies().get(SESSION_COOKIE)?.value }));
+	await runQuery(
+		deletes("sessions", { session_token: cookies().get(SESSION_COOKIE)?.value }),
+	);
 	cookies().delete(SESSION_COOKIE);
 	cookies().delete(LONG_SESSION_COOKIE);
 }
@@ -95,7 +90,7 @@ export function hasSessionCookie() {
 }
 
 export const createUser = async function createUser(user: users.Insertable) {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	return runQuery(
 		insert("users", {
 			...user,
@@ -149,7 +144,7 @@ export const updateUser = async (user: users.JSONSelectable) => {
 };
 
 export const deleteUser = async (userId: string) => {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	runQuery(deletes("users", { id: userId, property: property.id }));
 };
 
@@ -160,7 +155,7 @@ export const useVerificationToken = async function ({
 	identifier: string;
 	token: string;
 }) {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	const [item, ...res] = await runQuery(
 		update(
 			"verification_tokens",
@@ -190,7 +185,7 @@ export const getUser = async function getUser(id: string) {
 };
 
 export const getUserByEmail = async (email: string) => {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	return runQuery(selectOne("users", { email, property: property.id }));
 };
 
@@ -237,7 +232,7 @@ export const getUserByAccount = async function ({
 	provider: string;
 	providerAccountId: string;
 }) {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	const account = await runQuery(
 		selectExactlyOne(
 			"accounts",
@@ -266,7 +261,7 @@ export const unlinkAccount = async ({
 	provider_account_id,
 	provider,
 }: accounts.Selectable) => {
-	const property = await getCurrentProperty();
+	const property = await getCurrentProperty({ domain: getHostName() });
 	return runQuery(
 		deletes("accounts", {
 			provider_account_id,

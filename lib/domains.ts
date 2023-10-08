@@ -1,8 +1,62 @@
+import { runQuery } from "@/db";
 import {
 	DomainResponse,
 	DomainConfigResponse,
 	DomainVerificationResponse,
 } from "@/lib/types";
+import { cache } from "react";
+import { PgPropertySettings } from "zapatos/custom";
+import { selectExactlyOne, sql, upsert } from "zapatos/db";
+import { properties } from "zapatos/schema";
+import { shortId } from "./utils";
+
+export const upsertDomain = async (domain: string, name?: string) => {
+	const res = await runQuery(
+		upsert(
+			"properties",
+			{
+				id: shortId(10),
+				domain,
+				name: name ?? domain,
+			},
+			{
+				value: "properties_pkey",
+			},
+		),
+	);
+	return res;
+};
+
+export const getCurrentProperty = cache(
+	async (params: { domain: string; withSettings?: boolean }) => {
+		const { domain: ipDomain, withSettings = false } = params ?? {};
+		let domain: string = decodeURIComponent(ipDomain);
+		// console.log("get current property", domain);
+		try {
+			const property = await runQuery(
+				selectExactlyOne(
+					"properties",
+					{
+						domain,
+					},
+					withSettings
+						? {}
+						: {
+								columns: ["domain", "id", "name"],
+								extras: {
+									settings: sql<properties.SQL, PgPropertySettings>`'{}'::jsonb`,
+								},
+						  },
+				),
+			);
+			return property;
+		} catch (e) {
+			// console.error(e);
+			const property = upsertDomain(domain);
+			return property;
+		}
+	},
+);
 
 export const addDomainToVercel = async (domain: string) => {
 	return await fetch(

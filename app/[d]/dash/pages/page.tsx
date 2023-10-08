@@ -2,10 +2,10 @@ import { DataTable } from "@/components/table";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { runQuery } from "@/db";
-import { getCurrentProperty } from "@/lib/serverUtils";
 import { Suspense } from "react";
 import { select } from "zapatos/db";
 import { columns } from "./columns";
+import { getCurrentProperty } from "@/lib/domains";
 
 const PagesTable = async function ({ domain }: { domain: string }) {
 	const currentProperty = await getCurrentProperty({ domain });

@@ -1,5 +1,6 @@
 import { SIGN_IN_PATH } from "@/constants";
-import { getCurrentProperty } from "@/lib/serverUtils";
+import { getCurrentProperty } from "@/lib/domains";
+
 import { redirect } from "next/navigation";
 import { Fragment, ReactNode } from "react";
 
