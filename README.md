@@ -41,7 +41,7 @@ You can preview the production build with `pnpm run preview`.
 
 > To deploy your app to the cloud, check out [Next.js deployment documentation](https://nextjs.org/docs/deployment).
 
-## Using folder structure to set rules by exploiting Next.js Data Cache and React `cache`
+## Exploiting Next.js Data Cache and React `cache`
 
 Public `layout` doesn't make any user specific requests. But `(app)/layout` does. This composition can be reused elsewhere in the folder structure too.
 
@@ -52,3 +52,16 @@ Public `layout` doesn't make any user specific requests. But `(app)/layout` does
 ## Settings
 
 Read through `.env.example` for basic settings.
+
+## Forms
+
+Create a `jsonschema` and register it in `ajvSetup.ts`. The component `DeclarativeForm` defined in `@/components/forms/index` will use it to validate the data (via a server action) before triggering the `onSubmit` function.
+
+### Property Level Settings
+
+Defined in properties.settings.
+
+Steps to introduce a new setting:
+
+- Update schema in schemas
+- Update the type in zapatos/custom/PgPropertySettings.d.ts

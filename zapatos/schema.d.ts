@@ -10,6 +10,7 @@ Released under the MIT licence: see LICENCE file
 declare module 'zapatos/schema' {
 
   import type * as db from 'zapatos/db';
+  import type * as c from 'zapatos/custom';
 
   // got a type error on schemaVersionCanary below? update by running `npx zapatos`
   export interface schemaVersionCanary extends db.SchemaVersionCanary { version: 104 }
@@ -18,7 +19,11 @@ declare module 'zapatos/schema' {
   /* === schema: public === */
 
   /* --- enums --- */
-  /* (none) */
+
+  export type menu_type = 'footer' | 'header' | 'sidebar';
+  export namespace every {
+    export type menu_type = ['footer', 'header', 'sidebar'];
+  }
 
   /* --- tables --- */
 
@@ -609,6 +614,382 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **menus**
+   * - Table in database
+   */
+  export namespace menus {
+    export type Table = 'menus';
+    export interface Selectable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path: c.PgLtree;
+      /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated: boolean;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: menu_type;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items: c.PgMenuItems;
+    }
+    export interface JSONSelectable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path: c.PgLtree;
+      /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated: boolean;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: menu_type;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items: c.PgMenuItems;
+    }
+    export interface Whereable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path?: c.PgLtree | db.Parameter<c.PgLtree> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgLtree | db.Parameter<c.PgLtree> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: menu_type | db.Parameter<menu_type> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, menu_type | db.Parameter<menu_type> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path?: c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment;
+      /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type: menu_type | db.Parameter<menu_type> | db.SQLFragment;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **menus.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **menus.path**
+      * - `ltree` in database
+      * - `NOT NULL`, default: `''::ltree`
+      */
+      path?: c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgLtree | db.Parameter<c.PgLtree> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **menus.authenticated**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      authenticated?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **menus.type**
+      * - `menu_type` in database
+      * - `NOT NULL`, no default
+      */
+      type?: menu_type | db.Parameter<menu_type> | db.SQLFragment | db.SQLFragment<any, menu_type | db.Parameter<menu_type> | db.SQLFragment>;
+      /**
+      * **menus.items**
+      * - `menu_items` (base type: `jsonb`) in database
+      * - `NOT NULL`, default: `'[]'::jsonb`
+      */
+      items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'menus_path_type_auth_unique';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **pages**
+   * - Table in database
+   */
+  export namespace pages {
+    export type Table = 'pages';
+    export interface Selectable {
+      /**
+      * **pages.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **pages.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **pages.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **pages.path**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      path: string;
+      /**
+      * **pages.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: Date;
+      /**
+      * **pages.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **pages.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **pages.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **pages.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **pages.path**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      path: string;
+      /**
+      * **pages.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at: db.TimestampTzString;
+      /**
+      * **pages.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **pages.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pages.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pages.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pages.path**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      path?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pages.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pages.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **pages.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **pages.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **pages.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **pages.path**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      path: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **pages.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **pages.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **pages.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **pages.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **pages.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **pages.path**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      path?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **pages.created_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      created_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **pages.updated_at**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      updated_at?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'pages_path_unique' | 'pages_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **pgmigrations**
    * - Table in database
    */
@@ -747,11 +1128,11 @@ declare module 'zapatos/schema' {
       */
       domain: string;
       /**
-      * **properties.email_from**
-      * - `citext` in database
-      * - `NOT NULL`, no default
+      * **properties.settings**
+      * - `property_settings` (base type: `jsonb`) in database
+      * - Nullable, no default
       */
-      email_from: string;
+      settings: c.PgPropertySettings | null;
     }
     export interface JSONSelectable {
       /**
@@ -773,11 +1154,11 @@ declare module 'zapatos/schema' {
       */
       domain: string;
       /**
-      * **properties.email_from**
-      * - `citext` in database
-      * - `NOT NULL`, no default
+      * **properties.settings**
+      * - `property_settings` (base type: `jsonb`) in database
+      * - Nullable, no default
       */
-      email_from: string;
+      settings: c.PgPropertySettings | null;
     }
     export interface Whereable {
       /**
@@ -799,11 +1180,11 @@ declare module 'zapatos/schema' {
       */
       domain?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **properties.email_from**
-      * - `citext` in database
-      * - `NOT NULL`, no default
+      * **properties.settings**
+      * - `property_settings` (base type: `jsonb`) in database
+      * - Nullable, no default
       */
-      email_from?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      settings?: c.PgPropertySettings | db.Parameter<c.PgPropertySettings> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgPropertySettings | db.Parameter<c.PgPropertySettings> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -825,11 +1206,11 @@ declare module 'zapatos/schema' {
       */
       domain: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **properties.email_from**
-      * - `citext` in database
-      * - `NOT NULL`, no default
+      * **properties.settings**
+      * - `property_settings` (base type: `jsonb`) in database
+      * - Nullable, no default
       */
-      email_from: string | db.Parameter<string> | db.SQLFragment;
+      settings?: c.PgPropertySettings | db.Parameter<c.PgPropertySettings> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -851,13 +1232,186 @@ declare module 'zapatos/schema' {
       */
       domain?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **properties.email_from**
-      * - `citext` in database
-      * - `NOT NULL`, no default
+      * **properties.settings**
+      * - `property_settings` (base type: `jsonb`) in database
+      * - Nullable, no default
       */
-      email_from?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      settings?: c.PgPropertySettings | db.Parameter<c.PgPropertySettings> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgPropertySettings | db.Parameter<c.PgPropertySettings> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'properties_domain_key' | 'properties_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **sections**
+   * - Table in database
+   */
+  export namespace sections {
+    export type Table = 'sections';
+    export interface Selectable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **sections.page**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      page: string;
+      /**
+      * **sections.order**
+      * - `float4` in database
+      * - `NOT NULL`, no default
+      */
+      order: number;
+      /**
+      * **sections.code**
+      * - `page_section_code` (base type: `varchar`) in database
+      * - `NOT NULL`, no default
+      */
+      code: c.PgPageSectionCode;
+      /**
+      * **sections.config**
+      * - `jsonb` in database
+      * - `NOT NULL`, default: `'{}'::jsonb`
+      */
+      config: db.JSONValue;
+    }
+    export interface JSONSelectable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+      /**
+      * **sections.page**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      page: string;
+      /**
+      * **sections.order**
+      * - `float4` in database
+      * - `NOT NULL`, no default
+      */
+      order: number;
+      /**
+      * **sections.code**
+      * - `page_section_code` (base type: `varchar`) in database
+      * - `NOT NULL`, no default
+      */
+      code: c.PgPageSectionCode;
+      /**
+      * **sections.config**
+      * - `jsonb` in database
+      * - `NOT NULL`, default: `'{}'::jsonb`
+      */
+      config: db.JSONValue;
+    }
+    export interface Whereable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sections.page**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      page?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sections.order**
+      * - `float4` in database
+      * - `NOT NULL`, no default
+      */
+      order?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sections.code**
+      * - `page_section_code` (base type: `varchar`) in database
+      * - `NOT NULL`, no default
+      */
+      code?: c.PgPageSectionCode | db.Parameter<c.PgPageSectionCode> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgPageSectionCode | db.Parameter<c.PgPageSectionCode> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **sections.config**
+      * - `jsonb` in database
+      * - `NOT NULL`, default: `'{}'::jsonb`
+      */
+      config?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **sections.page**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      page: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **sections.order**
+      * - `float4` in database
+      * - `NOT NULL`, no default
+      */
+      order: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **sections.code**
+      * - `page_section_code` (base type: `varchar`) in database
+      * - `NOT NULL`, no default
+      */
+      code: c.PgPageSectionCode | db.Parameter<c.PgPageSectionCode> | db.SQLFragment;
+      /**
+      * **sections.config**
+      * - `jsonb` in database
+      * - `NOT NULL`, default: `'{}'::jsonb`
+      */
+      config?: db.JSONValue | db.Parameter<db.JSONValue> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **sections.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **sections.page**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      page?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **sections.order**
+      * - `float4` in database
+      * - `NOT NULL`, no default
+      */
+      order?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **sections.code**
+      * - `page_section_code` (base type: `varchar`) in database
+      * - `NOT NULL`, no default
+      */
+      code?: c.PgPageSectionCode | db.Parameter<c.PgPageSectionCode> | db.SQLFragment | db.SQLFragment<any, c.PgPageSectionCode | db.Parameter<c.PgPageSectionCode> | db.SQLFragment>;
+      /**
+      * **sections.config**
+      * - `jsonb` in database
+      * - `NOT NULL`, default: `'{}'::jsonb`
+      */
+      config?: db.JSONValue | db.Parameter<db.JSONValue> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'sections_page_order_unique' | 'sections_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -1506,20 +2060,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | block_list.Table | pgmigrations.Table | properties.Table | sessions.Table | users.Table | verification_tokens.Table;
-    export type Selectable = accounts.Selectable | block_list.Selectable | pgmigrations.Selectable | properties.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
-    export type Whereable = accounts.Whereable | block_list.Whereable | pgmigrations.Whereable | properties.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
-    export type Insertable = accounts.Insertable | block_list.Insertable | pgmigrations.Insertable | properties.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
-    export type Updatable = accounts.Updatable | block_list.Updatable | pgmigrations.Updatable | properties.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
-    export type Column = accounts.Column | block_list.Column | pgmigrations.Column | properties.Column | sessions.Column | users.Column | verification_tokens.Column;
+    export type Table = accounts.Table | block_list.Table | menus.Table | pages.Table | pgmigrations.Table | properties.Table | sections.Table | sessions.Table | users.Table | verification_tokens.Table;
+    export type Selectable = accounts.Selectable | block_list.Selectable | menus.Selectable | pages.Selectable | pgmigrations.Selectable | properties.Selectable | sections.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | menus.JSONSelectable | pages.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sections.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
+    export type Whereable = accounts.Whereable | block_list.Whereable | menus.Whereable | pages.Whereable | pgmigrations.Whereable | properties.Whereable | sections.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
+    export type Insertable = accounts.Insertable | block_list.Insertable | menus.Insertable | pages.Insertable | pgmigrations.Insertable | properties.Insertable | sections.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
+    export type Updatable = accounts.Updatable | block_list.Updatable | menus.Updatable | pages.Updatable | pgmigrations.Updatable | properties.Updatable | sections.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | menus.UniqueIndex | pages.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sections.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
+    export type Column = accounts.Column | block_list.Column | menus.Column | pages.Column | pgmigrations.Column | properties.Column | sections.Column | sessions.Column | users.Column | verification_tokens.Column;
   
-    export type AllBaseTables = [accounts.Table, block_list.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllBaseTables = [accounts.Table, block_list.Table, menus.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, block_list.Table, pgmigrations.Table, properties.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllTablesAndViews = [accounts.Table, block_list.Table, menus.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
   }
 
 
@@ -1549,8 +2103,11 @@ declare module 'zapatos/schema' {
   export type SelectableForTable<T extends Table> = {
     "accounts": accounts.Selectable;
     "block_list": block_list.Selectable;
+    "menus": menus.Selectable;
+    "pages": pages.Selectable;
     "pgmigrations": pgmigrations.Selectable;
     "properties": properties.Selectable;
+    "sections": sections.Selectable;
     "sessions": sessions.Selectable;
     "users": users.Selectable;
     "verification_tokens": verification_tokens.Selectable;
@@ -1559,8 +2116,11 @@ declare module 'zapatos/schema' {
   export type JSONSelectableForTable<T extends Table> = {
     "accounts": accounts.JSONSelectable;
     "block_list": block_list.JSONSelectable;
+    "menus": menus.JSONSelectable;
+    "pages": pages.JSONSelectable;
     "pgmigrations": pgmigrations.JSONSelectable;
     "properties": properties.JSONSelectable;
+    "sections": sections.JSONSelectable;
     "sessions": sessions.JSONSelectable;
     "users": users.JSONSelectable;
     "verification_tokens": verification_tokens.JSONSelectable;
@@ -1569,8 +2129,11 @@ declare module 'zapatos/schema' {
   export type WhereableForTable<T extends Table> = {
     "accounts": accounts.Whereable;
     "block_list": block_list.Whereable;
+    "menus": menus.Whereable;
+    "pages": pages.Whereable;
     "pgmigrations": pgmigrations.Whereable;
     "properties": properties.Whereable;
+    "sections": sections.Whereable;
     "sessions": sessions.Whereable;
     "users": users.Whereable;
     "verification_tokens": verification_tokens.Whereable;
@@ -1579,8 +2142,11 @@ declare module 'zapatos/schema' {
   export type InsertableForTable<T extends Table> = {
     "accounts": accounts.Insertable;
     "block_list": block_list.Insertable;
+    "menus": menus.Insertable;
+    "pages": pages.Insertable;
     "pgmigrations": pgmigrations.Insertable;
     "properties": properties.Insertable;
+    "sections": sections.Insertable;
     "sessions": sessions.Insertable;
     "users": users.Insertable;
     "verification_tokens": verification_tokens.Insertable;
@@ -1589,8 +2155,11 @@ declare module 'zapatos/schema' {
   export type UpdatableForTable<T extends Table> = {
     "accounts": accounts.Updatable;
     "block_list": block_list.Updatable;
+    "menus": menus.Updatable;
+    "pages": pages.Updatable;
     "pgmigrations": pgmigrations.Updatable;
     "properties": properties.Updatable;
+    "sections": sections.Updatable;
     "sessions": sessions.Updatable;
     "users": users.Updatable;
     "verification_tokens": verification_tokens.Updatable;
@@ -1599,8 +2168,11 @@ declare module 'zapatos/schema' {
   export type UniqueIndexForTable<T extends Table> = {
     "accounts": accounts.UniqueIndex;
     "block_list": block_list.UniqueIndex;
+    "menus": menus.UniqueIndex;
+    "pages": pages.UniqueIndex;
     "pgmigrations": pgmigrations.UniqueIndex;
     "properties": properties.UniqueIndex;
+    "sections": sections.UniqueIndex;
     "sessions": sessions.UniqueIndex;
     "users": users.UniqueIndex;
     "verification_tokens": verification_tokens.UniqueIndex;
@@ -1609,8 +2181,11 @@ declare module 'zapatos/schema' {
   export type ColumnForTable<T extends Table> = {
     "accounts": accounts.Column;
     "block_list": block_list.Column;
+    "menus": menus.Column;
+    "pages": pages.Column;
     "pgmigrations": pgmigrations.Column;
     "properties": properties.Column;
+    "sections": sections.Column;
     "sessions": sessions.Column;
     "users": users.Column;
     "verification_tokens": verification_tokens.Column;
@@ -1619,8 +2194,11 @@ declare module 'zapatos/schema' {
   export type SQLForTable<T extends Table> = {
     "accounts": accounts.SQL;
     "block_list": block_list.SQL;
+    "menus": menus.SQL;
+    "pages": pages.SQL;
     "pgmigrations": pgmigrations.SQL;
     "properties": properties.SQL;
+    "sections": sections.SQL;
     "sessions": sessions.SQL;
     "users": users.SQL;
     "verification_tokens": verification_tokens.SQL;

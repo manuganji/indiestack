@@ -1,6 +1,6 @@
 {
-    "database-url-var": "POSTGRES_URL",
-    "migration-file-language": "js",
-    "verbose": true,
-    "template-file-name": "migrationTemplate.js"
+	"database-url-var": "POSTGRES_URL",
+	"migration-file-language": "js",
+	"verbose": true,
+	"template-file-name": "migrationTemplate.js"
 }
