@@ -7,6 +7,7 @@ import { selectOne } from "zapatos/db";
 import { Table } from "zapatos/schema";
 
 export const dynamic = "force-dynamic";
+export const preferredRegion = "home";
 
 export const GET = async (req: NextRequest, { query }: RequestContext) => {
 	const { column, table, value } = query as {

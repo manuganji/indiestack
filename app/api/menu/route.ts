@@ -16,6 +16,8 @@ import { PgMenuItems } from "zapatos/custom";
 import { param, selectOne, self, sql } from "zapatos/db";
 import { menus } from "zapatos/schema";
 
+export const preferredRegion = "home";
+
 const DEFAULT_AUTH_MENU: PgMenuItems = [
 	[
 		{

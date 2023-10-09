@@ -7,6 +7,7 @@ import { all, parent, select, selectExactlyOne } from "zapatos/db";
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
 export const dynamic = "auto";
 export const revalidate = 60;
+export const preferredRegion = "home";
 
 export const generateStaticParams = async (): Promise<
 	Array<{ d: string; slug: null | string }>
