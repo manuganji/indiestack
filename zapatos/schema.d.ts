@@ -614,6 +614,232 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **feature_flags**
+   * - Table in database
+   */
+  export namespace feature_flags {
+    export type Table = 'feature_flags';
+    export interface Selectable {
+      /**
+      * **feature_flags.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **feature_flags.feature**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      feature: c.PgFeatureCode;
+      /**
+      * **feature_flags.status**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      status: boolean | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **feature_flags.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **feature_flags.feature**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      feature: c.PgFeatureCode;
+      /**
+      * **feature_flags.status**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      status: boolean | null;
+    }
+    export interface Whereable {
+      /**
+      * **feature_flags.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **feature_flags.feature**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      feature?: c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **feature_flags.status**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      status?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **feature_flags.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **feature_flags.feature**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      feature: c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment;
+      /**
+      * **feature_flags.status**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      status?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **feature_flags.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **feature_flags.feature**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      feature?: c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment | db.SQLFragment<any, c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment>;
+      /**
+      * **feature_flags.status**
+      * - `bool` in database
+      * - Nullable, default: `true`
+      */
+      status?: boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'feature_flags_property_feature_unique';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **features**
+   * - Table in database
+   */
+  export namespace features {
+    export type Table = 'features';
+    export interface Selectable {
+      /**
+      * **features.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **features.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc: string | null;
+      /**
+      * **features.code**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      code: c.PgFeatureCode;
+    }
+    export interface JSONSelectable {
+      /**
+      * **features.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **features.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc: string | null;
+      /**
+      * **features.code**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      code: c.PgFeatureCode;
+    }
+    export interface Whereable {
+      /**
+      * **features.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **features.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **features.code**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      code?: c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **features.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **features.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **features.code**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      code: c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **features.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **features.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **features.code**
+      * - `feature_code` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      code?: c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment | db.SQLFragment<any, c.PgFeatureCode | db.Parameter<c.PgFeatureCode> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'features_code_key' | 'features_title_key';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **menus**
    * - Table in database
    */
@@ -780,6 +1006,202 @@ declare module 'zapatos/schema' {
       items?: c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, c.PgMenuItems | db.Parameter<c.PgMenuItems> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'menus_path_type_auth_unique';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **org_members**
+   * - Table in database
+   */
+  export namespace org_members {
+    export type Table = 'org_members';
+    export interface Selectable {
+      /**
+      * **org_members.org**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      org: string;
+      /**
+      * **org_members.user**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      user: string;
+      /**
+      * **org_members.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role: c.PgOrgRole;
+    }
+    export interface JSONSelectable {
+      /**
+      * **org_members.org**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      org: string;
+      /**
+      * **org_members.user**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      user: string;
+      /**
+      * **org_members.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role: c.PgOrgRole;
+    }
+    export interface Whereable {
+      /**
+      * **org_members.org**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      org?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **org_members.user**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      user?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **org_members.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role?: c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **org_members.org**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      org: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **org_members.user**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      user: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **org_members.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role: c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **org_members.org**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      org?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **org_members.user**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      user?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **org_members.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role?: c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment | db.SQLFragment<any, c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'org_members_org_user_role_unique';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **orgs**
+   * - Table in database
+   */
+  export namespace orgs {
+    export type Table = 'orgs';
+    export interface Selectable {
+      /**
+      * **orgs.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **orgs.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **orgs.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string;
+      /**
+      * **orgs.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string;
+    }
+    export interface Whereable {
+      /**
+      * **orgs.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **orgs.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **orgs.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **orgs.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **orgs.property**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      property?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **orgs.id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'orgs_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -2060,20 +2482,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | block_list.Table | menus.Table | pages.Table | pgmigrations.Table | properties.Table | sections.Table | sessions.Table | users.Table | verification_tokens.Table;
-    export type Selectable = accounts.Selectable | block_list.Selectable | menus.Selectable | pages.Selectable | pgmigrations.Selectable | properties.Selectable | sections.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | menus.JSONSelectable | pages.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sections.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
-    export type Whereable = accounts.Whereable | block_list.Whereable | menus.Whereable | pages.Whereable | pgmigrations.Whereable | properties.Whereable | sections.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
-    export type Insertable = accounts.Insertable | block_list.Insertable | menus.Insertable | pages.Insertable | pgmigrations.Insertable | properties.Insertable | sections.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
-    export type Updatable = accounts.Updatable | block_list.Updatable | menus.Updatable | pages.Updatable | pgmigrations.Updatable | properties.Updatable | sections.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | menus.UniqueIndex | pages.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sections.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
-    export type Column = accounts.Column | block_list.Column | menus.Column | pages.Column | pgmigrations.Column | properties.Column | sections.Column | sessions.Column | users.Column | verification_tokens.Column;
+    export type Table = accounts.Table | block_list.Table | feature_flags.Table | features.Table | menus.Table | org_members.Table | orgs.Table | pages.Table | pgmigrations.Table | properties.Table | sections.Table | sessions.Table | users.Table | verification_tokens.Table;
+    export type Selectable = accounts.Selectable | block_list.Selectable | feature_flags.Selectable | features.Selectable | menus.Selectable | org_members.Selectable | orgs.Selectable | pages.Selectable | pgmigrations.Selectable | properties.Selectable | sections.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | feature_flags.JSONSelectable | features.JSONSelectable | menus.JSONSelectable | org_members.JSONSelectable | orgs.JSONSelectable | pages.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sections.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
+    export type Whereable = accounts.Whereable | block_list.Whereable | feature_flags.Whereable | features.Whereable | menus.Whereable | org_members.Whereable | orgs.Whereable | pages.Whereable | pgmigrations.Whereable | properties.Whereable | sections.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
+    export type Insertable = accounts.Insertable | block_list.Insertable | feature_flags.Insertable | features.Insertable | menus.Insertable | org_members.Insertable | orgs.Insertable | pages.Insertable | pgmigrations.Insertable | properties.Insertable | sections.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
+    export type Updatable = accounts.Updatable | block_list.Updatable | feature_flags.Updatable | features.Updatable | menus.Updatable | org_members.Updatable | orgs.Updatable | pages.Updatable | pgmigrations.Updatable | properties.Updatable | sections.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | feature_flags.UniqueIndex | features.UniqueIndex | menus.UniqueIndex | org_members.UniqueIndex | orgs.UniqueIndex | pages.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sections.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
+    export type Column = accounts.Column | block_list.Column | feature_flags.Column | features.Column | menus.Column | org_members.Column | orgs.Column | pages.Column | pgmigrations.Column | properties.Column | sections.Column | sessions.Column | users.Column | verification_tokens.Column;
   
-    export type AllBaseTables = [accounts.Table, block_list.Table, menus.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllBaseTables = [accounts.Table, block_list.Table, feature_flags.Table, features.Table, menus.Table, org_members.Table, orgs.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, block_list.Table, menus.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllTablesAndViews = [accounts.Table, block_list.Table, feature_flags.Table, features.Table, menus.Table, org_members.Table, orgs.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
   }
 
 
@@ -2103,7 +2525,11 @@ declare module 'zapatos/schema' {
   export type SelectableForTable<T extends Table> = {
     "accounts": accounts.Selectable;
     "block_list": block_list.Selectable;
+    "feature_flags": feature_flags.Selectable;
+    "features": features.Selectable;
     "menus": menus.Selectable;
+    "org_members": org_members.Selectable;
+    "orgs": orgs.Selectable;
     "pages": pages.Selectable;
     "pgmigrations": pgmigrations.Selectable;
     "properties": properties.Selectable;
@@ -2116,7 +2542,11 @@ declare module 'zapatos/schema' {
   export type JSONSelectableForTable<T extends Table> = {
     "accounts": accounts.JSONSelectable;
     "block_list": block_list.JSONSelectable;
+    "feature_flags": feature_flags.JSONSelectable;
+    "features": features.JSONSelectable;
     "menus": menus.JSONSelectable;
+    "org_members": org_members.JSONSelectable;
+    "orgs": orgs.JSONSelectable;
     "pages": pages.JSONSelectable;
     "pgmigrations": pgmigrations.JSONSelectable;
     "properties": properties.JSONSelectable;
@@ -2129,7 +2559,11 @@ declare module 'zapatos/schema' {
   export type WhereableForTable<T extends Table> = {
     "accounts": accounts.Whereable;
     "block_list": block_list.Whereable;
+    "feature_flags": feature_flags.Whereable;
+    "features": features.Whereable;
     "menus": menus.Whereable;
+    "org_members": org_members.Whereable;
+    "orgs": orgs.Whereable;
     "pages": pages.Whereable;
     "pgmigrations": pgmigrations.Whereable;
     "properties": properties.Whereable;
@@ -2142,7 +2576,11 @@ declare module 'zapatos/schema' {
   export type InsertableForTable<T extends Table> = {
     "accounts": accounts.Insertable;
     "block_list": block_list.Insertable;
+    "feature_flags": feature_flags.Insertable;
+    "features": features.Insertable;
     "menus": menus.Insertable;
+    "org_members": org_members.Insertable;
+    "orgs": orgs.Insertable;
     "pages": pages.Insertable;
     "pgmigrations": pgmigrations.Insertable;
     "properties": properties.Insertable;
@@ -2155,7 +2593,11 @@ declare module 'zapatos/schema' {
   export type UpdatableForTable<T extends Table> = {
     "accounts": accounts.Updatable;
     "block_list": block_list.Updatable;
+    "feature_flags": feature_flags.Updatable;
+    "features": features.Updatable;
     "menus": menus.Updatable;
+    "org_members": org_members.Updatable;
+    "orgs": orgs.Updatable;
     "pages": pages.Updatable;
     "pgmigrations": pgmigrations.Updatable;
     "properties": properties.Updatable;
@@ -2168,7 +2610,11 @@ declare module 'zapatos/schema' {
   export type UniqueIndexForTable<T extends Table> = {
     "accounts": accounts.UniqueIndex;
     "block_list": block_list.UniqueIndex;
+    "feature_flags": feature_flags.UniqueIndex;
+    "features": features.UniqueIndex;
     "menus": menus.UniqueIndex;
+    "org_members": org_members.UniqueIndex;
+    "orgs": orgs.UniqueIndex;
     "pages": pages.UniqueIndex;
     "pgmigrations": pgmigrations.UniqueIndex;
     "properties": properties.UniqueIndex;
@@ -2181,7 +2627,11 @@ declare module 'zapatos/schema' {
   export type ColumnForTable<T extends Table> = {
     "accounts": accounts.Column;
     "block_list": block_list.Column;
+    "feature_flags": feature_flags.Column;
+    "features": features.Column;
     "menus": menus.Column;
+    "org_members": org_members.Column;
+    "orgs": orgs.Column;
     "pages": pages.Column;
     "pgmigrations": pgmigrations.Column;
     "properties": properties.Column;
@@ -2194,7 +2644,11 @@ declare module 'zapatos/schema' {
   export type SQLForTable<T extends Table> = {
     "accounts": accounts.SQL;
     "block_list": block_list.SQL;
+    "feature_flags": feature_flags.SQL;
+    "features": features.SQL;
     "menus": menus.SQL;
+    "org_members": org_members.SQL;
+    "orgs": orgs.SQL;
     "pages": pages.SQL;
     "pgmigrations": pgmigrations.SQL;
     "properties": properties.SQL;
