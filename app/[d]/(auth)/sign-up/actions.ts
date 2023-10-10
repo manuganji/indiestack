@@ -3,7 +3,7 @@
 import { createUser, createVerificationToken } from "@/auth";
 import { validate } from "@/components/forms/actions";
 import { POST_AUTH_REDIRECT_URL, prod } from "@/constants";
-import { getCurrentProperty } from "@/lib/domains";
+import { getDomain } from "@/lib/domains";
 import {
 	createErrorObject,
 	deltaFromNow,
@@ -25,7 +25,7 @@ export async function signUpAction(data: {
 	lastName: string;
 	redirectUrl?: string;
 }) {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	const { valid, errors } = await validate("signUp", data);
 
 	if (!valid) {

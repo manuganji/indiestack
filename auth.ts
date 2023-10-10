@@ -7,6 +7,7 @@ import {
 	selectOne,
 	sql,
 	update,
+	upsert,
 } from "zapatos/db";
 import type {
 	accounts,
@@ -20,7 +21,8 @@ import { deltaFromNow, getHostName, sendWelcomeMail } from "@/lib/serverUtils";
 import { cookies } from "next/headers";
 import { LONG_SESSION_COOKIE, SESSION_COOKIE, prod } from "./constants";
 import { DEFAULT_AUTH_DURATION, LONG_AUTH_DURATION } from "./serverConstants";
-import { getCurrentProperty } from "./lib/domains";
+import { getDomain } from "./lib/domains";
+import { shortId } from "./lib/utils";
 
 // const SC_ORG_ID = env.SC_ORG_ID;
 
@@ -90,13 +92,33 @@ export function hasSessionCookie() {
 }
 
 export const createUser = async function createUser(user: users.Insertable) {
-	const property = await getCurrentProperty({ domain: getHostName() });
-	return runQuery(
-		insert("users", {
+	const property = await getDomain({
+		domain: getHostName(),
+		withSettings: true,
+	});
+	return runQueryTxn(async (client) => {
+		const newUser = await insert("users", {
 			...user,
 			property: property.id,
-		}),
-	);
+		}).run(client);
+		const newOrgId = shortId();
+		await Promise.all([
+			insert("orgs", {
+				id: newOrgId,
+				name: "Personal",
+				property: property.id,
+			}).run(client),
+			insert(
+				"org_members",
+				property.settings!.auth.defaultRoles.map((r) => ({
+					org: newOrgId,
+					user: newUser.id,
+					role: r,
+				})),
+			).run(client),
+		]);
+		return newUser;
+	});
 };
 
 export const createSession = async function (session: sessions.Insertable) {
@@ -144,7 +166,7 @@ export const updateUser = async (user: users.JSONSelectable) => {
 };
 
 export const deleteUser = async (userId: string) => {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	runQuery(deletes("users", { id: userId, property: property.id }));
 };
 
@@ -155,7 +177,7 @@ export const useVerificationToken = async function ({
 	identifier: string;
 	token: string;
 }) {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	const [item, ...res] = await runQuery(
 		update(
 			"verification_tokens",
@@ -185,7 +207,7 @@ export const getUser = async function getUser(id: string) {
 };
 
 export const getUserByEmail = async (email: string) => {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	return runQuery(selectOne("users", { email, property: property.id }));
 };
 
@@ -232,7 +254,7 @@ export const getUserByAccount = async function ({
 	provider: string;
 	providerAccountId: string;
 }) {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	const account = await runQuery(
 		selectExactlyOne(
 			"accounts",
@@ -261,7 +283,7 @@ export const unlinkAccount = async ({
 	provider_account_id,
 	provider,
 }: accounts.Selectable) => {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	return runQuery(
 		deletes("accounts", {
 			provider_account_id,

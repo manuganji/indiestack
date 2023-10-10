@@ -5,10 +5,10 @@ import { runQuery } from "@/db";
 import { Suspense } from "react";
 import { select } from "zapatos/db";
 import { columns } from "./columns";
-import { getCurrentProperty } from "@/lib/domains";
+import { getDomain } from "@/lib/domains";
 
 const PagesTable = async function ({ domain }: { domain: string }) {
-	const currentProperty = await getCurrentProperty({ domain });
+	const currentProperty = await getDomain({ domain });
 	const pages = await runQuery(
 		select("pages", {
 			property: currentProperty.id,

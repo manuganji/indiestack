@@ -26,7 +26,7 @@ import "server-only";
 import { PgPropertySettings } from "zapatos/custom";
 import { parent, selectExactlyOne, selectOne, sql } from "zapatos/db";
 import { properties } from "zapatos/schema";
-import { getCurrentProperty } from "./domains";
+import { getDomain } from "./domains";
 
 export const getHostName = () => headers().get("host")!;
 
@@ -106,7 +106,7 @@ export async function sendMailOnSignUp({
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
 
-	const property = await getCurrentProperty({
+	const property = await getDomain({
 		domain: getHostName(),
 		withSettings: true,
 	});
@@ -143,7 +143,7 @@ export async function sendWelcomeMail({
 	firstName: string;
 	email: string;
 }) {
-	const property = await getCurrentProperty({
+	const property = await getDomain({
 		domain: getHostName(),
 		withSettings: true,
 	});
@@ -182,7 +182,7 @@ export async function sendMagicLink({
 }) {
 	// const textContent = `Use the following link to sign in to {BRAND_NAME}: ${url}`;
 	// const htmlContent = `<p>Use the following link to sign in to {BRAND_NAME}: <a href="${url}">${url}</a></p>`;
-	const property = await getCurrentProperty({
+	const property = await getDomain({
 		domain: getHostName(),
 		withSettings: true,
 	});

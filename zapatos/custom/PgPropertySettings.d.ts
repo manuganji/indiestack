@@ -9,6 +9,7 @@ declare module "zapatos/custom" {
 		auth: {
 			allowSignUp: boolean;
 			allowSignIn: boolean;
+			defaultRoles: Array<PgOrgRole>;
 		};
 		email: {
 			emailFrom: string;

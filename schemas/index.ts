@@ -97,6 +97,14 @@ export const propertySettingsSchema: JSONSchemaType<PgPropertySettings> = {
 					description: "",
 					default: true,
 				},
+				defaultRoles: {
+					type: "array",
+					title: "Default Roles",
+					description: "Default roles assigned to newly signed up users",
+					items: {
+						type: "string",
+					},
+				},
 			},
 			required: ["allowSignUp", "allowSignIn"],
 			errorMessage: {},

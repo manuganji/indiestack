@@ -7,7 +7,7 @@ import {
 } from "@/constants";
 import { runQuery } from "@/db";
 import { isRoot } from "@/lib/checks";
-import { getCurrentProperty } from "@/lib/domains";
+import { getDomain } from "@/lib/domains";
 import { getHostName } from "@/lib/serverUtils";
 import { RequestContext } from "next/dist/server/base-server";
 import { NextRequest, NextResponse } from "next/server";
@@ -105,7 +105,7 @@ const getMenusForPath = cache(
 		pathname: string;
 		menuType: menus.JSONSelectable["type"];
 	}) => {
-		const property = await getCurrentProperty({ domain: getHostName() });
+		const property = await getDomain({ domain: getHostName() });
 		const isAuth = hasSessionCookie(); // basic check because menus are generally not sensitive.
 
 		const query = selectOne(

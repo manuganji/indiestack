@@ -1,5 +1,5 @@
 import { runQuery } from "@/db";
-import { getCurrentProperty } from "@/lib/domains";
+import { getDomain } from "@/lib/domains";
 import { getHostName } from "@/lib/serverUtils";
 import { shortId } from "@/lib/utils";
 import { HttpStatusCode } from "axios";
@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { insert, sql } from "zapatos/db";
 
 export const POST = async (req: NextRequest) => {
-	const property = await getCurrentProperty({ domain: getHostName() });
+	const property = await getDomain({ domain: getHostName() });
 	const newPage = await runQuery(
 		insert("pages", {
 			property: property.id,

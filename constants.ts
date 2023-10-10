@@ -1,3 +1,5 @@
+import { PgFeatureCode, PgOrgRole } from "zapatos/custom";
+
 export const dev = process.env.NEXT_PUBLIC_VERCEL_ENV === "development";
 
 export const preview = process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
@@ -33,3 +35,12 @@ export const POST_AUTH_REDIRECT_URL = "/dash";
 export const HEADER = "header";
 export const FOOTER = "footer";
 export const SIDEBAR = "sidebar";
+
+export const DEFAULT_FEATURES: Set<PgFeatureCode> = new Set([
+	"jobs",
+	"ecomm",
+] satisfies Array<PgFeatureCode>);
+
+export const DEFAULT_ROLES: Set<PgOrgRole> = new Set([
+	"admin.user",
+] satisfies Array<PgOrgRole>);

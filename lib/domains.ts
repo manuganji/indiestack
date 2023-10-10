@@ -1,33 +1,37 @@
 import { runQuery } from "@/db";
 import {
-	DomainResponse,
 	DomainConfigResponse,
+	DomainResponse,
 	DomainVerificationResponse,
 } from "@/lib/types";
 import { cache } from "react";
 import { PgPropertySettings } from "zapatos/custom";
-import { selectExactlyOne, sql, upsert } from "zapatos/db";
+import { insert, selectExactlyOne, sql } from "zapatos/db";
 import { properties } from "zapatos/schema";
 import { shortId } from "./utils";
+import { DEFAULT_FEATURES } from "@/constants";
 
-export const upsertDomain = async (domain: string, name?: string) => {
-	const res = await runQuery(
-		upsert(
-			"properties",
-			{
-				id: shortId(10),
-				domain,
-				name: name ?? domain,
-			},
-			{
-				value: "properties_pkey",
-			},
+export const insertDomain = async (domain: string, name?: string) => {
+	const property = await runQuery(
+		insert("properties", {
+			id: shortId(10),
+			domain,
+			name: name ?? domain,
+		}),
+	);
+	await runQuery(
+		insert(
+			"feature_flags",
+			Array.from(DEFAULT_FEATURES).map((f) => ({
+				property: property.id,
+				feature: f,
+			})),
 		),
 	);
-	return res;
+	return property;
 };
 
-export const getCurrentProperty = cache(
+export const getDomain = cache(
 	async (params: { domain: string; withSettings?: boolean }) => {
 		const { domain: ipDomain, withSettings = false } = params ?? {};
 		let domain: string = decodeURIComponent(ipDomain);
@@ -52,11 +56,26 @@ export const getCurrentProperty = cache(
 			return property;
 		} catch (e) {
 			// console.error(e);
-			const property = upsertDomain(domain);
+			const property = insertDomain(domain);
 			return property;
 		}
 	},
 );
+
+export const getDomainSettings = cache(async (domain: string) => {
+	const property = await runQuery(
+		selectExactlyOne(
+			"properties",
+			{
+				domain,
+			},
+			{
+				columns: ["settings"],
+			},
+		),
+	);
+	return property;
+});
 
 export const addDomainToVercel = async (domain: string) => {
 	return await fetch(

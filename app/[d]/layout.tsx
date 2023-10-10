@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 
 import NavMenu from "@/components/NavMenu";
-import { getCurrentProperty } from "@/lib/domains";
+import { getDomain } from "@/lib/domains";
 import { runQuery } from "@/db";
 import { select, all } from "zapatos/db";
 
@@ -16,7 +16,7 @@ export async function generateMetadata({
 	searchParams,
 }: Props): Promise<Metadata> {
 	// fetch data
-	const property = await getCurrentProperty({ domain: params.d });
+	const property = await getDomain({ domain: params.d });
 
 	// optionally access and extend (rather than replace) parent metadata
 	// const previousImages = (await parent).openGraph?.images || [];

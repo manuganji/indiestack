@@ -7,21 +7,6 @@ exports.shorthands = undefined;
  */
 exports.up = (pgm) => {
 	pgm.createDomain("feature_code", "ltree"); // There can be a hierarchy of features
-	pgm.createTable("features", {
-		title: {
-			type: "varchar(255)",
-			notNull: true,
-      unique: true,
-		},
-		desc: {
-			type: "text",
-		},
-		code: {
-			type: "feature_code",
-			notNull: true,
-			unique: true,
-		},
-	});
 	pgm.createTable("feature_flags", {
 		property: {
 			type: "varchar(10)",
@@ -44,6 +29,21 @@ exports.up = (pgm) => {
 			unique: ["property", "feature"],
 		},
 	);
+	pgm.createTable("features", {
+		title: {
+			type: "varchar(255)",
+			notNull: true,
+			unique: true,
+		},
+		desc: {
+			type: "text",
+		},
+		code: {
+			type: "feature_code",
+			notNull: true,
+			unique: true,
+		},
+	});
 };
 
 // /**

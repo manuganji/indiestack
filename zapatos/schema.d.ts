@@ -1126,6 +1126,119 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **org_roles**
+   * - Table in database
+   */
+  export namespace org_roles {
+    export type Table = 'org_roles';
+    export interface Selectable {
+      /**
+      * **org_roles.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role: c.PgOrgRole;
+      /**
+      * **org_roles.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **org_roles.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc: string | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **org_roles.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role: c.PgOrgRole;
+      /**
+      * **org_roles.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **org_roles.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc: string | null;
+    }
+    export interface Whereable {
+      /**
+      * **org_roles.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role?: c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **org_roles.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **org_roles.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **org_roles.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role: c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment;
+      /**
+      * **org_roles.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **org_roles.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **org_roles.role**
+      * - `org_role` (base type: `ltree`) in database
+      * - `NOT NULL`, no default
+      */
+      role?: c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment | db.SQLFragment<any, c.PgOrgRole | db.Parameter<c.PgOrgRole> | db.SQLFragment>;
+      /**
+      * **org_roles.title**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **org_roles.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'org_roles_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **orgs**
    * - Table in database
    */
@@ -1144,6 +1257,18 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string;
+      /**
+      * **orgs.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **orgs.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc: string | null;
     }
     export interface JSONSelectable {
       /**
@@ -1158,6 +1283,18 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string;
+      /**
+      * **orgs.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **orgs.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc: string | null;
     }
     export interface Whereable {
       /**
@@ -1172,6 +1309,18 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **orgs.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **orgs.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1186,6 +1335,18 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **orgs.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **orgs.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1200,6 +1361,18 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **orgs.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **orgs.desc**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      desc?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'orgs_pkey';
     export type Column = keyof Selectable;
@@ -2482,20 +2655,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = accounts.Table | block_list.Table | feature_flags.Table | features.Table | menus.Table | org_members.Table | orgs.Table | pages.Table | pgmigrations.Table | properties.Table | sections.Table | sessions.Table | users.Table | verification_tokens.Table;
-    export type Selectable = accounts.Selectable | block_list.Selectable | feature_flags.Selectable | features.Selectable | menus.Selectable | org_members.Selectable | orgs.Selectable | pages.Selectable | pgmigrations.Selectable | properties.Selectable | sections.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
-    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | feature_flags.JSONSelectable | features.JSONSelectable | menus.JSONSelectable | org_members.JSONSelectable | orgs.JSONSelectable | pages.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sections.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
-    export type Whereable = accounts.Whereable | block_list.Whereable | feature_flags.Whereable | features.Whereable | menus.Whereable | org_members.Whereable | orgs.Whereable | pages.Whereable | pgmigrations.Whereable | properties.Whereable | sections.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
-    export type Insertable = accounts.Insertable | block_list.Insertable | feature_flags.Insertable | features.Insertable | menus.Insertable | org_members.Insertable | orgs.Insertable | pages.Insertable | pgmigrations.Insertable | properties.Insertable | sections.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
-    export type Updatable = accounts.Updatable | block_list.Updatable | feature_flags.Updatable | features.Updatable | menus.Updatable | org_members.Updatable | orgs.Updatable | pages.Updatable | pgmigrations.Updatable | properties.Updatable | sections.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
-    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | feature_flags.UniqueIndex | features.UniqueIndex | menus.UniqueIndex | org_members.UniqueIndex | orgs.UniqueIndex | pages.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sections.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
-    export type Column = accounts.Column | block_list.Column | feature_flags.Column | features.Column | menus.Column | org_members.Column | orgs.Column | pages.Column | pgmigrations.Column | properties.Column | sections.Column | sessions.Column | users.Column | verification_tokens.Column;
+    export type Table = accounts.Table | block_list.Table | feature_flags.Table | features.Table | menus.Table | org_members.Table | org_roles.Table | orgs.Table | pages.Table | pgmigrations.Table | properties.Table | sections.Table | sessions.Table | users.Table | verification_tokens.Table;
+    export type Selectable = accounts.Selectable | block_list.Selectable | feature_flags.Selectable | features.Selectable | menus.Selectable | org_members.Selectable | org_roles.Selectable | orgs.Selectable | pages.Selectable | pgmigrations.Selectable | properties.Selectable | sections.Selectable | sessions.Selectable | users.Selectable | verification_tokens.Selectable;
+    export type JSONSelectable = accounts.JSONSelectable | block_list.JSONSelectable | feature_flags.JSONSelectable | features.JSONSelectable | menus.JSONSelectable | org_members.JSONSelectable | org_roles.JSONSelectable | orgs.JSONSelectable | pages.JSONSelectable | pgmigrations.JSONSelectable | properties.JSONSelectable | sections.JSONSelectable | sessions.JSONSelectable | users.JSONSelectable | verification_tokens.JSONSelectable;
+    export type Whereable = accounts.Whereable | block_list.Whereable | feature_flags.Whereable | features.Whereable | menus.Whereable | org_members.Whereable | org_roles.Whereable | orgs.Whereable | pages.Whereable | pgmigrations.Whereable | properties.Whereable | sections.Whereable | sessions.Whereable | users.Whereable | verification_tokens.Whereable;
+    export type Insertable = accounts.Insertable | block_list.Insertable | feature_flags.Insertable | features.Insertable | menus.Insertable | org_members.Insertable | org_roles.Insertable | orgs.Insertable | pages.Insertable | pgmigrations.Insertable | properties.Insertable | sections.Insertable | sessions.Insertable | users.Insertable | verification_tokens.Insertable;
+    export type Updatable = accounts.Updatable | block_list.Updatable | feature_flags.Updatable | features.Updatable | menus.Updatable | org_members.Updatable | org_roles.Updatable | orgs.Updatable | pages.Updatable | pgmigrations.Updatable | properties.Updatable | sections.Updatable | sessions.Updatable | users.Updatable | verification_tokens.Updatable;
+    export type UniqueIndex = accounts.UniqueIndex | block_list.UniqueIndex | feature_flags.UniqueIndex | features.UniqueIndex | menus.UniqueIndex | org_members.UniqueIndex | org_roles.UniqueIndex | orgs.UniqueIndex | pages.UniqueIndex | pgmigrations.UniqueIndex | properties.UniqueIndex | sections.UniqueIndex | sessions.UniqueIndex | users.UniqueIndex | verification_tokens.UniqueIndex;
+    export type Column = accounts.Column | block_list.Column | feature_flags.Column | features.Column | menus.Column | org_members.Column | org_roles.Column | orgs.Column | pages.Column | pgmigrations.Column | properties.Column | sections.Column | sessions.Column | users.Column | verification_tokens.Column;
   
-    export type AllBaseTables = [accounts.Table, block_list.Table, feature_flags.Table, features.Table, menus.Table, org_members.Table, orgs.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllBaseTables = [accounts.Table, block_list.Table, feature_flags.Table, features.Table, menus.Table, org_members.Table, org_roles.Table, orgs.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [accounts.Table, block_list.Table, feature_flags.Table, features.Table, menus.Table, org_members.Table, orgs.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
+    export type AllTablesAndViews = [accounts.Table, block_list.Table, feature_flags.Table, features.Table, menus.Table, org_members.Table, org_roles.Table, orgs.Table, pages.Table, pgmigrations.Table, properties.Table, sections.Table, sessions.Table, users.Table, verification_tokens.Table];
   }
 
 
@@ -2529,6 +2702,7 @@ declare module 'zapatos/schema' {
     "features": features.Selectable;
     "menus": menus.Selectable;
     "org_members": org_members.Selectable;
+    "org_roles": org_roles.Selectable;
     "orgs": orgs.Selectable;
     "pages": pages.Selectable;
     "pgmigrations": pgmigrations.Selectable;
@@ -2546,6 +2720,7 @@ declare module 'zapatos/schema' {
     "features": features.JSONSelectable;
     "menus": menus.JSONSelectable;
     "org_members": org_members.JSONSelectable;
+    "org_roles": org_roles.JSONSelectable;
     "orgs": orgs.JSONSelectable;
     "pages": pages.JSONSelectable;
     "pgmigrations": pgmigrations.JSONSelectable;
@@ -2563,6 +2738,7 @@ declare module 'zapatos/schema' {
     "features": features.Whereable;
     "menus": menus.Whereable;
     "org_members": org_members.Whereable;
+    "org_roles": org_roles.Whereable;
     "orgs": orgs.Whereable;
     "pages": pages.Whereable;
     "pgmigrations": pgmigrations.Whereable;
@@ -2580,6 +2756,7 @@ declare module 'zapatos/schema' {
     "features": features.Insertable;
     "menus": menus.Insertable;
     "org_members": org_members.Insertable;
+    "org_roles": org_roles.Insertable;
     "orgs": orgs.Insertable;
     "pages": pages.Insertable;
     "pgmigrations": pgmigrations.Insertable;
@@ -2597,6 +2774,7 @@ declare module 'zapatos/schema' {
     "features": features.Updatable;
     "menus": menus.Updatable;
     "org_members": org_members.Updatable;
+    "org_roles": org_roles.Updatable;
     "orgs": orgs.Updatable;
     "pages": pages.Updatable;
     "pgmigrations": pgmigrations.Updatable;
@@ -2614,6 +2792,7 @@ declare module 'zapatos/schema' {
     "features": features.UniqueIndex;
     "menus": menus.UniqueIndex;
     "org_members": org_members.UniqueIndex;
+    "org_roles": org_roles.UniqueIndex;
     "orgs": orgs.UniqueIndex;
     "pages": pages.UniqueIndex;
     "pgmigrations": pgmigrations.UniqueIndex;
@@ -2631,6 +2810,7 @@ declare module 'zapatos/schema' {
     "features": features.Column;
     "menus": menus.Column;
     "org_members": org_members.Column;
+    "org_roles": org_roles.Column;
     "orgs": orgs.Column;
     "pages": pages.Column;
     "pgmigrations": pgmigrations.Column;
@@ -2648,6 +2828,7 @@ declare module 'zapatos/schema' {
     "features": features.SQL;
     "menus": menus.SQL;
     "org_members": org_members.SQL;
+    "org_roles": org_roles.SQL;
     "orgs": orgs.SQL;
     "pages": pages.SQL;
     "pgmigrations": pgmigrations.SQL;
