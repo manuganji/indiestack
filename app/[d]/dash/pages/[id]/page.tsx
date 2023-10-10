@@ -7,7 +7,6 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
 import {
 	Sheet,
 	SheetContent,
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import { toast } from "@/components/ui/use-toast";
 import { shortId } from "@/lib/utils";
+import { pageSchema } from "@/schemas";
 import {
 	ArrowDownIcon,
 	ArrowUpIcon,
@@ -24,13 +24,13 @@ import {
 	PencilIcon,
 	TrashIcon,
 } from "@heroicons/react/20/solid";
+import { get } from "lodash";
 import { useParams } from "next/navigation";
 import { memo, useEffect, useMemo, useReducer, useState } from "react";
 import { JSONValue } from "zapatos/db";
 import { pages, sections } from "zapatos/schema";
 import { getDefaultConfig, getPageById, savePage } from "./actions";
-import { pageSchema } from "@/schemas";
-import { get } from "lodash";
+import WidgetCategories, { WidgetSelector } from "./WidgetCategory";
 
 const MemoizedComponentWrapper = memo(function ComponentWrapper({
 	position,
@@ -153,6 +153,13 @@ type ActionTypes =
 			};
 	  }
 	| {
+			type: "changeWidget";
+			payload: {
+				sectionId: string;
+				code: keyof typeof components;
+			};
+	  }
+	| {
 			type: "setFullPage";
 			payload: {
 				sections: sections.JSONSelectable[];
@@ -213,6 +220,14 @@ function reducer(state: StateType, { type, payload }: ActionTypes): StateType {
 		case "setConfig": {
 			const section = state.sections.get(payload.sectionId)!;
 			section["config"] = payload.config;
+			return {
+				...state,
+				sections: state.sections.set(payload.sectionId, section),
+			};
+		}
+		case "changeWidget": {
+			const section = state.sections.get(payload.sectionId)!;
+			section["code"] = payload.code;
 			return {
 				...state,
 				sections: state.sections.set(payload.sectionId, section),
@@ -402,33 +417,25 @@ export default function PageEditor() {
 				{preview}
 				<div className="p-4 border-t border-gray-400 flex flex-col gap-2 my-4">
 					<h2>Add new section</h2>
-					<div className="grid grid-cols-6 gap-1">
-						{Object.entries(metadata).map(([code, { title, schema }]) => (
-							<Button
-								variant={"outline"}
-								key={code}
-								onClick={async () => {
-									const defaultConfig = await getDefaultConfig(code);
-									const newId = shortId();
-									dispatch({
-										type: "addSection",
-										payload: {
-											section: {
-												code,
-												id: newId,
-												// creates a long gap between new sections and existing sections for re-ordering
-												order: sortedOrder.length > 0 ? sortedOrder.at(-1)![1] + 1 : 1,
-												config: defaultConfig,
-											},
-										},
-									});
-									setEditSectionId(newId);
-								}}
-							>
-								{title}
-							</Button>
-						))}
-					</div>
+					<WidgetCategories
+						onWidgetSelect={async (code) => {
+							const defaultConfig = await getDefaultConfig(metadataKey[code]);
+							const newId = shortId();
+							dispatch({
+								type: "addSection",
+								payload: {
+									section: {
+										code,
+										id: newId,
+										// creates a long gap between new sections and existing sections for re-ordering
+										order: sortedOrder.length > 0 ? sortedOrder.at(-1)![1] + 1 : 1,
+										config: defaultConfig,
+									},
+								},
+							});
+							setEditSectionId(newId);
+						}}
+					/>
 				</div>
 			</div>
 			<Sheet
@@ -442,7 +449,24 @@ export default function PageEditor() {
 				{/* <SheetTrigger>Open</SheetTrigger> */}
 				<SheetContent side={"right"}>
 					<SheetHeader>
-						<SheetTitle>{editedSection?.code}</SheetTitle>
+						<SheetTitle>
+							{editedSection?.code ? (
+								<WidgetSelector
+									cat={metadataKey[editedSection.code]}
+									selected={editedSection?.code}
+									onWidgetSelect={(newcode) => {
+										dispatch({
+											type: "changeWidget",
+											payload: {
+												sectionId: editSectionId!,
+												code: newcode,
+											},
+										});
+									}}
+								/>
+							) : null}
+							{/* {editedSection?.code} */}
+						</SheetTitle>
 						<SheetDescription>Editing this section</SheetDescription>
 					</SheetHeader>
 					{sectionSchema && editSectionId ? (
