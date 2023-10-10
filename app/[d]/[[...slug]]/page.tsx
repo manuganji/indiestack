@@ -126,14 +126,14 @@ export default async function Home({
 	if (!pageOnDB) {
 		notFound();
 	}
-	const { page, sections } = pageOnDB;
+	const { sections } = pageOnDB;
 	// console.log(params);
 	return (
 		<main className="flex min-h-screen flex-col items-center p-24">
 			{sections?.map((section) => (
 				<Fragment key={section.id}>
 					{/* @ts-ignore */}
-					{components[section.code].Component(section.config)}
+					{components[section.code](section.config)}
 				</Fragment>
 			))}
 		</main>

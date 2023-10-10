@@ -1,15 +1,13 @@
-import { Layout, UISchemaElement, VerticalLayout } from "@jsonforms/core";
+import { VerticalLayout } from "@jsonforms/core";
 import { JSONSchemaType } from "ajv";
+import { TextPropsType } from "../types";
+import * as H001 from "./H001";
+import * as T001 from "./T001";
+import { SCHEMA_IDS } from "../ids";
 
-type PropsType = {
-	text: string;
-};
-
-export const title = "Header";
-
-export const schema: JSONSchemaType<PropsType> = {
+export const schema: JSONSchemaType<TextPropsType> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: "H001",
+	$id: SCHEMA_IDS.text,
 	type: "object",
 	title: "Text",
 	description: "",
@@ -43,6 +41,12 @@ export const uiSchema: VerticalLayout = {
 	],
 };
 
-export const Component = function H001({ text }: PropsType) {
-	return <h1 className="text-6xl my-4 font-bold w-full">{text}</h1>;
-};
+export const variants = {
+	H001,
+	T001,
+} as const;
+
+export const components = {
+	H001: H001.Component,
+	T001: T001.Component,
+} as const;

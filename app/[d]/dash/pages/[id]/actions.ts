@@ -1,6 +1,7 @@
 "use server";
 
-import { components } from "@/components/sections";
+import { components, metadata } from "@/components/sections";
+import { SCHEMA_IDS } from "@/components/sections/ids";
 import { runQuery, runQueryTxn } from "@/db";
 import { requireAdmin } from "@/lib/checks";
 import { getDomain } from "@/lib/domains";
@@ -111,9 +112,9 @@ export const savePage = async function (
 };
 
 export const getDefaultConfig = cache(async function (
-	code: keyof typeof components,
+	code: keyof typeof metadata,
 ) {
-	const validate = ajv.getSchema(components[code].schema.$id || code);
+	const validate = ajv.getSchema(metadata[code].schema.$id || code);
 	const data = {};
 	// @ts-ignore
 	validate(data);

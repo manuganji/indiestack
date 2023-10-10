@@ -1,21 +1,31 @@
-import { JSONSchemaType } from "ajv";
-import * as T001 from "./T001";
-import * as IMG001 from "./IMG001";
-import * as H001 from "./H001";
-import { Layout } from "@jsonforms/core";
+import * as img from "./image";
+import * as text from "./text";
+import { VariantComponents, Variants } from "./types";
 
-type ComponentConfig<T> = {
-	title: string;
-	desc?: string;
-	schema: JSONSchemaType<T>;
-	uiSchema?: Layout;
-	Component: React.FunctionComponent<T>;
-};
+export const metadata = {
+	text: {
+		title: "Text",
+		desc: "Text components.",
+		...text,
+	},
+	img: {
+		title: "Image",
+		desc: "Image components.",
+		...img,
+	},
+} as const satisfies Variants<any>;
 
 export const components = {
-	T001: T001,
-	IMG001: IMG001,
-	H001: H001,
-} as const satisfies {
-	[code: string]: ComponentConfig<any>;
-};
+	...text.components,
+	...img.components,
+} as const satisfies VariantComponents<any>;
+
+export const metadataKey = Object.entries(metadata).reduce<{
+	[code: string]: keyof typeof metadata;
+	// @ts-ignore
+}>((acc, [key, value]) => {
+	return {
+		...acc,
+		...Object.fromEntries(Object.keys(value.variants).map((v) => [v, key])),
+	};
+}, {});

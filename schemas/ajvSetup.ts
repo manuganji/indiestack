@@ -3,7 +3,7 @@ import addErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 import addKeywords from "ajv-keywords";
 import * as schemas from "./index";
-import { components } from "@/components/sections";
+import { metadata } from "@/components/sections";
 
 const ajv = new Ajv({
 	allErrors: true,
@@ -50,9 +50,9 @@ for (const [key, sch] of Object.entries(schemas)) {
 	ajv.addSchema(sch, key);
 }
 
-for (const component of Object.values(components)) {
+for (const item of Object.values(metadata)) {
 	// section schemas for page builder
-	ajv.addSchema(component.schema);
+	ajv.addSchema(item.schema);
 }
 
 export const getAjv = () => {

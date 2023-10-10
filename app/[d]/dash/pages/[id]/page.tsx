@@ -1,6 +1,6 @@
 "use client";
 import DeclarativeForm from "@/components/forms";
-import { components } from "@/components/sections/index";
+import { components, metadata, metadataKey } from "@/components/sections/index";
 import { Button } from "@/components/ui/button";
 import {
 	Collapsible,
@@ -85,7 +85,7 @@ const MemoizedComponentWrapper = memo(function ComponentWrapper({
 		},
 	];
 	/* @ts-ignore */
-	const cEl = useMemo(() => components[code].Component(config), [code, config]);
+	const cEl = useMemo(() => components[code](config), [code, config]);
 	return (
 		<div className="group w-full relative">
 			<div
@@ -294,7 +294,10 @@ export default function PageEditor() {
 	const sortedOrder = useMemo(() => getSortedOrder(state), [state.order]);
 
 	const sectionSchema = useMemo(
-		() => (editSectionId ? components[editedSection?.code!].schema : undefined),
+		() =>
+			editSectionId
+				? metadata[metadataKey[editedSection?.code!]].schema
+				: undefined,
 		[editSectionId],
 	);
 
@@ -400,19 +403,17 @@ export default function PageEditor() {
 				<div className="p-4 border-t border-gray-400 flex flex-col gap-2 my-4">
 					<h2>Add new section</h2>
 					<div className="grid grid-cols-6 gap-1">
-						{Object.entries(components).map(([code, { title }]) => (
+						{Object.entries(metadata).map(([code, { title, schema }]) => (
 							<Button
 								variant={"outline"}
 								key={code}
 								onClick={async () => {
-									// @ts-ignore
 									const defaultConfig = await getDefaultConfig(code);
 									const newId = shortId();
 									dispatch({
 										type: "addSection",
 										payload: {
 											section: {
-												// @ts-ignore
 												code,
 												id: newId,
 												// creates a long gap between new sections and existing sections for re-ordering
