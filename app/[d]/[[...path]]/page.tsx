@@ -10,14 +10,14 @@ export const revalidate = 60;
 export const preferredRegion = "home";
 
 export const generateStaticParams = async (): Promise<
-	Array<{ d: string; slug: null | string }>
+	Array<{ d: string; path: null | string }>
 > => {
 	const properties = await runQuery(
 		select("properties", all, {
 			columns: ["domain"],
 		}),
 	);
-	const params = properties.map(({ domain }) => ({ d: domain, slug: null }));
+	const params = properties.map(({ domain }) => ({ d: domain, path: null }));
 	// console.log("static params", params);
 	return params;
 	// const property = await runQuery(
@@ -101,10 +101,10 @@ const getPage = cache(async (path: string, domain: string) => {
 });
 
 export async function generateMetadata(
-	{ params }: { params: { slug: string[]; d: string } },
+	{ params }: { params: { path: string[]; d: string } },
 	parent: ResolvingMetadata,
 ): Promise<Metadata> {
-	const pageOnDB = await getPage(params.slug?.join("/") || "", params.d);
+	const pageOnDB = await getPage(params.path?.join("/") || "", params.d);
 	// console.log(pageOnDB);
 	return {
 		title: pageOnDB?.page?.title || pageOnDB?.property?.name,
@@ -119,17 +119,17 @@ export default async function Home({
 }: {
 	params: {
 		d: string;
-		slug?: string[];
+		path?: string[];
 	};
 }) {
-	const pageOnDB = await getPage(params.slug?.join("/") || "", params.d);
+	const pageOnDB = await getPage(params.path?.join("/") || "", params.d);
 	if (!pageOnDB) {
 		notFound();
 	}
 	const { sections } = pageOnDB;
 	// console.log(params);
 	return (
-		<main className="flex min-h-screen flex-col items-center p-24">
+		<main className="flex min-h-screen flex-col p-24">
 			{sections?.map((section) => (
 				<Fragment key={section.id}>
 					{/* @ts-ignore */}

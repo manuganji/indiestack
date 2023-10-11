@@ -359,15 +359,15 @@ export default function PageEditor() {
 	});
 
 	return (
-		<div className="flex gap-4">
-			<div className="px-2 flex flex-col">
+		<div className="flex gap-4 w-full">
+			<div className="flex flex-col w-full px-2">
 				<div className="flex gap-2 items-baseline justify-between">
 					<Collapsible
 						className="flex-grow"
 						open={pageFormOpen}
 						onOpenChange={setPageFormOpen}
 					>
-						<div className="flex items-center justify-between space-x-4 px-4 w-full">
+						<div className="flex items-center justify-between space-x-4 w-full">
 							<p className="font-bold">Page Settings</p>
 							<CollapsibleTrigger asChild>
 								<Button variant={"ghost"}>
