@@ -3,6 +3,7 @@ import {
 	deletes,
 	insert,
 	parent,
+	select,
 	selectExactlyOne,
 	selectOne,
 	sql,
@@ -11,6 +12,7 @@ import {
 } from "zapatos/db";
 import type {
 	accounts,
+	org_members,
 	sessions,
 	users,
 	verification_tokens,
@@ -40,6 +42,81 @@ export const findVerificatonToken = async function (
 	return res ?? null;
 };
 
+export const getUserByEmail = async (email: string) => {
+	const property = await getDomain({ domain: getHostName() });
+	return runQuery(selectOne("users", { email, property: property.id }));
+};
+
+export const getOneUserOrg = (userId: string) => {
+	return runQuery(
+		selectOne(
+			"org_members",
+			{
+				user: userId,
+			},
+			{
+				columns: ["org"],
+			},
+		),
+	);
+};
+
+export const updateLastOrg = async (userId: string, orgId: string) => {
+	return runQuery(
+		update(
+			"users",
+			{
+				last_org: orgId,
+			},
+			{
+				id: userId,
+			},
+		),
+	);
+};
+
+export const addUserToOrg = async (
+	userId: string,
+	orgId: string,
+	role?: org_members.Insertable["role"],
+) => {
+	return runQuery(
+		insert("org_members", {
+			user: userId,
+			org: orgId,
+			role: role ?? "admin.user",
+		}),
+	);
+};
+
+export const removeUserFromOrg = async (userId: string, orgId: string) => {
+	return runQueryTxn(async (client) => {
+		await Promise.all([
+			// remove user from org
+			deletes("org_members", {
+				user: userId,
+				org: orgId,
+			}).run(client),
+			// update last used org
+			update(
+				"users",
+				{
+					last_org: null,
+				},
+				{
+					id: userId,
+					last_org: orgId,
+				},
+			).run(client),
+			// remove sessions with this org
+			deletes("sessions", {
+				user_id: userId,
+				org: orgId,
+			}).run(client),
+		]);
+	});
+};
+
 export async function logUserIn(email: string) {
 	const isLongSession = cookies().get(LONG_SESSION_COOKIE)?.value === "true";
 	const user = await getUserByEmail(email);
@@ -56,13 +133,31 @@ export async function logUserIn(email: string) {
 		await runQuery(update("users", { welcomed: true }, { id: user.id }));
 	}
 
+	// get last used org
+	let orgId: org_members.JSONSelectable["org"] | null = user.last_org;
+	if (!orgId) {
+		const oneOrg = await getOneUserOrg(user.id);
+		orgId = oneOrg?.org ?? null;
+	}
+
+	// create session
 	const [session, _] = await createSession({
 		user_id: user.id,
+		org: orgId,
 		expires: isLongSession
 			? deltaFromNow(LONG_AUTH_DURATION)
 			: deltaFromNow(DEFAULT_AUTH_DURATION),
 		property: user.property,
 	});
+
+	// update last used org
+	if (orgId) {
+		try {
+			updateLastOrg(user.id, orgId);
+		} catch (e) {
+			console.log(e);
+		}
+	}
 
 	cookies().set(SESSION_COOKIE, session.session_token, {
 		path: "/",
@@ -206,11 +301,6 @@ export const getUser = async function getUser(id: string) {
 	return runQuery(selectOne("users", { id }));
 };
 
-export const getUserByEmail = async (email: string) => {
-	const property = await getDomain({ domain: getHostName() });
-	return runQuery(selectOne("users", { email, property: property.id }));
-};
-
 export const getSessionAndUser = async function getSessionAndUser(
 	session_token: string,
 ) {
@@ -226,13 +316,16 @@ export const getSessionAndUser = async function getSessionAndUser(
 					user: selectOne("users", {
 						id: parent("user_id"),
 					}),
+					org: selectOne("orgs", {
+						id: parent("org"),
+					}),
 				},
 			},
 		),
 	);
 	if (!res) return null;
 
-	const { user, ...session } = res;
+	const { user, org, ...session } = res;
 
 	if (!user) return null;
 
@@ -243,6 +336,7 @@ export const getSessionAndUser = async function getSessionAndUser(
 			userId: session.user_id,
 			expires: new Date(session.expires),
 		},
+		org,
 		user,
 	};
 };
