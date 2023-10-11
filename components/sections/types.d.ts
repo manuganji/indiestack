@@ -1,5 +1,8 @@
 import { Layout } from "@jsonforms/core";
 import { JSONSchemaType } from "ajv";
+import type { ReactPlayerProps } from "react-player";
+
+type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
 export type ComponentConfig<T> = {
 	title: string;
@@ -26,8 +29,25 @@ export type TextPropsType = {
 	text: string;
 };
 
+export type VideoPropsType = Pick<
+	ReactPlayerProps,
+	| "url"
+	| "playing"
+	| "loop"
+	| "controls"
+	| "volume"
+	| "muted"
+	| "width"
+	| "height"
+	| "pip"
+	| "playbackRate"
+	| "light"
+> & {
+	url: string;
+};
+
 export type ImgPropsType = {
 	img: string; // url to image
 };
 
-export type PropsType = TextPropsType | ImgPropsType;
+export type PropsType = TextPropsType | ImgPropsType | VideoPropsType;

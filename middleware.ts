@@ -8,12 +8,16 @@ export function middleware(request: NextRequest) {
     script-src 'self' ${
 					dev ? "'unsafe-eval'" : "'strict-dynamic'"
 				} 'nonce-${nonce}';
+		script-src-elem 'self' 'nonce-${nonce}' 
+			https://www.youtube.com/iframe_api
+			https://www.youtube.com/s/player/5279ebfe/www-widgetapi.vflset/www-widgetapi.js;
     style-src 'self' '${dev ? "unsafe-inline" : "nonce-${nonce}"}' ;
     img-src 'self' blob: data: https:;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
     form-action 'self';
+		frame-src 'self' https://www.youtube.com;
     frame-ancestors 'none';
     block-all-mixed-content;
     ${dev ? "" : "upgrade-insecure-requests"};

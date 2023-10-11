@@ -6,6 +6,8 @@ export const preview = process.env.NEXT_PUBLIC_VERCEL_ENV === "preview";
 
 export const prod = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 
+export const browser = typeof window !== "undefined";
+
 export const AWS_REGION = "eu-central-1";
 
 export const EMAIL_COOKIE = "auth-email";

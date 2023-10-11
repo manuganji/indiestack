@@ -1,9 +1,11 @@
 import { components } from "@/components/sections";
 import { runQuery } from "@/db";
+import { RendererComponent } from "@jsonforms/react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import { Fragment, cache } from "react";
 import { all, parent, select, selectExactlyOne } from "zapatos/db";
+import RenderSections from "./RenderSections";
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
 export const dynamic = "auto";
 export const revalidate = 60;
@@ -130,12 +132,7 @@ export default async function Home({
 	// console.log(params);
 	return (
 		<main className="flex min-h-screen flex-col p-24">
-			{sections?.map((section) => (
-				<Fragment key={section.id}>
-					{/* @ts-ignore */}
-					{components[section.code](section.config)}
-				</Fragment>
-			))}
+			{sections ? <RenderSections sections={sections} /> : null}
 		</main>
 	);
 }

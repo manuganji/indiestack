@@ -439,6 +439,7 @@ export default function PageEditor() {
 				</div>
 			</div>
 			<Sheet
+				
 				open={!!editSectionId}
 				onOpenChange={(open) => {
 					if (!open) {
@@ -447,7 +448,7 @@ export default function PageEditor() {
 				}}
 			>
 				{/* <SheetTrigger>Open</SheetTrigger> */}
-				<SheetContent side={"right"}>
+				<SheetContent side={"right"} className="overflow-scroll">
 					<SheetHeader>
 						<SheetTitle>
 							{editedSection?.code ? (
