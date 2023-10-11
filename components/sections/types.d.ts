@@ -46,8 +46,24 @@ export type VideoPropsType = Pick<
 	url: string;
 };
 
+export type ImageTextPropsType = {
+	text: string;
+	img: {
+		src: string; // url to image
+		left?: boolean;
+		radius?: number;
+		alt?: string;
+		width?: number;
+		height?: number;
+	};
+};
+
 export type ImgPropsType = {
 	img: string; // url to image
 };
 
-export type PropsType = TextPropsType | ImgPropsType | VideoPropsType;
+export type PropsType =
+	| TextPropsType
+	| ImgPropsType
+	| VideoPropsType
+	| ImageTextPropsType;

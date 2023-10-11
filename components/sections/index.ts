@@ -2,6 +2,7 @@ import { PgPageSectionCode } from "zapatos/custom";
 import * as img from "./image";
 import * as text from "./text";
 import * as video from "./video";
+import * as imgText from "./imgText";
 import { VariantComponents, Variants } from "./types";
 import { SCHEMA_IDS } from "./ids";
 
@@ -21,12 +22,18 @@ export const metadata = {
 		desc: "Video components.",
 		...video,
 	},
+	imgText: {
+		title: "Image with text",
+		desc: "Image with text components.",
+		...imgText,
+	},
 } as const satisfies Variants<any>;
 
 export const components = {
 	...text.components,
 	...img.components,
 	...video.components,
+	...imgText.components,
 } as const satisfies VariantComponents<any>;
 
 export const metadataKey = new Map<
