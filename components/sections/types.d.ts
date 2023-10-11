@@ -6,10 +6,10 @@ export type ComponentConfig<T> = {
 	desc?: string;
 	uiSchema?: Layout;
 	schema: JSONSchemaType<T>;
-	variants: { [code: string]: VariantConfig<T> };
+	variants: { [code: string]: VariantConfig };
 };
 
-export type VariantConfig<T> = {
+export type VariantConfig = {
 	title: string;
 	desc?: string;
 };

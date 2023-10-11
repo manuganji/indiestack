@@ -112,7 +112,7 @@ export const savePage = async function (
 };
 
 export const getDefaultConfig = cache(async function (
-	code: keyof typeof metadata,
+	code: keyof typeof SCHEMA_IDS,
 ) {
 	const validate = ajv.getSchema(metadata[code].schema.$id || code);
 	const data = {};

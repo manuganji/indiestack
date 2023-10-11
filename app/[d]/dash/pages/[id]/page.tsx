@@ -310,10 +310,10 @@ export default function PageEditor() {
 
 	const sectionSchema = useMemo(
 		() =>
-			editSectionId
-				? metadata[metadataKey[editedSection?.code!]].schema
+			editSectionId && editedSection?.code && metadataKey.has(editedSection?.code)
+				? metadata[metadataKey.get(editedSection?.code)!].schema
 				: undefined,
-		[editSectionId],
+		[editSectionId, editedSection?.code],
 	);
 
 	const changeOrder = useMemo(
@@ -419,7 +419,7 @@ export default function PageEditor() {
 					<h2>Add new section</h2>
 					<WidgetCategories
 						onWidgetSelect={async (code) => {
-							const defaultConfig = await getDefaultConfig(metadataKey[code]);
+							const defaultConfig = await getDefaultConfig(metadataKey.get(code)!);
 							const newId = shortId();
 							dispatch({
 								type: "addSection",
@@ -452,7 +452,7 @@ export default function PageEditor() {
 						<SheetTitle>
 							{editedSection?.code ? (
 								<WidgetSelector
-									cat={metadataKey[editedSection.code]}
+									cat={metadataKey.get(editedSection.code)!}
 									selected={editedSection?.code}
 									onWidgetSelect={(newcode) => {
 										dispatch({

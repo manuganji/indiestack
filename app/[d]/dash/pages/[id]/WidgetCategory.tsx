@@ -1,4 +1,5 @@
-import { metadata, metadataKey, components } from "@/components/sections/index";
+import { SCHEMA_IDS } from "@/components/sections/ids";
+import { metadata } from "@/components/sections/index";
 import { Button } from "@/components/ui/button";
 import {
 	Collapsible,
@@ -7,15 +8,16 @@ import {
 } from "@radix-ui/react-collapsible";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { PgPageSectionCode } from "zapatos/custom";
 
 export function WidgetSelector({
 	cat,
 	selected,
 	onWidgetSelect,
 }: {
-	selected?: keyof typeof metadataKey;
+	selected?: PgPageSectionCode;
 	cat: keyof typeof metadata;
-	onWidgetSelect: (code: keyof typeof components) => void;
+	onWidgetSelect: (code: PgPageSectionCode) => void;
 }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const { title, desc, variants } = metadata[cat];
@@ -43,7 +45,7 @@ export function WidgetSelector({
 						variant={"outline"}
 						key={code}
 						onClick={() => {
-							onWidgetSelect(code);
+							onWidgetSelect(code as PgPageSectionCode);
 							setIsOpen(false);
 						}}
 						// className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm"
@@ -58,24 +60,17 @@ export function WidgetSelector({
 export default function WidgetCategories({
 	onWidgetSelect,
 }: {
-	onWidgetSelect: (widget: keyof typeof metadataKey) => void;
+	onWidgetSelect: (widget: PgPageSectionCode) => void;
 }) {
-	const sortedCats = Object.entries(metadata).sort((a, b) =>
-		a[1].title.localeCompare(b[1].title),
-	);
+	const sortedCats = Object.keys(metadata).sort((a, b) =>
+		a.localeCompare(b),
+	) as Array<keyof typeof SCHEMA_IDS>;
 
 	return (
 		<div className="grid grid-cols-3 gap-1">
-			{sortedCats.map(([cat]) => (
-				// @ts-ignore
+			{sortedCats.map((cat) => (
 				<WidgetSelector cat={cat} onWidgetSelect={onWidgetSelect} key={cat} />
 			))}
-			{/* {Object.entries(metadata).map(([code, { title, variants }]) => (
-				// Combo box for variants
-				<Button variant={"outline"} key={code} onClick={}>
-					{title}
-				</Button>
-			))} */}
 		</div>
 	);
 }

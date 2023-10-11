@@ -1,6 +1,8 @@
+import { PgPageSectionCode } from "zapatos/custom";
 import * as img from "./image";
 import * as text from "./text";
 import { VariantComponents, Variants } from "./types";
+import { SCHEMA_IDS } from "./ids";
 
 export const metadata = {
 	text: {
@@ -20,12 +22,12 @@ export const components = {
 	...img.components,
 } as const satisfies VariantComponents<any>;
 
-export const metadataKey = Object.entries(metadata).reduce<{
-	[code: string]: keyof typeof metadata;
-	// @ts-ignore
-}>((acc, [key, value]) => {
-	return {
-		...acc,
-		...Object.fromEntries(Object.keys(value.variants).map((v) => [v, key])),
-	};
-}, {});
+export const metadataKey = new Map<
+	PgPageSectionCode,
+	keyof typeof SCHEMA_IDS
+>();
+for (const [key, value] of Object.entries(metadata)) {
+	for (const variant in value.variants) {
+		metadataKey.set(variant as PgPageSectionCode, key as keyof typeof SCHEMA_IDS);
+	}
+}
