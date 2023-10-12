@@ -5,6 +5,7 @@ import { SCHEMA_IDS } from "./ids";
 import * as img from "./image";
 import * as imgText from "./imgText";
 import * as text from "./text";
+import * as textGrid from "./textGrid";
 import { Variants } from "./types";
 import * as video from "./video";
 
@@ -34,12 +35,20 @@ export const metadata = {
 		desc: "Hero components.",
 		...hero,
 	},
+	textGrid: {
+		title: "Text Grid",
+		desc: "Text Grid components.",
+		...textGrid,
+	},
 } as const satisfies Variants;
 
 export const components = new Map<PgPageSectionCode, React.FunctionComponent>();
 
 for (const cat of Object.values(metadata)) {
 	for (const [code, variant] of Object.entries(cat.components)) {
+		if (components.has(code as PgPageSectionCode)) {
+			throw new Error(`Duplicate code ${code}`);
+		}
 		components.set(code as PgPageSectionCode, variant as React.FunctionComponent);
 	}
 }
@@ -51,6 +60,9 @@ export const metadataKey = new Map<
 
 for (const [key, value] of Object.entries(metadata)) {
 	for (const variant in value.variants) {
+		if (metadataKey.has(variant as PgPageSectionCode)) {
+			throw new Error(`Duplicate code ${variant}`);
+		}
 		metadataKey.set(variant as PgPageSectionCode, key as keyof typeof SCHEMA_IDS);
 	}
 }

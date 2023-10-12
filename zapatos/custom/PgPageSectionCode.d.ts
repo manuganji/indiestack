@@ -6,10 +6,17 @@ import type { components } from "@/components/sections";
 
 declare module "zapatos/custom" {
 	export type PgPageSectionCode =
+		// hero
 		| "HE001"
+		// image
 		| "IMG001"
+		// image text
 		| "IT001"
+		// text
 		| "H001"
 		| "T001"
-		| "VDO001";
+		// video
+		| "VDO001"
+		// text grid
+		| "TG001";
 }

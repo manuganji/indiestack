@@ -4,5 +4,5 @@ export const SCHEMA_IDS = {
   video: "sections/video",
   hero: "sections/hero",
   imgText: "sections/imgText",
-  // textGrid: "sections/benefitsGrid",
+  textGrid: "sections/textGrid",
 };

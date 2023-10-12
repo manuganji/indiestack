@@ -24,6 +24,20 @@ export type Variants = {
 	[code: PgPageSectionCode]: ComponentConfig<T>;
 };
 
+export type TextGridPropsType = {
+	cols?: {
+		xl?: number;
+		lg?: number;
+		md?: number;
+		sm?: number;
+	};
+	items: Array<{
+		text: string;
+		icon?: string;
+	}>;
+	gap?: number;
+};
+
 export type TextPropsType = {
 	text: string;
 };
