@@ -114,7 +114,6 @@ export const savePage = async function (
 export const getDefaultConfig = cache(async function (
 	code: keyof typeof SCHEMA_IDS,
 ) {
-	console.log("schemaId", metadata[code].schema.$id);
 	const validate = ajv.getSchema(metadata[code].schema.$id || code);
 	const data = {};
 	// @ts-ignore
