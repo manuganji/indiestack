@@ -46,3 +46,5 @@ export const DEFAULT_FEATURES: Set<PgFeatureCode> = new Set([
 export const DEFAULT_ROLES: Set<PgOrgRole> = new Set([
 	"admin.user",
 ] satisfies Array<PgOrgRole>);
+
+export const DEFAULT_TEST_IMAGE: string = "/Stairs_onne_palle.jpeg";

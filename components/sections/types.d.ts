@@ -1,6 +1,7 @@
 import { Layout } from "@jsonforms/core";
 import { JSONSchemaType } from "ajv";
 import type { ReactPlayerProps } from "react-player";
+import { PgPageSectionCode } from "zapatos/custom";
 
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
@@ -17,12 +18,10 @@ export type VariantConfig = {
 	desc?: string;
 };
 
-export type VariantComponents<T> = {
-	[code: string]: React.FunctionComponent<T>;
-};
+export type VariantComponents = Map<PgPageSectionCode, React.FunctionComponent>;
 
-export type Variants<T> = {
-	[code: string]: ComponentConfig<T>;
+export type Variants = {
+	[code: PgPageSectionCode]: ComponentConfig<T>;
 };
 
 export type TextPropsType = {
@@ -47,10 +46,38 @@ export type VideoPropsType = Pick<
 };
 
 export type ImageTextPropsType = {
+	margin?: {
+		x?: number;
+		y?: number;
+	};
+	padding?: {
+		x?: number;
+		y?: number;
+	};
+	gap?: number;
+	justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
+	items?: "start" | "center" | "end" | "stretch" | "baseline";
 	text: string;
 	img: {
 		src: string; // url to image
 		left?: boolean;
+		radius?: number;
+		alt?: string;
+		width?: number;
+		height?: number;
+	};
+};
+
+export type HeroPropsType = {
+	justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
+	items?: "start" | "center" | "end" | "stretch" | "baseline";
+	text: string;
+	padding?: {
+		x?: number;
+		y?: number;
+	};
+	img?: {
+		src: string; // url to image
 		radius?: number;
 		alt?: string;
 		width?: number;
@@ -66,4 +93,5 @@ export type PropsType =
 	| TextPropsType
 	| ImgPropsType
 	| VideoPropsType
-	| ImageTextPropsType;
+	| ImageTextPropsType
+	| HeroPropsType;

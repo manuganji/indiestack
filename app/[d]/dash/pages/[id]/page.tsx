@@ -1,6 +1,10 @@
 "use client";
 import DeclarativeForm from "@/components/forms";
-import { components, metadata, metadataKey } from "@/components/sections/index";
+import {
+	components,
+	getSchemaForCode,
+	metadataKey
+} from "@/components/sections/index";
 import { Button } from "@/components/ui/button";
 import {
 	Collapsible,
@@ -24,13 +28,13 @@ import {
 	PencilIcon,
 	TrashIcon,
 } from "@heroicons/react/20/solid";
-import { get } from "lodash";
 import { useParams } from "next/navigation";
 import { memo, useEffect, useMemo, useReducer, useState } from "react";
+import { PgPageSectionCode } from "zapatos/custom";
 import { JSONValue } from "zapatos/db";
 import { pages, sections } from "zapatos/schema";
-import { getDefaultConfig, getPageById, savePage } from "./actions";
 import WidgetCategories, { WidgetSelector } from "./WidgetCategory";
+import { getDefaultConfig, getPageById, savePage } from "./actions";
 
 const MemoizedComponentWrapper = memo(function ComponentWrapper({
 	position,
@@ -84,8 +88,8 @@ const MemoizedComponentWrapper = memo(function ComponentWrapper({
 			onClick: () => deleteSection(id),
 		},
 	];
-	/* @ts-ignore */
-	const cEl = useMemo(() => components[code](config), [code, config]);
+	// @ts-ignore
+	const cEl = useMemo(() => components.get(code)!(config), [code, config]);
 	return (
 		<div className="group w-full relative">
 			<div
@@ -94,6 +98,7 @@ const MemoizedComponentWrapper = memo(function ComponentWrapper({
         w-full
         transition-all
         top-0 
+				z-50
         absolute
         gap-1 px-2 py-2"
 			>
@@ -132,7 +137,7 @@ type ActionTypes =
 			payload: {
 				section: {
 					id: string;
-					code: keyof typeof components;
+					code: PgPageSectionCode;
 					order: number;
 					config: JSONValue;
 				};
@@ -156,7 +161,7 @@ type ActionTypes =
 			type: "changeWidget";
 			payload: {
 				sectionId: string;
-				code: keyof typeof components;
+				code: PgPageSectionCode;
 			};
 	  }
 	| {
@@ -310,8 +315,8 @@ export default function PageEditor() {
 
 	const sectionSchema = useMemo(
 		() =>
-			editSectionId && editedSection?.code && metadataKey.has(editedSection?.code)
-				? metadata[metadataKey.get(editedSection?.code)!].schema
+			editSectionId && editedSection?.code
+				? getSchemaForCode(editedSection.code)
 				: undefined,
 		[editSectionId, editedSection?.code],
 	);
@@ -439,7 +444,6 @@ export default function PageEditor() {
 				</div>
 			</div>
 			<Sheet
-				
 				open={!!editSectionId}
 				onOpenChange={(open) => {
 					if (!open) {
@@ -472,12 +476,11 @@ export default function PageEditor() {
 					</SheetHeader>
 					{sectionSchema && editSectionId ? (
 						<DeclarativeForm
-							schema={sectionSchema}
-							uiSchema={get(components, `${editedSection?.code}.uiSchema`, undefined)}
+							schema={sectionSchema.schema}
+							uiSchema={sectionSchema.uiSchema}
 							// @ts-ignore
 							initialData={editedSection?.config}
 							onSubmit={(newConfig) => {
-								// console.log(newConfig);
 								dispatch({
 									type: "setConfig",
 									payload: {

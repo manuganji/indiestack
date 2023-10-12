@@ -13,6 +13,7 @@ const ajv = new Ajv({
 		source: true,
 	},
 	useDefaults: true,
+	coerceTypes: true,
 });
 
 addFormats(ajv);

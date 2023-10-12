@@ -5,7 +5,7 @@ function RenderComponent({
 	code,
 	config,
 }: Pick<sections.JSONSelectable, "code" | "config">) {
-	const Component = components[code];
+	const Component = components.get(code);
 	// @ts-ignore
 	return <Component {...config} />;
 }

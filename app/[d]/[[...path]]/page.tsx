@@ -1,9 +1,7 @@
-import { components } from "@/components/sections";
 import { runQuery } from "@/db";
-import { RendererComponent } from "@jsonforms/react";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { Fragment, cache } from "react";
+import { cache } from "react";
 import { all, parent, select, selectExactlyOne } from "zapatos/db";
 import RenderSections from "./RenderSections";
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams

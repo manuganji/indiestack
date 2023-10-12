@@ -1,9 +1,8 @@
-import { ImageTextPropsType } from "../types";
-import Image from "next/image";
 import classnames from "classnames";
-export const title = "Image with Text";
+import { ImageTextPropsType } from "../types";
+export const title = "Hero";
 
-export const Component = function IT001({
+export const Component = function HE001({
 	img,
 	text,
 	padding,
@@ -13,7 +12,7 @@ export const Component = function IT001({
 	gap,
 }: ImageTextPropsType) {
 	const classes = classnames({
-		"flex flex-row": true,
+		"flex flex-col relative isolate overflow-hidden": true,
 		"justify-center": justify === "center",
 		"justify-start": justify === "start",
 		"justify-end": justify === "end",
@@ -39,6 +38,7 @@ export const Component = function IT001({
 		"items-stretch": items === "stretch",
 	});
 	const imgClasses = classnames({
+		"absolute inset-0 object-cover w-full h-full z-0": true,
 		"rounded-none": img.radius === 0,
 		"rounded-sm": img.radius === 2,
 		"rounded-md": img.radius === 4,
@@ -54,7 +54,9 @@ export const Component = function IT001({
 				width={img.width}
 				height={img.height}
 			/>
-			<div className="prose text-black">{text}</div>
+			<div className="prose z-10 py-20 min-h-[20rem] flex items-center w-4/5">
+				{text}
+			</div>
 		</div>
 	);
 };

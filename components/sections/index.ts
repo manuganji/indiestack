@@ -1,10 +1,12 @@
+import { get } from "lodash";
 import { PgPageSectionCode } from "zapatos/custom";
-import * as img from "./image";
-import * as text from "./text";
-import * as video from "./video";
-import * as imgText from "./imgText";
-import { VariantComponents, Variants } from "./types";
+import * as hero from "./hero";
 import { SCHEMA_IDS } from "./ids";
+import * as img from "./image";
+import * as imgText from "./imgText";
+import * as text from "./text";
+import { Variants } from "./types";
+import * as video from "./video";
 
 export const metadata = {
 	text: {
@@ -27,21 +29,39 @@ export const metadata = {
 		desc: "Image with text components.",
 		...imgText,
 	},
-} as const satisfies Variants<any>;
+	hero: {
+		title: "Hero",
+		desc: "Hero components.",
+		...hero,
+	},
+} as const satisfies Variants;
 
-export const components = {
-	...text.components,
-	...img.components,
-	...video.components,
-	...imgText.components,
-} as const satisfies VariantComponents<any>;
+export const components = new Map<PgPageSectionCode, React.FunctionComponent>();
+
+for (const cat of Object.values(metadata)) {
+	for (const [code, variant] of Object.entries(cat.components)) {
+		components.set(code as PgPageSectionCode, variant as React.FunctionComponent);
+	}
+}
 
 export const metadataKey = new Map<
 	PgPageSectionCode,
 	keyof typeof SCHEMA_IDS
 >();
+
 for (const [key, value] of Object.entries(metadata)) {
 	for (const variant in value.variants) {
 		metadataKey.set(variant as PgPageSectionCode, key as keyof typeof SCHEMA_IDS);
 	}
 }
+
+export const getSchemaForCode = (code: PgPageSectionCode) => {
+	const key = metadataKey.get(code);
+	if (!key) {
+		throw new Error(`No schema for code ${code}`);
+	}
+	return {
+		schema: metadata[key].schema,
+		uiSchema: get(metadata, `${key}.uiSchema`, undefined),
+	};
+};

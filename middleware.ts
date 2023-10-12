@@ -9,10 +9,9 @@ export function middleware(request: NextRequest) {
 					dev ? "'unsafe-eval'" : "'strict-dynamic'"
 				} 'nonce-${nonce}';
 		script-src-elem 'self' 'nonce-${nonce}' 
-			https://www.youtube.com/iframe_api
-			https://www.youtube.com/s/player/5279ebfe/www-widgetapi.vflset/www-widgetapi.js;
+			https://www.youtube.com ;
     style-src 'self' '${dev ? "unsafe-inline" : "nonce-${nonce}"}' ;
-    img-src 'self' blob: data: https:;
+    img-src 'self' blob: data: https: ;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
@@ -56,7 +55,8 @@ export const config = {
 		 * - favicon.ico (favicon file)
 		 */
 		{
-			source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+			
+			source: "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
 			missing: [
 				{ type: "header", key: "next-router-prefetch" },
 				{ type: "header", key: "purpose", value: "prefetch" },

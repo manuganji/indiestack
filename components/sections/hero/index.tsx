@@ -1,14 +1,14 @@
-import { JSONSchemaType } from "ajv";
-import { ImageTextPropsType } from "../types";
-import { SCHEMA_IDS } from "../ids";
-import * as IT001 from "./IT001";
 import { DEFAULT_TEST_IMAGE } from "@/constants";
+import { JSONSchemaType } from "ajv";
+import { SCHEMA_IDS } from "../ids";
+import { HeroPropsType } from "../types";
+import * as HE001 from "./HE001";
 
-export const schema: JSONSchemaType<ImageTextPropsType> = {
+export const schema: JSONSchemaType<HeroPropsType> = {
 	$schema: "http://json-schema.org/draft-07/schema#",
-	$id: SCHEMA_IDS.imgText,
+	$id: SCHEMA_IDS.hero,
 	type: "object",
-	title: "Image with Text",
+	title: "Hero Section",
 	description: "",
 	$defs: {
 		gap: {
@@ -20,6 +20,20 @@ export const schema: JSONSchemaType<ImageTextPropsType> = {
 		},
 	},
 	properties: {
+		padding: {
+			type: "object",
+			properties: {
+				y: {
+					title: "Padding Y",
+					$ref: "#/$defs/gap",
+				},
+				x: {
+					title: "Padding X",
+					$ref: "#/$defs/gap",
+				},
+			},
+			nullable: true,
+		},
 		img: {
 			type: "object",
 			title: "Image",
@@ -27,20 +41,14 @@ export const schema: JSONSchemaType<ImageTextPropsType> = {
 				src: {
 					type: "string",
 					title: "Image URL",
-					errorMessage: "Please enter a valid image URL.",
 					default: DEFAULT_TEST_IMAGE,
+					errorMessage: "Please enter a valid image URL.",
 				},
 				alt: {
 					type: "string",
 					title: "Image Alt Text",
 					errorMessage: "Please enter a valid image alt text.",
-					default: "Random Image",
-					nullable: true,
-				},
-				left: {
-					type: "boolean",
-					title: "Image Left",
-					default: true,
+					default: "Hero",
 					nullable: true,
 				},
 				radius: {
@@ -65,7 +73,7 @@ export const schema: JSONSchemaType<ImageTextPropsType> = {
 				},
 			},
 			required: ["src"],
-			nullable: false,
+			nullable: true,
 			default: {
 				// this is required for ajv default compute to work
 				src: DEFAULT_TEST_IMAGE,
@@ -76,41 +84,6 @@ export const schema: JSONSchemaType<ImageTextPropsType> = {
 			title: "Text",
 			errorMessage: "Please enter a valid text.",
 			default: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-		},
-		margin: {
-			type: "object",
-			title: "Margin",
-			properties: {
-				y: {
-					title: "Margin Y",
-					$ref: "#/$defs/gap",
-				},
-				x: {
-					title: "Margin X",
-					$ref: "#/$defs/gap",
-				},
-			},
-			nullable: true,
-		},
-		gap: {
-			title: "Gap",
-			type: "number",
-			$ref: "#/$defs/gap",
-			nullable: true,
-		},
-		padding: {
-			type: "object",
-			properties: {
-				y: {
-					title: "Padding Y",
-					$ref: "#/$defs/gap",
-				},
-				x: {
-					title: "Padding X",
-					$ref: "#/$defs/gap",
-				},
-			},
-			nullable: true,
 		},
 		justify: {
 			type: "string",
@@ -127,7 +100,7 @@ export const schema: JSONSchemaType<ImageTextPropsType> = {
 			nullable: true,
 		},
 	},
-	required: ["text", "img"],
+	required: ["text"],
 	errorMessage: {
 		required: {
 			url: "Please enter a valid video URL.",
@@ -136,9 +109,9 @@ export const schema: JSONSchemaType<ImageTextPropsType> = {
 };
 
 export const variants = {
-	IT001,
+	HE001,
 } as const;
 
 export const components = {
-	IT001: IT001.Component,
+	HE001: HE001.Component,
 } as const;
